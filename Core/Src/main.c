@@ -24,6 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "bsp_can.h"
+extern motor_info motor_1;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -90,16 +91,31 @@ int main(void)
   MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
   bsp_can_init();
+  int16_t target_speed = 500; // 目标速度
+  float Kp = 0.5f; // 比例系数
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    if (bsp_can_send_motor_cmd(1000, 0, 0, 0) != HAL_OK)
-    {
-      Error_Handler();
-    }
+    // 读取当前速度
+    int16_t current_speed = motor_1.rotor_speed;
+
+    // 计算误差
+    int16_t error = target_speed - current_speed;
+
+    // 计算控制量
+    int16_t control_output = (int16_t)(Kp * error);
+
+    // 限幅
+    if (control_output > 500) control_output = 500;
+    if (control_output < -500) control_output = -500;
+
+    // 发送控制命令
+    bsp_can_sendmotorcmd(control_output, 0, 0, 0);
+
     HAL_Delay(10);
     /* USER CODE END WHILE */
 

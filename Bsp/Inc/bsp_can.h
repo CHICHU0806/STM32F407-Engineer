@@ -8,6 +8,13 @@
 #pragma once
 #include "can.h"
 
+typedef struct {
+    int16_t rotor_angle;      // 电机转子角度
+    int16_t  rotor_speed;      // 电机转子速度
+    int16_t  torque_current;   // 电机转矩电流
+    int16_t  temp;             // 电机温度
+} motor_info;
+
 #ifdef __cplusplus
 class bsp_can {
 public:
@@ -22,8 +29,8 @@ extern "C" {
 #endif
 
 void bsp_can_init();
-void bsp_can_filter_config();
-HAL_StatusTypeDef bsp_can_send_motor_cmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
+void bsp_can_filterconfig();
+HAL_StatusTypeDef bsp_can_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
 
 #ifdef __cplusplus
 }

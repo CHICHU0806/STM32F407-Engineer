@@ -7,6 +7,9 @@
 //外部CAN句柄 如果有更多的hcan句柄同样在这里进行定义
 extern CAN_HandleTypeDef hcan1;
 
+//创建不同电机的结构体变量
+motor_info motor_1;
+
 //BSP_CAN相关内容初始化
 void bsp_can::BSP_CAN_Init()
 {
@@ -15,7 +18,6 @@ void bsp_can::BSP_CAN_Init()
     can.BSP_CAN_FilterConfig();
 
     // 2. 启动 CAN 外设
-    // 确保你的 CAN 句柄 (hcan1, hcan2, hcan3) 已经在 CubeMX 生成的 can.c 中正确初始化。
     if (HAL_CAN_Start(&hcan1) != HAL_OK) {
         Error_Handler(); // 启动失败，进入错误处理
     }
@@ -71,6 +73,31 @@ HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmd(int16_t motor1, int16_t motor2, 
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
+    CAN_RxHeaderTypeDef RxHeader;
+    uint8_t RxData[8];
+    if (HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData) == HAL_OK) {
+        // 在这里解析RxData，更新电机状态等
+        if(hcan->Instance == CAN1)
+        {
+            HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData); //CAN接收数据
+            switch(RxHeader.StdId)
+            {
+
+                case 0x201://此处仅接收了id为0x201电机的报文
+                {
+                    motor_1.rotor_angle    = ((RxData[0] << 8) | RxData[1]);
+                    motor_1.rotor_speed    = ((RxData[2] << 8) | RxData[3]);
+                    motor_1.torque_current = ((RxData[4] << 8) | RxData[5]);
+                    motor_1.temp           =   RxData[6];
+                    break;
+                }
+                default: ;
+            }
+        }
+    }
+}
+
 // C接口封装
 extern "C" {
     void bsp_can_init() {
@@ -78,12 +105,12 @@ extern "C" {
         can.BSP_CAN_Init();
     }
 
-    void bsp_can_filter_config() {
+    void bsp_can_filterconfig() {
         static bsp_can can;
         can.BSP_CAN_FilterConfig();
     }
 
-    HAL_StatusTypeDef bsp_can_send_motor_cmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
+    HAL_StatusTypeDef bsp_can_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
         static bsp_can can;
         return can.BSP_CAN_SendMotorCmd(motor1, motor2, motor3, motor4);
     }
