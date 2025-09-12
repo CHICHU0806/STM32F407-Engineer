@@ -37,7 +37,11 @@ enable_language(C ASM)
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME}
         Bsp/Src/bsp_can.cpp
-        Bsp/Inc/bsp_can.h)
+        Bsp/Inc/bsp_can.h
+        PID/Src/speed_pid.cpp
+        PID/Inc/speed_pid.h
+        Debug-Vars/debug_vars.cpp
+        Debug-Vars/debug_vars.h)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
@@ -57,6 +61,9 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
         Bsp/Inc
         Bsp/Src
+        PID/Inc
+        PID/Src
+        Debug-Vars
 )
 
 # Add project symbols (macros)
