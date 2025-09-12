@@ -3,6 +3,7 @@
 //
 
 #include "bsp_can.h"
+#include "debug_vars.h"
 
 //外部CAN句柄 如果有更多的hcan句柄同样在这里进行定义
 extern CAN_HandleTypeDef hcan1;
@@ -24,7 +25,7 @@ void bsp_can::BSP_CAN_Init()
     // 如果有其他 CAN 外设，也在这里启动
 
     // 3. 激活 CAN 接收中断 (当 FIFO0 中有新消息时触发)
-    if (HAL_CAN_ActivateNotification(&hcan1, 0) != HAL_OK) {
+    if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK) {
         Error_Handler(); // 激活中断失败
     }
     // 如果有其他 CAN 外设，也在这里激活中断
@@ -83,7 +84,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
             HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData); //CAN接收数据
             switch(RxHeader.StdId)
             {
-
                 case 0x201://此处仅接收了id为0x201电机的报文
                 {
                     motor_1.rotor_angle    = ((RxData[0] << 8) | RxData[1]);
