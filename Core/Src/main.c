@@ -105,12 +105,9 @@ int main(void)
     float target = 500.0f;
     float actual = motor_1.rotor_speed;
 
-    debug_target_speed = target;
     debug_actual_speed = actual;
 
     int16_t control = speed_pid_calculate(target, actual, dt);
-
-    debug_control = control;
 
     // 把控制发给电机
     bsp_can_sendmotorcmd(control, 0, 0, 0);

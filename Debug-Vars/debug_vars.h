@@ -13,13 +13,10 @@ extern "C" {
 
 //基本框架
 //extern volatile 类型 变量名；
-extern volatile int16_t debug_control;
 extern volatile float debug_P;
 extern volatile float debug_I;
 extern volatile float debug_D;
-extern volatile float debug_target_speed;
 extern volatile float debug_actual_speed;
-extern volatile float debug_output;
 
 #ifdef __cplusplus
 }

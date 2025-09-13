@@ -59,7 +59,6 @@ extern "C" {
 
     int16_t speed_pid_calculate(float target_speed, float actual_speed, float dt) {
         float output = speed_pid.PID_Calculate(target_speed, actual_speed, dt);
-        debug_output = output;
         return static_cast<int16_t>(output);
     }
 }
