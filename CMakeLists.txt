@@ -41,7 +41,10 @@ add_executable(${CMAKE_PROJECT_NAME}
         PID/Src/speed_pid.cpp
         PID/Inc/speed_pid.h
         Debug-Vars/debug_vars.cpp
-        Debug-Vars/debug_vars.h)
+        Debug-Vars/debug_vars.h
+        Remote/Src/dt7_remote.cpp
+        Remote/Inc/dt7_remote.h
+)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
@@ -64,6 +67,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         PID/Inc
         PID/Src
         Debug-Vars
+        Remote/Inc
+        Remote/Src
 )
 
 # Add project symbols (macros)

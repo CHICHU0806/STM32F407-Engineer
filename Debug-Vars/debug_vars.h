@@ -5,7 +5,7 @@
 #ifndef STARTM3508_DEBUG_VARS_H
 #define STARTM3508_DEBUG_VARS_H
 
-#include <sys/_stdint.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,6 +17,7 @@ extern volatile float debug_P;
 extern volatile float debug_I;
 extern volatile float debug_D;
 extern volatile float debug_actual_speed;
+extern volatile int16_t debug_ch0;
 
 #ifdef __cplusplus
 }

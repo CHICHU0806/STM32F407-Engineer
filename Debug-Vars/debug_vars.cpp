@@ -12,3 +12,4 @@ volatile float debug_P = 0.0f;
 volatile float debug_I = 0.0f;
 volatile float debug_D = 0.0f;
 volatile float debug_actual_speed = -1.0f;
+volatile int16_t debug_ch0 = 0;

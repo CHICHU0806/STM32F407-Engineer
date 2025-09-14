@@ -2,10 +2,10 @@
 // Created by 20852 on 2025/9/11.
 //
 
-#include "../Inc/speed_pid.h"
+    #include "../Inc/speed_pid.h"
 #include "../Debug-Vars/debug_vars.h"
 #include <algorithm> // for std::clamp
-#include <sys/_stdint.h>
+#include <stdint.h>
 
 // 构造函数
 SpeedPID::SpeedPID(float kp, float ki, float kd, float max_out, float max_iout)
@@ -40,6 +40,7 @@ float SpeedPID::PID_Calculate(float target_speed, float actual_speed, float dt) 
     output = std::clamp(output, -maxOutput, maxOutput);
 
     prevError = error;
+
 
     // 调试变量
     debug_P = Kp * error;

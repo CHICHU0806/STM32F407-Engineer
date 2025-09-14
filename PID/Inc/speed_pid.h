@@ -4,7 +4,7 @@
 
 #ifndef STARTM3508_PID_H
 #define STARTM3508_PID_H
-#include <sys/_stdint.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 class SpeedPID {

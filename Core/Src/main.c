@@ -19,6 +19,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "can.h"
+#include "dma.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -26,8 +28,10 @@
 #include "bsp_can.h"
 #include "speed_pid.h"
 #include "debug_vars.h"
+#include "dt7_remote.h"
 
 extern motor_info motor_1;
+volatile int16_t count = 0;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -91,28 +95,26 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_CAN1_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   bsp_can_init();
   speed_pid_clear();
-  float dt = 0.01f;
+  rc_init();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    float target = 500.0f;
-    float actual = motor_1.rotor_speed;
+    const RCData* data = rc_getdata();
 
-    debug_actual_speed = actual;
+    //bsp_can_sendmotorcmd((int16_t)data->ch[2]-1024, 0, 0, 0);
 
-    int16_t control = speed_pid_calculate(target, actual, dt);
-
-    // 把控制发给电机
-    bsp_can_sendmotorcmd(control, 0, 0, 0);
-
-
+    debug_ch0 = data->ch[0];
+    count++;
     HAL_Delay(10);
     /* USER CODE END WHILE */
 
