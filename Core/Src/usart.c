@@ -52,7 +52,7 @@ void MX_USART3_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART3_Init 2 */
-
+  __HAL_UART_ENABLE_IT(&huart3, UART_IT_IDLE);
   /* USER CODE END USART3_Init 2 */
 
 }

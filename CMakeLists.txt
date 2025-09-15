@@ -44,6 +44,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         Debug-Vars/debug_vars.h
         Remote/Src/dt7_remote.cpp
         Remote/Inc/dt7_remote.h
+        Remote/Src/dbus.cpp
+        Remote/Inc/dbus.h
 )
 
 # Add STM32CubeMX generated sources
