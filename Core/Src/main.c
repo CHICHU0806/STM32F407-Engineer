@@ -29,8 +29,12 @@
 #include "speed_pid.h"
 #include "debug_vars.h"
 #include "dt7_remote.h"
+#include "dbus.h"
 
 extern motor_info motor_1;
+extern void Uart3_Init(UART_HandleTypeDef* huart,
+                       void (*decode_func)(volatile uint8_t* buf, int len));
+
 volatile int16_t count = 0;
 /* USER CODE END Includes */
 
@@ -63,6 +67,10 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void MyDecodeFunc(volatile uint8_t* buf, int len)
+{
+  dbus_decode(buf, len);
+}
 
 /* USER CODE END 0 */
 
@@ -101,19 +109,19 @@ int main(void)
   /* USER CODE BEGIN 2 */
   bsp_can_init();
   speed_pid_clear();
-  rc_init();
+  Uart3_Init(&huart3, MyDecodeFunc);
 
+  int output=0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    const RCData* data = rc_getdata();
+    debug_ch0 = dbus.ch[0];
+    output=speed_pid_calculate((int16_t)10*dbus.ch[1], motor_1.rotor_speed, 0.01f);
+    bsp_can_sendmotorcmd(output, 0, 0, 0);
 
-    //bsp_can_sendmotorcmd((int16_t)data->ch[2]-1024, 0, 0, 0);
-
-    debug_ch0 = data->ch[0];
     count++;
     HAL_Delay(10);
     /* USER CODE END WHILE */
