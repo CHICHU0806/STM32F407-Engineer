@@ -124,6 +124,7 @@ int main(void)
 
     count++;
     HAL_Delay(10);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
