@@ -12,7 +12,7 @@ typedef struct {
     int16_t rotor_angle;      // 电机转子角度
     int16_t  rotor_speed;    // 电机转子速度
     int16_t  torque_current;   // 电机转矩电流
-    int16_t  temp;             // 电机温度
+    int8_t  temp;             // 电机温度
 } motor_info;
 
 #ifdef __cplusplus

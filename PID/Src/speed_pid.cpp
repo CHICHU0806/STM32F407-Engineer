@@ -34,13 +34,12 @@ float SpeedPID::PID_Calculate(float target_speed, float actual_speed, float dt) 
         integral += Ki * error * dt;
         integral = std::clamp(integral, -maxIntegral, maxIntegral);
     }
-
+    
     // 总输出
     output += integral;
     output = std::clamp(output, -maxOutput, maxOutput);
 
     prevError = error;
-
 
     // 调试变量
     debug_P = Kp * error;
