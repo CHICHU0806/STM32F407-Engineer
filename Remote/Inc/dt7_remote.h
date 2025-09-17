@@ -10,13 +10,12 @@
 #endif
 
 #ifdef __cplusplus
-class UartDma
+class DT7Dma
 {
 public:
-    // 原来是 std::function，现在改成 C 风格函数指针
     using DecodeCallback = void (*)(volatile uint8_t* buf, int len);
 
-    UartDma(UART_HandleTypeDef* huart, DecodeCallback cb);
+    DT7Dma(UART_HandleTypeDef* huart, DecodeCallback cb);
 
     // IRQHandler 在 USART3_IRQHandler() 中调用
     static void IRQHandler(UART_HandleTypeDef* huart);
@@ -29,9 +28,9 @@ private:
     int rx_data_len_;
     uint8_t callback_busy_ = 0;
 
-    static inline UartDma* instance_ = nullptr; // 只支持 USART3 单例
+    static inline DT7Dma* instance_ = nullptr; // 只支持 USART3 单例
 
-    void init();
+    void Remote_Init();
     void uartRxIdleCallback();
 
     void dmaM0RxCpltCallback();

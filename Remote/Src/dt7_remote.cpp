@@ -1,13 +1,13 @@
 #include "dt7_remote.h"
 
-UartDma::UartDma(UART_HandleTypeDef* huart, DecodeCallback cb)
+DT7Dma::DT7Dma(UART_HandleTypeDef* huart, DecodeCallback cb)
     : huart_(huart), decode_cb_(cb), rx_data_len_(0)
 {
     instance_ = this; // 只允许一个 USART3 对象
-    init();
+    Remote_Init();
 }
 
-void UartDma::init()
+void DT7Dma::Remote_Init()
 {
     __HAL_UART_CLEAR_IDLEFLAG(huart_);
     __HAL_UART_ENABLE_IT(huart_, UART_IT_IDLE);
@@ -20,7 +20,7 @@ void UartDma::init()
                                 UART_RX_BUF_LEN);
 }
 
-void UartDma::IRQHandler(UART_HandleTypeDef* huart)
+void DT7Dma::IRQHandler(UART_HandleTypeDef* huart)
 {
     if (instance_ && instance_->callback_busy_ == 0)
     {
@@ -32,7 +32,7 @@ void UartDma::IRQHandler(UART_HandleTypeDef* huart)
     }
 }
 
-void UartDma::uartRxIdleCallback()
+void DT7Dma::uartRxIdleCallback()
 {
     callback_busy_ = 1;
 
@@ -52,19 +52,19 @@ void UartDma::uartRxIdleCallback()
     callback_busy_ = 0;
 }
 
-void UartDma::dmaM0RxCpltCallback()
+void DT7Dma::dmaM0RxCpltCallback()
 {
     huart_->hdmarx->Instance->CR |= (uint32_t)(DMA_SxCR_CT);
     if (decode_cb_) decode_cb_(rx_buf_[0], rx_data_len_);
 }
 
-void UartDma::dmaM1RxCpltCallback()
+void DT7Dma::dmaM1RxCpltCallback()
 {
     huart_->hdmarx->Instance->CR &= ~(uint32_t)(DMA_SxCR_CT);
     if (decode_cb_) decode_cb_(rx_buf_[1], rx_data_len_);
 }
 
-HAL_StatusTypeDef UartDma::DMAEx_MultiBufferStart_NoIT(DMA_HandleTypeDef* hdma,
+HAL_StatusTypeDef DT7Dma::DMAEx_MultiBufferStart_NoIT(DMA_HandleTypeDef* hdma,
                                                        uint32_t SrcAddress,
                                                        uint32_t DstAddress,
                                                        uint32_t SecondMemAddress,
@@ -114,16 +114,16 @@ HAL_StatusTypeDef UartDma::DMAEx_MultiBufferStart_NoIT(DMA_HandleTypeDef* hdma,
 }
 
 /* ================== C 接口实现 ================== */
-static UartDma* uart3_instance = nullptr;
+static DT7Dma* uart3_instance = nullptr;
 
 void Uart3_Init(UART_HandleTypeDef* huart,
                 void (*decode_func)(volatile uint8_t* buf, int len))
 {
-    static UartDma uart3(huart, decode_func);
+    static DT7Dma uart3(huart, decode_func);
     uart3_instance = &uart3;
 }
 
 void Uart3_IRQHandler(UART_HandleTypeDef* huart)
 {
-    UartDma::IRQHandler(huart);
+    DT7Dma::IRQHandler(huart);
 }
