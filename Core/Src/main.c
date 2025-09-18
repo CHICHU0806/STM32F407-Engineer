@@ -32,9 +32,6 @@
 #include "dbus.h"
 
 extern motor_info motor_1;
-extern void Uart3_Init(UART_HandleTypeDef* huart,
-                       void (*decode_func)(volatile uint8_t* buf, int len));
-
 volatile int16_t count = 0;
 /* USER CODE END Includes */
 
@@ -67,10 +64,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void MyDecodeFunc(volatile uint8_t* buf, int len)
-{
-  dbus_decode(buf, len);
-}
 
 /* USER CODE END 0 */
 
@@ -109,7 +102,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   bsp_can_init();
   speed_pid_clear();
-  Uart3_Init(&huart3, MyDecodeFunc);
+  Uart3_Init(&huart3, dbus_decode);
 
   int output=0;
   /* USER CODE END 2 */
@@ -118,7 +111,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    debug_ch0 = dbus.ch[0];
+    debug_ch0 = dbus.ch[1];
     output=speed_pid_calculate((int16_t)10*dbus.ch[1], motor_1.rotor_speed, 0.01f);
     bsp_can_sendmotorcmd(output, 0, 0, 0);
 

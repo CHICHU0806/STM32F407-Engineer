@@ -11,6 +11,7 @@ void DBUS_Decode(volatile uint8_t* buf, int len)
 {
     if (len != 18) return; // DBUS 一帧固定 18 字节
 
+    // 0000_0111_1111_1111
     dbus.ch[0] = ((buf[0] | (buf[1] << 8)) & 0x07FF) - 1024;
     dbus.ch[1] = (((buf[1] >> 3) | (buf[2] << 5)) & 0x07FF) - 1024;
     dbus.ch[2] = (((buf[2] >> 6) | (buf[3] << 2) | (buf[4] << 10)) & 0x07FF) - 1024;
@@ -29,16 +30,10 @@ void DBUS_Decode(volatile uint8_t* buf, int len)
     dbus.key = buf[14] | (buf[15] << 8);
 }
 
-#ifdef __cplusplus
+
 extern "C" {
-#endif
-
-void dbus_decode(volatile uint8_t* buf, int len)
-{
-    DBUS_Decode(buf, len);
+    void dbus_decode(volatile uint8_t *buf, int len) {
+        DBUS_Decode(buf, len);
+    }
 }
-
-#ifdef __cplusplus
-}
-#endif
 
