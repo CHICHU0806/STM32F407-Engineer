@@ -55,7 +55,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmd(int16_t motor1, int16_t motor2, 
     uint32_t TxMailbox;
 
     //帧头组成
-    TxHeader.StdId = 0x200;
+    TxHeader.StdId = 0x200; //标准标识符
     TxHeader.IDE = CAN_ID_STD;
     TxHeader.RTR = CAN_RTR_DATA;
     TxHeader.DLC = 8;

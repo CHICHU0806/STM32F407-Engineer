@@ -32,8 +32,6 @@
 #include "dt7_remote.h"
 #include "dbus.h"
 
-extern motor_info motor_1;
-volatile int16_t count = 0;
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -105,8 +103,6 @@ int main(void)
   bsp_can_init();
   speed_pid_clear();
   Uart3_Init(&huart3, dbus_decode);
-
-  int output=0;
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
@@ -121,13 +117,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    debug_ch0 = dbus.ch[1];
-    output=speed_pid_calculate((int16_t)10*dbus.ch[1], motor_1.rotor_speed, 0.01f);
-    bsp_can_sendmotorcmd(output, 0, 0, 0);
-
-    count++;
-    HAL_Delay(10);
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

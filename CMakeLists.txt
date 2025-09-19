@@ -46,6 +46,9 @@ add_executable(${CMAKE_PROJECT_NAME}
         Remote/Inc/dt7_remote.h
         Remote/Src/dbus.cpp
         Remote/Inc/dbus.h
+        Task/Src/motorTask.cpp
+        Task/Inc/motorTask.h
+        Task/Inc/TaskBase.h
 )
 
 # Add STM32CubeMX generated sources
@@ -71,6 +74,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         Debug-Vars
         Remote/Inc
         Remote/Src
+        Task/Inc
+        Task/Src
 )
 
 # Add project symbols (macros)
