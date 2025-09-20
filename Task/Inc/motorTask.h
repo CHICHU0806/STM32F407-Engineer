@@ -20,7 +20,7 @@ public:
 extern "C" {
 #endif
 
-    void StartMotorTask(void const * argument);
+    void MotorTask_Init();
 
 #ifdef __cplusplus
 }

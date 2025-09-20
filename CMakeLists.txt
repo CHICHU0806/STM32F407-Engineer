@@ -49,6 +49,10 @@ add_executable(${CMAKE_PROJECT_NAME}
         Task/Src/motorTask.cpp
         Task/Inc/motorTask.h
         Task/Inc/TaskBase.h
+        Task/Src/chassisTask.cpp
+        Task/Inc/chassisTask.h
+        Chassis/Src/mecanum.cpp
+        Chassis/Inc/mecanum.h
 )
 
 # Add STM32CubeMX generated sources
@@ -76,6 +80,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         Remote/Src
         Task/Inc
         Task/Src
+        Chassis/Inc
+        Chassis/Src
 )
 
 # Add project symbols (macros)

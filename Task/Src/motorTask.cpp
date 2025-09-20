@@ -7,8 +7,6 @@
 #include "speed_pid.h"
 #include "dbus.h"
 
-static MotorTask motorTask;
-
 extern motor_info motor_1;
 
 int output = 0;
@@ -22,6 +20,8 @@ void MotorTask::run() {
 }
 
 extern "C" {
+    static MotorTask motorTask;
+
     void MotorTask_Init() {
         motorTask.start((char*)"MotorTask", 256, osPriorityNormal);
     }

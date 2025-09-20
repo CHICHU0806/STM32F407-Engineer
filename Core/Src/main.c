@@ -28,7 +28,6 @@
 /* USER CODE BEGIN Includes */
 #include "bsp_can.h"
 #include "speed_pid.h"
-#include "debug_vars.h"
 #include "dt7_remote.h"
 #include "dbus.h"
 

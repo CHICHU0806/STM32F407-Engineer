@@ -10,6 +10,9 @@ extern CAN_HandleTypeDef hcan1;
 
 //创建不同电机的结构体变量
 motor_info motor_1;
+motor_info motor_2;
+motor_info motor_3;
+motor_info motor_4;
 
 //BSP_CAN相关内容初始化
 void bsp_can::BSP_CAN_Init()
