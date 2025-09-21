@@ -53,6 +53,12 @@ add_executable(${CMAKE_PROJECT_NAME}
         Task/Inc/chassisTask.h
         Chassis/Src/mecanum.cpp
         Chassis/Inc/mecanum.h
+        PID/Src/angle_pid.cpp
+        PID/Inc/angle_pid.h
+        PID/Inc/PidBase.h
+        Bsp/magictools.h
+        PID/Src/CascadePID.cpp
+        PID/Inc/CascadePId.h
 )
 
 # Add STM32CubeMX generated sources
@@ -71,6 +77,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+        Bsp
         Bsp/Inc
         Bsp/Src
         PID/Inc

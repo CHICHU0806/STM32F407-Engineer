@@ -5,6 +5,8 @@
 #include "../Inc/motorTask.h"
 #include "bsp_can.h"
 #include "speed_pid.h"
+#include "angle_pid.h"
+#include "CascadePID.h"
 #include "dbus.h"
 
 extern motor_info motor_1;
@@ -12,10 +14,24 @@ extern motor_info motor_1;
 int output = 0;
 
 void MotorTask::run() {
-    for (;;){
-        int output = speed_pid_calculate((int16_t)10 * dbus.ch[1], motor_1.rotor_speed, 0.01f);
+    static int32_t target_angle = 0;
+    const int32_t step = 2048; // 90度对应编码器量
+    uint32_t last_time = osKernelSysTick(); // 记录上次更新时间
+
+    angle_pid_clear(); // 清零积分
+
+    for (;;) {
+        uint32_t now = osKernelSysTick();
+        if (now - last_time >= 1000) { // 10秒
+            target_angle += step;
+            if (target_angle >= 8192) target_angle -= 8192; // 跨零处理
+            last_time = now;
+        }
+
+        int16_t output = angle_pid_calculate(target_angle, motor_1.rotor_angle);
         bsp_can_sendmotorcmd(output, output, output, output);
-        osDelay(10);
+
+        osDelay(5);
     }
 }
 
