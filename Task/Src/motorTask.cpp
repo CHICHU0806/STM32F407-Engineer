@@ -8,6 +8,7 @@
 #include "angle_pid.h"
 #include "CascadePID.h"
 #include "dbus.h"
+#include "debug_vars.h"
 
 extern motor_info motor_1;
 
@@ -22,9 +23,12 @@ void MotorTask::run() {
 
     for (;;) {
         uint32_t now = osKernelSysTick();
-        if (now - last_time >= 1000) { // 10秒
+        //1s一次更新目标角度
+        if (now - last_time >= 1000) {
             target_angle += step;
-            if (target_angle >= 8192) target_angle -= 8192; // 跨零处理
+            if (target_angle >= 8192) {
+                target_angle -= 8192; // 跨零处理
+                }
             last_time = now;
         }
 

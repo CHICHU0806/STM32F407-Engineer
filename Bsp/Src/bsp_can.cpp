@@ -93,6 +93,11 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     motor_1.rotor_speed    = ((RxData[2] << 8) | RxData[3]);
                     motor_1.torque_current = ((RxData[4] << 8) | RxData[5]);
                     motor_1.temp           =   RxData[6];
+
+
+                    debug_angle = motor_1.rotor_angle;
+
+
                     break;
                 }
                 default: ;

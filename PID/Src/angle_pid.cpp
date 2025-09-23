@@ -10,7 +10,7 @@ extern "C" {
     static AnglePID angle_pid(2.0f, 0.0f, 0.1f, 5000.0f, 5000.0f);
 
     void angle_pid_clear() {
-        angle_pid.reset();
+        angle_pid.Clear();
     }
 
     int16_t angle_pid_calculate(int32_t target, int32_t feedback) {

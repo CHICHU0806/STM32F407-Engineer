@@ -17,7 +17,7 @@ extern volatile float debug_P;
 extern volatile float debug_I;
 extern volatile float debug_D;
 extern volatile float debug_actual_speed;
-extern volatile int16_t debug_ch0;
+extern volatile int16_t debug_angle;
 
 #ifdef __cplusplus
 }

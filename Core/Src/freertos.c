@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-extern void MotorTask_Init(void);
+//extern void MotorTask_Init(void);
 //extern void ChassisTask_Init(void);
 /* USER CODE END Includes */
 
@@ -105,9 +105,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of defaultTask */
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 256);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL );
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  MotorTask_Init();
+  //MotorTask_Init();
   //ChassisTask_Init();
   /* USER CODE END RTOS_THREADS */
 
