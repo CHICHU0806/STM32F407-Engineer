@@ -13,6 +13,7 @@ motor_info motor_1;
 motor_info motor_2;
 motor_info motor_3;
 motor_info motor_4;
+motor_info motor_5;
 
 //BSP_CAN相关内容初始化
 void bsp_can::BSP_CAN_Init()
@@ -51,7 +52,7 @@ void bsp_can::BSP_CAN_FilterConfig() {
 }
 
 //CAN命令发送函数
-HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
+HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmdone2four(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
     uint8_t TxData[8];
@@ -77,6 +78,32 @@ HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmd(int16_t motor1, int16_t motor2, 
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
+HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
+    //三要素：帧头，数据，邮箱
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t TxData[8];
+    uint32_t TxMailbox;
+
+    //帧头组成
+    TxHeader.StdId = 0x1FF; //标准标识符
+    TxHeader.IDE = CAN_ID_STD;
+    TxHeader.RTR = CAN_RTR_DATA;
+    TxHeader.DLC = 8;
+
+    //数据填充
+    TxData[0] = motor5 >> 8;
+    TxData[1] = motor5;
+    TxData[2] = motor6 >> 8;
+    TxData[3] = motor6;
+    TxData[4] = motor7 >> 8;
+    TxData[5] = motor7;
+    TxData[6] = motor8 >> 8;
+    TxData[7] = motor8;
+
+    //将信息推送到邮箱
+    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+}
+
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
     CAN_RxHeaderTypeDef RxHeader;
     uint8_t RxData[8];
@@ -93,11 +120,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     motor_1.rotor_speed    = ((RxData[2] << 8) | RxData[3]);
                     motor_1.torque_current = ((RxData[4] << 8) | RxData[5]);
                     motor_1.temp           =   RxData[6];
-
-
-                    debug_angle = motor_1.rotor_angle;
-
-
                     break;
                 }
                 default: ;
@@ -108,18 +130,21 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 
 // C接口封装
 extern "C" {
+    static bsp_can can;
+
     void bsp_can_init() {
-        static bsp_can can;
         can.BSP_CAN_Init();
     }
 
     void bsp_can_filterconfig() {
-        static bsp_can can;
         can.BSP_CAN_FilterConfig();
     }
 
-    HAL_StatusTypeDef bsp_can_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
-        static bsp_can can;
-        return can.BSP_CAN_SendMotorCmd(motor1, motor2, motor3, motor4);
+    HAL_StatusTypeDef bsp_can_sendmotorcmdone2four(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
+        return can.BSP_CAN_SendMotorCmdone2four(motor1, motor2, motor3, motor4);
+    }
+
+    HAL_StatusTypeDef bsp_can_sendmotorcmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
+        return can.BSP_CAN_SendMotorCmdfive2eight(motor5, motor6, motor7, motor8);
     }
 }

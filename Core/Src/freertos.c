@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 //extern void MotorTask_Init(void);
 //extern void ChassisTask_Init(void);
+extern void MeasureSpeedTask_Init(void);
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,6 +111,7 @@ void MX_FREERTOS_Init(void) {
   /* add threads, ... */
   //MotorTask_Init();
   //ChassisTask_Init();
+  MeasureSpeedTask_Init();
   /* USER CODE END RTOS_THREADS */
 
 }

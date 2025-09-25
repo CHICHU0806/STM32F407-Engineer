@@ -59,6 +59,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         Bsp/magictools.h
         PID/Src/CascadePID.cpp
         PID/Inc/CascadePId.h
+        Task/Src/measureSpeedTask.cpp
+        Task/Inc/measureSpeedTask.h
 )
 
 # Add STM32CubeMX generated sources
