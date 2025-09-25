@@ -7,7 +7,6 @@
 
 #pragma once
 #include "PidBase.h"
-#include <stdint.h>
 
 #ifdef __cplusplus
 class SpeedPID : public PidBase {
