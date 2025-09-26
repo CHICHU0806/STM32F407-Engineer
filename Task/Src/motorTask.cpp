@@ -12,15 +12,17 @@
 
 extern motor_info motor_1;
 
-int output = 0;
+int angle_output = 0;
+int speed_output = 0;
 
 void MotorTask::run() {
     const int32_t target_angle = 4096;
     angle_pid_clear(); // 清零积分
 
     for (;;) {
-        int16_t output = angle_pid_calculate(target_angle, motor_1.rotor_angle, 0.01f);
-        bsp_can_sendmotorcmd(output, output, output, output);
+        int16_t angle_output = angle_pid_calculate(target_angle, motor_1.rotor_angle, 0.01f);
+        int16_t speed_output = speed_pid_calculate(angle_output, motor_1.rotor_speed, 0.01f);
+        bsp_can_sendmotorcmd(speed_output, speed_output, speed_output, speed_output);
         osDelay(5);
     }
 }
