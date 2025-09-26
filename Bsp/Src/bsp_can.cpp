@@ -140,7 +140,7 @@ extern "C" {
         can.BSP_CAN_FilterConfig();
     }
 
-    HAL_StatusTypeDef bsp_can_sendmotorcmdone2four(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
+    HAL_StatusTypeDef bsp_can_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
         return can.BSP_CAN_SendMotorCmdone2four(motor1, motor2, motor3, motor4);
     }
 

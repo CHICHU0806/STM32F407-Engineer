@@ -34,7 +34,7 @@ void MeasureSpeedTask::run() {
         int16_t output_4 = speed_pid_calculate(target_speed_4, motor_4.rotor_speed, 0.01f);
         //int16_t output_5 = speed_pid_calculate(target_speed_5, motor_5.rotor_speed, 0.01f);
 
-        bsp_can_sendmotorcmdone2four(output_1, output_2, -output_3, -output_4);
+        bsp_can_sendmotorcmd(output_1, output_2, -output_3, -output_4);
         bsp_can_sendmotorcmdfive2eight(output_5, 1000, 0, 1000);
         osDelay(5);
     }

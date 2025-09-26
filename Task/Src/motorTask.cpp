@@ -20,7 +20,7 @@ void MotorTask::run() {
 
     for (;;) {
         int16_t output = angle_pid_calculate(target_angle, motor_1.rotor_angle, 0.01f);
-        bsp_can_sendmotorcmdone2four(1000, 5000, 5000, 5000);
+        bsp_can_sendmotorcmd(output, output, output, output);
         osDelay(5);
     }
 }
