@@ -6,11 +6,10 @@
 #define STARTM3508_PIDBASE_H
 
 #pragma once
-//#include "magictools.h"
+#include "magictools.h"
 #include "stdint.h"
 
 #ifdef __cplusplus
-#include <algorithm>
 
 class PidBase {
 public:
@@ -40,12 +39,12 @@ public:
         // 积分（带限幅 + 抗积分饱和）
         if (output < maxOutput && output > -maxOutput) {
             integral += Ki * error * dt;
-            integral = std::clamp(integral, -maxIntegral, maxIntegral);
+            integral = clamp(integral, -maxIntegral, maxIntegral);
         }
 
         // 总输出
         output += integral;
-        output = std::clamp(output, -maxOutput, maxOutput);
+        output = clamp(output, -maxOutput, maxOutput);
 
         prevError = error;
         return output;

@@ -4,6 +4,7 @@
 
 #include "dbus.h"
 #include <string.h>
+#include "debug_vars.h"
 
 DBUS_t dbus;
 
@@ -28,6 +29,9 @@ void DBUS_Decode(volatile uint8_t* buf, int len)
     dbus.mouse.r = buf[13];
 
     dbus.key = buf[14] | (buf[15] << 8);
+
+    debug_D = dbus.s1;
+    debug_I = dbus.ch[0];
 }
 
 

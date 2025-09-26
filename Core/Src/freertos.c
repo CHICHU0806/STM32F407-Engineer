@@ -25,8 +25,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-//extern void MotorTask_Init(void);
-//extern void ChassisTask_Init(void);
+extern void MotorTask_Init(void);
+extern void ChassisTask_Init(void);
 extern void MeasureSpeedTask_Init(void);
 /* USER CODE END Includes */
 

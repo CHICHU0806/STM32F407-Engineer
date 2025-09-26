@@ -52,7 +52,7 @@ void bsp_can::BSP_CAN_FilterConfig() {
 }
 
 //CAN命令发送函数
-HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmdone2four(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
+HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
     uint8_t TxData[8];
@@ -111,7 +111,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
         // 在这里解析RxData，更新电机状态等
         if(hcan->Instance == CAN1)
         {
-            HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData); //CAN接收数据
             switch(RxHeader.StdId)
             {
                 case 0x201://此处仅接收了id为0x201电机的报文
@@ -120,6 +119,29 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     motor_1.rotor_speed    = ((RxData[2] << 8) | RxData[3]);
                     motor_1.torque_current = ((RxData[4] << 8) | RxData[5]);
                     motor_1.temp           =   RxData[6];
+
+                    debug_angle = motor_1.rotor_speed;
+                    break;
+                }
+                case 0x202: {
+                    motor_2.rotor_angle   = ((RxData[0] << 8) | RxData[1]);
+                    motor_2.rotor_speed   = ((RxData[2] << 8) | RxData[3]);
+                    motor_2.torque_current= ((RxData[4] << 8) | RxData[5]);
+                    motor_2.temp          =   RxData[6];
+                    break;
+                }
+                case 0x203: {
+                    motor_3.rotor_angle   = ((RxData[0] << 8) | RxData[1]);
+                    motor_3.rotor_speed   = ((RxData[2] << 8) | RxData[3]);
+                    motor_3.torque_current= ((RxData[4] << 8) | RxData[5]);
+                    motor_3.temp          =   RxData[6];
+                    break;
+                }
+                case 0x204: {
+                    motor_4.rotor_angle   = ((RxData[0] << 8) | RxData[1]);
+                    motor_4.rotor_speed   = ((RxData[2] << 8) | RxData[3]);
+                    motor_4.torque_current= ((RxData[4] << 8) | RxData[5]);
+                    motor_4.temp          =   RxData[6];
                     break;
                 }
                 default: ;
@@ -141,7 +163,7 @@ extern "C" {
     }
 
     HAL_StatusTypeDef bsp_can_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
-        return can.BSP_CAN_SendMotorCmdone2four(motor1, motor2, motor3, motor4);
+        return can.BSP_CAN_SendMotorCmd(motor1, motor2, motor3, motor4);
     }
 
     HAL_StatusTypeDef bsp_can_sendmotorcmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
