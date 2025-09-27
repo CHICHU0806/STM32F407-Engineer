@@ -23,7 +23,7 @@ void MeasureSpeedTask::run() {
         int16_t motor3_cmd = speed_pid_calculate(1000, motor_3.rotor_speed, 0.01f);
         int16_t motor4_cmd = speed_pid_calculate(1000, motor_4.rotor_speed, 0.01f);
 
-        bsp_can_sendmotorcmd(abc * motor1_cmd,abc*motor2_cmd,abc*motor3_cmd,0);
+        bsp_can_sendmotorcmd(abc * motor1_cmd,abc*motor2_cmd,abc*motor3_cmd,abc*motor4_cmd);
 
         osDelay(10);
     }

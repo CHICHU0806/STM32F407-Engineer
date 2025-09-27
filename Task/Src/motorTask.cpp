@@ -18,13 +18,12 @@ int speed_output = 0;
 
 void MotorTask::run() {
     const int32_t target_angle = 4096;
-    int target_speed = 1000;
-    angle_pid_clear(); // 清零积分
+    angle_pid_clear();
     speed_pid_clear();
 
     for (;;) {
-        //int16_t angle_output = angle_pid_calculate(target_angle, motor_1.rotor_angle, 0.01f);
-        speed_output = speed_pid_calculate(target_speed, motor_1.rotor_speed, 0.005f);
+        int16_t angle_output = angle_pid_calculate(target_angle, motor_1.rotor_angle, 0.01f);
+        speed_output = speed_pid_calculate(angle_output, motor_1.rotor_speed, 0.005f);
         bsp_can_sendmotorcmd((int16_t)speed_output, (int16_t)speed_output, (int16_t)speed_output, (int16_t)speed_output);
         osDelay(5);
     }
@@ -34,6 +33,6 @@ extern "C" {
     static MotorTask motorTask;
 
     void MotorTask_Init() {
-        motorTask.start((char*)"MotorTask", 256, osPriorityAboveNormal);
+        motorTask.start((char*)"MotorTask", 256, osPriorityNormal);
     }
 }
