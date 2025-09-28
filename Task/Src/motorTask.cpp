@@ -6,7 +6,7 @@
 #include "bsp_can.h"
 #include "speed_pid.h"
 #include "angle_pid.h"
-#include "CascadePID.h"
+#include "cascade_pid.h"
 #include "dbus.h"
 #include "debug_vars.h"
 
