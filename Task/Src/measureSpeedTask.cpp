@@ -12,20 +12,33 @@ extern motor_info motor_2;
 extern motor_info motor_3;
 extern motor_info motor_4;
 
-void MeasureSpeedTask::run() {
-    speed_pid_clear(); // 清零积分
+SpeedPID speed_pid1(0.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
+SpeedPID speed_pid2(0.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
+SpeedPID speed_pid3(0.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
+SpeedPID speed_pid4(0.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
+
+int16_t motor1_cmd = 0;
+int16_t motor2_cmd = 0;
+int16_t motor3_cmd = 0;
+int16_t motor4_cmd = 0;
+
+void MeasureSpeedTask::run() {;
+    speed_pid1.Clear();
+    speed_pid2.Clear();
+    speed_pid3.Clear();
+    speed_pid4.Clear();
 
     for (;;) {
-        int16_t abc = 15;
+        int16_t abc = 18;
 
-        int16_t motor1_cmd = speed_pid_calculate(1000, motor_1.rotor_speed, 0.01f);
-        int16_t motor2_cmd = speed_pid_calculate(1000, motor_2.rotor_speed, 0.01f);
-        int16_t motor3_cmd = speed_pid_calculate(1000, motor_3.rotor_speed, 0.01f);
-        int16_t motor4_cmd = speed_pid_calculate(1000, motor_4.rotor_speed, 0.01f);
+        motor1_cmd = speed_pid1.Calculate(2500, motor_1.rotor_speed, 0.005f);
+        motor2_cmd = speed_pid2.Calculate(2500, motor_2.rotor_speed, 0.005f);
+        motor3_cmd = speed_pid3.Calculate(5000, motor_3.rotor_speed, 0.005f);
+        motor4_cmd = speed_pid4.Calculate(5000, motor_4.rotor_speed, 0.005f);
 
-        bsp_can_sendmotorcmd(abc * motor1_cmd,abc*motor2_cmd,abc*motor3_cmd,abc*motor4_cmd);
+        bsp_can_sendmotorcmd(motor1_cmd,-motor2_cmd,motor3_cmd,-motor4_cmd);
 
-        osDelay(10);
+        osDelay(5);
     }
 }
 

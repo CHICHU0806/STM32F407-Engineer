@@ -57,8 +57,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         PID/Inc/angle_pid.h
         PID/Inc/PidBase.h
         Bsp/magictools.h
-        PID/Src/CascadePID.cpp
-        PID/Inc/CascadePId.h
+        PID/Src/cascade_pid.cpp
+        PID/Inc/cascade_pid.h
         Task/Src/measureSpeedTask.cpp
         Task/Inc/measureSpeedTask.h
 )
