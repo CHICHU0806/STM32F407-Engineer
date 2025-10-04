@@ -30,23 +30,25 @@ public:
     virtual float Calculate(float target, float actual, float dt) {
         float error = target - actual;
 
-        // 微分项
-        float derivative = (error - prevError) / dt;
+        // 检测是否切换了目标方向（正↔负）
+        if ((prevTarget * target) < 0.0f) {
+            integral = 0.0f; // 清除历史积分，防止反向时积分抵消不对称
+        }
 
-        // P+D
+        float derivative = (error - prevError) / dt;
         float output = Kp * error + Kd * derivative;
 
-        // 积分（带限幅 + 抗积分饱和）
+        // 积分防饱和
         if (output < maxOutput && output > -maxOutput) {
             integral += Ki * error * dt;
             integral = clamp(integral, -maxIntegral, maxIntegral);
         }
 
-        // 总输出
         output += integral;
         output = clamp(output, -maxOutput, maxOutput);
 
         prevError = error;
+        prevTarget = target;
         return output;
     }
 
@@ -56,6 +58,7 @@ protected:
     float maxIntegral;      // 积分限幅
     float integral;         // 积分项
     float prevError;        // 上一次误差
+    float prevTarget = 0.0f; // 上一次目标值
 };
 #endif
 
