@@ -17,6 +17,7 @@ void DBUS_Decode(volatile uint8_t* buf, int len)
     dbus.ch[1] = (((buf[1] >> 3) | (buf[2] << 5)) & 0x07FF) - 1024;
     dbus.ch[2] = (((buf[2] >> 6) | (buf[3] << 2) | (buf[4] << 10)) & 0x07FF) - 1024;
     dbus.ch[3] = (((buf[4] >> 1) | (buf[5] << 7)) & 0x07FF) - 1024;
+    dbus.ch[4] = ((buf[16] | (buf[17] << 8)) & 0x07FF) - 1024;
 
     dbus.s1 = ((buf[5] >> 4) & 0x000C) >> 2;  // S1
     dbus.s2 = ((buf[5] >> 4) & 0x0003);       // S2
@@ -31,7 +32,9 @@ void DBUS_Decode(volatile uint8_t* buf, int len)
     dbus.key = buf[14] | (buf[15] << 8);
 
     debug_D = dbus.s1;
+    debug_P = dbus.s2;
     debug_I = dbus.ch[0];
+    debug_actual_speed = dbus.ch[4];
 }
 
 
