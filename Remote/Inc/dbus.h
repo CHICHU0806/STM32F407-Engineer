@@ -10,7 +10,7 @@
 
 typedef struct
 {
-    int16_t ch[4];   // 四个通道（摇杆数据）
+    int16_t ch[5];   // 四个通道（摇杆数据）
     uint8_t s1;      // 开关 S1
     uint8_t s2;      // 开关 S2
 

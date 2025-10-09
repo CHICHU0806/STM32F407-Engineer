@@ -78,7 +78,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmd(int16_t motor1, int16_t motor2, 
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
-HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
+HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmdFive2Eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
     uint8_t TxData[8];
@@ -119,8 +119,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     motor_1.rotor_speed    = ((RxData[2] << 8) | RxData[3]);
                     motor_1.torque_current = ((RxData[4] << 8) | RxData[5]);
                     motor_1.temp           =   RxData[6];
-
-                    debug_angle = motor_1.rotor_speed;
                     break;
                 }
                 case 0x202: {
@@ -144,7 +142,14 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     motor_4.temp          =   RxData[6];
                     break;
                 }
-                default: ;
+                case 0x205: {
+                    motor_5.rotor_angle   = ((RxData[0] << 8) | RxData[1]);
+                    motor_5.rotor_speed   = ((RxData[2] << 8) | RxData[3]);
+                    motor_5.torque_current= ((RxData[4] << 8) | RxData[5]);
+                    motor_5.temp          =   RxData[6];
+                    break;
+                }
+                default: break;
             }
         }
     }
@@ -167,6 +172,6 @@ extern "C" {
     }
 
     HAL_StatusTypeDef bsp_can_sendmotorcmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
-        return can.BSP_CAN_SendMotorCmdfive2eight(motor5, motor6, motor7, motor8);
+        return can.BSP_CAN_SendMotorCmdFive2Eight(motor5, motor6, motor7, motor8);
     }
 }

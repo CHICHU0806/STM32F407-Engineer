@@ -49,18 +49,20 @@ add_executable(${CMAKE_PROJECT_NAME}
         Task/Src/motorTask.cpp
         Task/Inc/motorTask.h
         Task/Inc/TaskBase.h
-        Task/Src/chassisTask.cpp
-        Task/Inc/chassisTask.h
+        Task/Src/mecanumTask.cpp
+        Task/Inc/mecanumTask.h
         Chassis/Src/mecanum.cpp
         Chassis/Inc/mecanum.h
         PID/Src/angle_pid.cpp
         PID/Inc/angle_pid.h
         PID/Inc/PidBase.h
         Bsp/magictools.h
-        PID/Src/cascade_pid.cpp
-        PID/Inc/cascade_pid.h
         Task/Src/measureSpeedTask.cpp
         Task/Inc/measureSpeedTask.h
+        Chassis/Src/omniwheel.cpp
+        Chassis/Inc/omniwheel.h
+        Task/Src/omniwheelTask.cpp
+        Task/Inc/omniwheelTask.h
 )
 
 # Add STM32CubeMX generated sources

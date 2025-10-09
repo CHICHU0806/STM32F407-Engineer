@@ -9,7 +9,7 @@
 #include "TaskBase.h"
 
 #ifdef __cplusplus
-class ChassisTask : public TaskBase{
+class MecanumTask : public TaskBase{
 public:
     void run() override;
 };
@@ -19,7 +19,7 @@ public:
 extern "C" {
 #endif
 
-    void ChassisTask_Init();
+    void MecanumTask_Init();
 
 #ifdef __cplusplus
 }

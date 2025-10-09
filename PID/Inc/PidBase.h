@@ -30,12 +30,15 @@ public:
     virtual float Calculate(float target, float actual, float dt) {
         float error = target - actual;
 
-        // 检测是否切换了目标方向（正↔负）
+        // 检测是否切换了目标方向（正/负）
         if ((prevTarget * target) < 0.0f) {
             integral = 0.0f; // 清除历史积分，防止反向时积分抵消不对称
         }
 
+        // 微分
         float derivative = (error - prevError) / dt;
+
+        // P+D输出
         float output = Kp * error + Kd * derivative;
 
         // 积分防饱和
@@ -45,10 +48,16 @@ public:
         }
 
         output += integral;
+
+        //限幅
         output = clamp(output, -maxOutput, maxOutput);
 
+        // 误差保存
         prevError = error;
+
+        // 目标保存，便于判断正负方向
         prevTarget = target;
+
         return output;
     }
 

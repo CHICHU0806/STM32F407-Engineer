@@ -2,7 +2,7 @@
 // Created by 20852 on 2025/9/20.
 //
 
-#include "chassisTask.h"
+#include "mecanumTask.h"
 #include "bsp_can.h"
 #include "speed_pid.h"
 #include "mecanum.h"
@@ -14,7 +14,7 @@ extern motor_info motor_2;
 extern motor_info motor_3;
 extern motor_info motor_4;
 
-void ChassisTask::run() {
+void MecanumTask::run() {
     for (;;){
         float Vx = dbus.ch[3] * 0.5f;
         float Vy = -dbus.ch[2] * 0.5f;
@@ -34,9 +34,9 @@ void ChassisTask::run() {
 }
 
 extern "C"{
-    static ChassisTask chassistask;
+    static MecanumTask mecanumtask;
 
-    void ChassisTask_Init() {
-        chassistask.start((char*)"ChassisTask", 256, osPriorityNormal);
+    void MecanumTask_Init() {
+        mecanumtask.start((char*)"MecanumTask", 256, osPriorityNormal);
     }
 }

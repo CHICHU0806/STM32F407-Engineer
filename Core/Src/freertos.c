@@ -26,7 +26,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 extern void MotorTask_Init(void);
-extern void ChassisTask_Init(void);
+extern void MecanumTask_Init(void);
+extern void OmniWheelTask_Init(void);
 extern void MeasureSpeedTask_Init(void);
 /* USER CODE END Includes */
 
@@ -110,7 +111,8 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   MotorTask_Init();
-  //ChassisTask_Init();
+  //MecanumTask_Init();
+  //OmniWheelTask_Init();
   //MeasureSpeedTask_Init();
   /* USER CODE END RTOS_THREADS */
 
