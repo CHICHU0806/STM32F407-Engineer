@@ -13,7 +13,6 @@ class MotorTask : public TaskBase {
 public:
     void run() override;   // 继承并实现 run()
 };
-
 #endif
 
 #ifdef __cplusplus
