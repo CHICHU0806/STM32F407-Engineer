@@ -3,7 +3,7 @@
 //
 
 #include "dbus.h"
-#include <string.h>
+#include <cstring>
 #include "debug_vars.h"
 
 DBUS_t dbus;
