@@ -30,6 +30,7 @@
 #include "speed_pid.h"
 #include "dt7_remote.h"
 #include "dbus.h"
+#include "bsp_uart.h"
 
 /* USER CODE END Includes */
 
@@ -98,10 +99,12 @@ int main(void)
   MX_DMA_Init();
   MX_CAN1_Init();
   MX_USART3_UART_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
-  bsp_can_init();
+  BSP_CAN_Init();
   speed_pid_clear();
-  Uart3_Init(&huart3, dbus_decode);
+  Uart3_Init(&huart3, DBUS_Decode);
+  char msg[] = "Hello,World!\r\n";
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
@@ -116,6 +119,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    HAL_UART_Transmit(&huart6, (uint8_t*)msg, sizeof(msg) - 1, 100);
+    HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
