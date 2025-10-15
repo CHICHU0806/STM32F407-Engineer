@@ -29,6 +29,8 @@ extern void MotorTask_Init(void);
 extern void MecanumTask_Init(void);
 extern void OmniWheelTask_Init(void);
 extern void MeasureSpeedTask_Init(void);
+extern void UartTask_Init(void);
+extern void KeyTask_Init(void);
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,10 +112,12 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  MotorTask_Init();
+  //MotorTask_Init();
   //MecanumTask_Init();
   //OmniWheelTask_Init();
   //MeasureSpeedTask_Init();
+  //UartTask_Init();
+  KeyTask_Init();
   /* USER CODE END RTOS_THREADS */
 
 }
