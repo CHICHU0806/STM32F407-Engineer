@@ -6,7 +6,7 @@
 #define STARTM3508_MOTORTASK_H
 
 #pragma once
-#include "TaskBase.h"
+#include "../TaskBase.h"
 
 #ifdef __cplusplus
 class MotorTask : public TaskBase {

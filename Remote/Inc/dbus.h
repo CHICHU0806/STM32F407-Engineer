@@ -27,13 +27,13 @@ typedef struct
 
 extern DBUS_t dbus;
 
-void DBUS_Decode(volatile uint8_t* buf, int len);
+void dbus_decode(volatile uint8_t* buf, int len);
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    void dbus_decode(volatile uint8_t* buf, int len);
+    void DBUS_Decode(volatile uint8_t* buf, int len);
 
 #ifdef __cplusplus
 }

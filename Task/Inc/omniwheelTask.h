@@ -6,7 +6,7 @@
 #define STARTM3508_OMNIWHEELTASK_H
 
 #pragma once
-#include "TaskBase.h"
+#include "../TaskBase.h"
 
 #ifdef __cplusplus
 class OmniWheelTask : public TaskBase{

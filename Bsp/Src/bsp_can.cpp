@@ -16,7 +16,7 @@ motor_info motor_4;
 motor_info motor_5;
 
 //BSP_CAN相关内容初始化
-void bsp_can::BSP_CAN_Init()
+void bsp_can::bsp_can_init()
 {
     static bsp_can can;
     // 1. 配置 CAN 过滤器
@@ -159,12 +159,8 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 extern "C" {
     static bsp_can can;
 
-    void bsp_can_init() {
-        can.BSP_CAN_Init();
-    }
-
-    void bsp_can_filterconfig() {
-        can.BSP_CAN_FilterConfig();
+    void BSP_CAN_Init() {
+        can.bsp_can_init();
     }
 
     HAL_StatusTypeDef bsp_can_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {

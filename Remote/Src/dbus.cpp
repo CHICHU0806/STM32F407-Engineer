@@ -8,7 +8,7 @@
 
 DBUS_t dbus;
 
-void DBUS_Decode(volatile uint8_t* buf, int len)
+void dbus_decode(volatile uint8_t* buf, int len)
 {
     if (len != 18) return; // DBUS 一帧固定 18 字节
 
@@ -39,8 +39,8 @@ void DBUS_Decode(volatile uint8_t* buf, int len)
 
 
 extern "C" {
-    void dbus_decode(volatile uint8_t *buf, int len) {
-        DBUS_Decode(buf, len);
+    void DBUS_Decode(volatile uint8_t *buf, int len) {
+        dbus_decode(buf, len);
     }
 }
 

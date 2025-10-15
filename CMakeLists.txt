@@ -48,7 +48,7 @@ add_executable(${CMAKE_PROJECT_NAME}
         Remote/Inc/dbus.h
         Task/Src/motorTask.cpp
         Task/Inc/motorTask.h
-        Task/Inc/TaskBase.h
+        Task/TaskBase.h
         Task/Src/mecanumTask.cpp
         Task/Inc/mecanumTask.h
         Chassis/Src/mecanum.cpp
@@ -63,6 +63,12 @@ add_executable(${CMAKE_PROJECT_NAME}
         Chassis/Inc/omniwheel.h
         Task/Src/omniwheelTask.cpp
         Task/Inc/omniwheelTask.h
+        Bsp/Src/bsp_uart.cpp
+        Bsp/Inc/bsp_uart.h
+        Task/Src/uartTask.cpp
+        Task/Inc/uartTask.h
+        Task/Src/keyTask.cpp
+        Task/Inc/keyTask.h
 )
 
 # Add STM32CubeMX generated sources
@@ -89,6 +95,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         Debug-Vars
         Remote/Inc
         Remote/Src
+        Task
         Task/Inc
         Task/Src
         Chassis/Inc
