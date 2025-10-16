@@ -41,7 +41,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+uint8_t rx_buf[32];
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -103,15 +103,15 @@ int main(void)
   /* USER CODE BEGIN 2 */
   BSP_CAN_Init();
   speed_pid_clear();
+
   Uart3_Init(&huart3, DBUS_Decode);
-  char msg[] = "Hello,World!\r\n";
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
-  MX_FREERTOS_Init();
+  //MX_FREERTOS_Init();
 
   /* Start scheduler */
-  osKernelStart();
+  //osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
 
@@ -119,8 +119,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    HAL_UART_Transmit(&huart6, (uint8_t*)msg, sizeof(msg) - 1, 100);
-    HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

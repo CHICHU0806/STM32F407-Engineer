@@ -117,7 +117,7 @@ void MX_FREERTOS_Init(void) {
   //OmniWheelTask_Init();
   //MeasureSpeedTask_Init();
   //UartTask_Init();
-  KeyTask_Init();
+  //KeyTask_Init();
   /* USER CODE END RTOS_THREADS */
 
 }
