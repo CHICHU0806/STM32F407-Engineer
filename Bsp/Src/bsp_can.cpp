@@ -14,6 +14,9 @@ motor_info motor_2;
 motor_info motor_3;
 motor_info motor_4;
 motor_info motor_5;
+motor_info motor_6;
+motor_info motor_7;
+motor_info motor_8;
 
 //BSP_CAN相关内容初始化
 void bsp_can::bsp_can_init()
@@ -104,6 +107,37 @@ HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmdFive2Eight(int16_t motor5, int16_
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
+//辅助函数：更新电机累计角度
+void update_motor_total_angle(motor_info* motor, uint16_t new_ecd)
+{
+    // 首次初始化处理
+    if (!motor->inited) {
+        motor->last_angle = new_ecd;
+        motor->round_count = 0;
+        motor->total_angle = (int32_t)new_ecd;
+        motor->inited = 1;
+        return;
+    }
+
+    // 使用有符号计算差分，避免 uint16 溢出问题
+    int32_t diff = (int32_t)new_ecd - (int32_t)motor->last_angle;
+
+    // 过零检测 (当差值超过半圈认为跨了圈)
+    if (diff > 4096) {
+        // new_ecd 小， last 大 -> 实际向上跨过 0 点， round_count 增加
+        motor->round_count--;
+    }
+    else if (diff < -4096) {
+        motor->round_count++;
+    }
+
+    // 计算连续编码器读数（ticks）
+    motor->total_angle = motor->round_count * (int32_t)8192 + (int32_t)new_ecd;
+
+    // 最后更新 last_angle
+    motor->last_angle = new_ecd;
+}
+
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
     CAN_RxHeaderTypeDef RxHeader;
     uint8_t RxData[8];
@@ -147,6 +181,39 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     motor_5.rotor_speed   = ((RxData[2] << 8) | RxData[3]);
                     motor_5.torque_current= ((RxData[4] << 8) | RxData[5]);
                     motor_5.temp          =   RxData[6];
+                    update_motor_total_angle(&motor_5, motor_5.rotor_angle);
+
+                    debug_angle1 = motor_5.total_angle;
+                    break;
+                }
+                case 0x206: {
+                    motor_6.rotor_angle   = ((RxData[0] << 8) | RxData[1]);
+                    motor_6.rotor_speed   = ((RxData[2] << 8) | RxData[3]);
+                    motor_6.torque_current= ((RxData[4] << 8) | RxData[5]);
+                    motor_6.temp          =   RxData[6];
+                    update_motor_total_angle(&motor_6, motor_6.rotor_angle);
+
+                    debug_angle2 = motor_6.total_angle;
+                    break;
+                }
+                case 0x207: {
+                    motor_7.rotor_angle   = ((RxData[0] << 8) | RxData[1]);
+                    motor_7.rotor_speed   = ((RxData[2] << 8) | RxData[3]);
+                    motor_7.torque_current= ((RxData[4] << 8) | RxData[5]);
+                    motor_7.temp          =   RxData[6];
+                    update_motor_total_angle(&motor_7, motor_7.rotor_angle);
+
+                    debug_angle3 = motor_7.total_angle;
+                    break;
+                }
+                case 0x208: {
+                    motor_8.rotor_angle   = ((RxData[0] << 8) | RxData[1]);
+                    motor_8.rotor_speed   = ((RxData[2] << 8) | RxData[3]);
+                    motor_8.torque_current= ((RxData[4] << 8) | RxData[5]);
+                    motor_8.temp          =   RxData[6];
+                    update_motor_total_angle(&motor_8, motor_8.rotor_angle);
+
+                    debug_angle4 = motor_8.total_angle;
                     break;
                 }
                 default: break;

@@ -9,10 +9,16 @@
 #include "can.h"
 
 typedef struct {
+    //M3508，GM6020电机协议反馈信息
     int16_t rotor_angle;      // 电机转子角度
     int16_t rotor_speed;      // 电机转子速度
     int16_t torque_current;   // 电机转矩电流
     int8_t  temp;             // 电机温度
+
+    uint16_t last_angle;      // 上次角度
+    int16_t  total_angle;     // 累计角度
+    int32_t  round_count;     // 圈数计数
+    uint8_t  inited;          // 是否初始化标志
 } motor_info;
 
 #ifdef __cplusplus
