@@ -26,11 +26,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
 #include "bsp_can.h"
 #include "speed_pid.h"
 #include "dt7_remote.h"
 #include "dbus.h"
-#include "bsp_uart.h"
+
 
 /* USER CODE END Includes */
 
@@ -41,7 +42,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-uint8_t rx_buf[32];
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -103,15 +104,15 @@ int main(void)
   /* USER CODE BEGIN 2 */
   BSP_CAN_Init();
   speed_pid_clear();
-
+  //BSP_UART_Init(&huart6, NULL);
   Uart3_Init(&huart3, DBUS_Decode);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
-  //MX_FREERTOS_Init();
+  MX_FREERTOS_Init();
 
   /* Start scheduler */
-  //osKernelStart();
+  osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
 
@@ -119,6 +120,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    bsp_can_sendmotorcmd(1000, 1000, 1000, 1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

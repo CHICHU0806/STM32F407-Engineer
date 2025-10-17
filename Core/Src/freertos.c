@@ -29,8 +29,8 @@ extern void MotorTask_Init(void);
 extern void MecanumTask_Init(void);
 extern void OmniWheelTask_Init(void);
 extern void MeasureSpeedTask_Init(void);
-extern void UartTask_Init(void);
 extern void KeyTask_Init(void);
+extern void SwerveTask_Init(void);
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -112,11 +112,20 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+  //电机驱动任务
   //MotorTask_Init();
+
+  //各类底盘任务
   //MecanumTask_Init();
   //OmniWheelTask_Init();
+  SwerveTask_Init();
+
+  //弹速测量任务
   //MeasureSpeedTask_Init();
-  //UartTask_Init();
+
+  //串口通信任务
+
+  //按键任务
   //KeyTask_Init();
   /* USER CODE END RTOS_THREADS */
 
