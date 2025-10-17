@@ -12,6 +12,8 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -63,12 +65,18 @@ add_executable(${CMAKE_PROJECT_NAME}
         Chassis/Inc/omniwheel.h
         Task/Src/omniwheelTask.cpp
         Task/Inc/omniwheelTask.h
-        Bsp/Src/bsp_uart.cpp
-        Bsp/Inc/bsp_uart.h
-        Task/Src/uartTask.cpp
-        Task/Inc/uartTask.h
         Task/Src/keyTask.cpp
         Task/Inc/keyTask.h
+        Algorithm/Src/CRC16.cpp
+        Algorithm/Inc/CRC16.h
+        Algorithm/Src/CRC8.cpp
+        Algorithm/Inc/CRC8.h
+        Message_Bus/message_bus.cpp
+        Message_Bus/message_bus.h
+        Chassis/Src/swerve.cpp
+        Chassis/Inc/swerve.h
+        Task/Src/swerveTask.cpp
+        Task/Inc/swerveTask.h
 )
 
 # Add STM32CubeMX generated sources
@@ -100,6 +108,9 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         Task/Src
         Chassis/Inc
         Chassis/Src
+        Algorithm/Inc
+        Algorithm/Src
+        Message_Bus
 )
 
 # Add project symbols (macros)
