@@ -104,8 +104,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   BSP_CAN_Init();
   speed_pid_clear();
-  //BSP_UART_Init(&huart6, NULL);
-  Uart3_Init(&huart3, DBUS_Decode);
+  Uart_Init(&huart3, DBUS_Decode);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

@@ -27,7 +27,7 @@ int32_t AnglePID::handleZeroCross(int32_t target, int32_t current) {
 // C接口封装
 extern "C" {
     //static AnglePID angle_pid(2.0f, 0.0f, 0.1f, 5000.0f, 5000.0f);
-    static AnglePID angle_pid(10.0f, 0.8f, 0.08f, 5000.0f, 5000.0f);
+    static AnglePID angle_pid(15.0f, 0.8f, 0.08f, 5000.0f, 5000.0f);
 
     void angle_pid_clear() {
         angle_pid.Clear();

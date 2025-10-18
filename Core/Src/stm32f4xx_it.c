@@ -233,7 +233,7 @@ void USART3_IRQHandler(void)
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */
-  Uart3_IRQHandler(&huart3);
+  Uart_IRQHandler(&huart3);
   /* USER CODE END USART3_IRQn 1 */
 }
 
@@ -275,16 +275,13 @@ void USART6_IRQHandler(void)
   /* USER CODE END USART6_IRQn 0 */
   HAL_UART_IRQHandler(&huart6);
   /* USER CODE BEGIN USART6_IRQn 1 */
-  //BSP_UART_IRQHandler(&huart6);
+
   /* USER CODE END USART6_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-  if (huart->Instance == USART6)
-  {
-    //BSP_UART_TxCpltHandler(huart);
-  }
+
 }
 /* USER CODE END 1 */
