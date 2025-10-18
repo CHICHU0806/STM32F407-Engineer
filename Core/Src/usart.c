@@ -56,6 +56,8 @@ void MX_USART3_UART_Init(void)
   }
   /* USER CODE BEGIN USART3_Init 2 */
   __HAL_UART_ENABLE_IT(&huart3, UART_IT_IDLE);
+  extern DMA_HandleTypeDef hdma_usart3_rx; // CubeMX 生成
+  huart3.hdmarx = &hdma_usart3_rx;
   /* USER CODE END USART3_Init 2 */
 
 }
