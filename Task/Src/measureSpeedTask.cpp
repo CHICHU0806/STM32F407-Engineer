@@ -29,7 +29,6 @@ void MeasureSpeedTask::run() {;
     speed_pid4.Clear();
 
     for (;;) {
-
         motor1_cmd = speed_pid1.Calculate(2000, motor_1.rotor_speed, 0.005f);
         motor2_cmd = speed_pid2.Calculate(-2000, motor_2.rotor_speed, 0.005f);
         motor3_cmd = speed_pid3.Calculate(4700, motor_3.rotor_speed, 0.005f);

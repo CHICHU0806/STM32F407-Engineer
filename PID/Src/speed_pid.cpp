@@ -6,7 +6,7 @@
 
 // C接口封装
 extern "C" {
-    static SpeedPID speed_pid(0.7f, 0.01f, 0.001f, 5000.0f, 200.0f);
+    static SpeedPID speed_pid(0.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
 
     void speed_pid_clear() {
         speed_pid.Clear();

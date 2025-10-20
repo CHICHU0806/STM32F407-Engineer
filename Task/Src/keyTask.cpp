@@ -15,12 +15,12 @@ void KeyTask::run() {;
     for (;;) {
         if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET)
         {
-            int16_t pushout = speed_pid_calculate(750, motor_5.rotor_speed, 0.01f);
+            int16_t pushout = speed_pid_calculate(1500, motor_5.rotor_speed, 0.01f);
             bsp_can_sendmotorcmdfive2eight(pushout, 0, 0, 0);
             osDelay(10);
         }
         else {
-            int16_t pushout = speed_pid_calculate(-750, motor_5.rotor_speed, 0.01f);
+            int16_t pushout = speed_pid_calculate(-850, motor_5.rotor_speed, 0.01f);
             bsp_can_sendmotorcmdfive2eight(pushout, 0, 0, 0);
             osDelay(10);
         }
