@@ -10,7 +10,7 @@
 
 extern motor_info motor_5;
 
-SpeedPID key_speed_pid(0.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
+SpeedPID key_speed_pid(1.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
 
 void KeyTask::run() {;
 

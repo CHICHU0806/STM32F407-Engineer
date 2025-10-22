@@ -107,13 +107,13 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 256);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 512);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL );
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   //电机驱动任务
-  MotorTask_Init();
+  //MotorTask_Init();
 
   //各类底盘任务
   //MecanumTask_Init();
@@ -121,12 +121,12 @@ void MX_FREERTOS_Init(void) {
   //SwerveTask_Init();
 
   //弹速测量任务
-  //MeasureSpeedTask_Init();
+  MeasureSpeedTask_Init();
 
   //串口通信任务
 
   //按键任务
-  //KeyTask_Init();
+  KeyTask_Init();
   /* USER CODE END RTOS_THREADS */
 
 }

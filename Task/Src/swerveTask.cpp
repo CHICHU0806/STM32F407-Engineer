@@ -12,10 +12,10 @@
 #include <cmath>
 
 // ---- 四个驱动电机 (M3508) ----
-motor_info motor_drive_fl;
-motor_info motor_drive_fr;
-motor_info motor_drive_rr;
-motor_info motor_drive_rl;
+extern motor_info motor_1;
+extern motor_info motor_2;
+extern motor_info motor_3;
+extern motor_info motor_4;
 
 // ---- 四个舵向电机 (GM6020) ----'
 extern motor_info motor_5;
@@ -57,10 +57,10 @@ void SwerveTask::run() {
         //——————————电机部分——————————
         int16_t V = dbus.ch[3]* 3;  // 目标速度
 
-        int16_t drive_cmd_rl = speed_pid_calculate(-V, motor_5.rotor_speed, 0.005f);
-        int16_t drive_cmd_fl = speed_pid_calculate(-V, motor_6.rotor_speed, 0.005f);
-        int16_t drive_cmd_fr = speed_pid_calculate(-V, motor_7.rotor_speed, 0.005f);
-        int16_t drive_cmd_rr = speed_pid_calculate(-V, motor_8.rotor_speed, 0.005f);
+        int16_t drive_cmd_rl = speed_pid_calculate(-V, motor_1.rotor_speed, 0.005f);
+        int16_t drive_cmd_fl = speed_pid_calculate(-V, motor_2.rotor_speed, 0.005f);
+        int16_t drive_cmd_fr = speed_pid_calculate(-V, motor_3.rotor_speed, 0.005f);
+        int16_t drive_cmd_rr = speed_pid_calculate(-V, motor_4.rotor_speed, 0.005f);
 
 
         // ---------- 发送 ----------
