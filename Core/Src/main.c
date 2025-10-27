@@ -103,7 +103,6 @@ int main(void)
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
   BSP_CAN_Init();
-  speed_pid_clear();
   Uart_Init(&huart3, DBUS_Decode);
   /* USER CODE END 2 */
 
@@ -119,7 +118,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    bsp_can_sendmotorcmd(1000, 1000, 1000, 1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

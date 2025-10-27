@@ -118,15 +118,15 @@ void MX_FREERTOS_Init(void) {
   //各类底盘任务
   //MecanumTask_Init();
   //OmniWheelTask_Init();
-  //SwerveTask_Init();
+  SwerveTask_Init();
 
   //弹速测量任务
-  MeasureSpeedTask_Init();
+  //MeasureSpeedTask_Init();
 
   //串口通信任务
 
   //按键任务
-  KeyTask_Init();
+  //KeyTask_Init();
   /* USER CODE END RTOS_THREADS */
 
 }
