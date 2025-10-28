@@ -24,11 +24,11 @@ extern motor_info motor_7;
 extern motor_info motor_8;
 
 //舵pid
-AnglePID Servo_angle_pid(15.0f, 0.8f, 0.08f, 5000.0f, 5000.0f);
-SpeedPID Servo_speed_pid(0.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
+AnglePID Servo_angle_pid(15.0f, 0.05f, 0.005f, 5000.0f, 5000.0f);
+SpeedPID Servo_speed_pid(1.5f, 0.005f, 0.0001f, 5000.0f, 200.0f);
 
 //电机pid
-SpeedPID Drive_speed_pid(0.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
+SpeedPID Drive_speed_pid(1.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
 
 void SwerveTask::run() {
     for (;;) {
@@ -60,19 +60,18 @@ void SwerveTask::run() {
 
 
         //——————————电机部分——————————
-        int16_t V = dbus.ch[3]* 3;  // 目标速度
+        int16_t V = dbus.ch[3]* 6;  // 目标速度
 
         int16_t drive_cmd_rl = Drive_speed_pid.Calculate(-V, motor_1.rotor_speed, 0.005f);
-        //int16_t drive_cmd_fl = speed_pid_calculate(-V, motor_2.rotor_speed, 0.005f);
-        //int16_t drive_cmd_fr = speed_pid_calculate(-V, motor_3.rotor_speed, 0.005f);
-        //int16_t drive_cmd_rr = speed_pid_calculate(-V, motor_4.rotor_speed, 0.005f);
+        int16_t drive_cmd_fl = Drive_speed_pid.Calculate(-V, motor_2.rotor_speed, 0.005f);
+        int16_t drive_cmd_fr = Drive_speed_pid.Calculate(-V, motor_3.rotor_speed, 0.005f);
+        int16_t drive_cmd_rr = Drive_speed_pid.Calculate(-V, motor_4.rotor_speed, 0.005f);
 
 
         // ---------- 发送 ----------
          bsp_can_sendmotorcmdfive2eight(cmd_rl, cmd_fl, cmd_fr, cmd_rr);
-         //bsp_can_sendmotorcmd(drive_cmd_rl, drive_cmd_fl, drive_cmd_fr, drive_cmd_rr);
-        bsp_can_sendmotorcmd(drive_cmd_rl,0,0,0);
-
+         bsp_can_sendmotorcmd(drive_cmd_rl, drive_cmd_fl, drive_cmd_fr, drive_cmd_rr);
+        bsp_can_sendmotorcmdnine2eleven(5000,0,0);
         osDelay(5);
     }
 }
