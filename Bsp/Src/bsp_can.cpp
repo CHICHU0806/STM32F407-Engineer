@@ -17,6 +17,7 @@ motor_info motor_5;
 motor_info motor_6;
 motor_info motor_7;
 motor_info motor_8;
+motor_info motor_9;
 
 //BSP_CAN相关内容初始化
 void bsp_can::bsp_can_init()
@@ -102,6 +103,30 @@ HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmdFive2Eight(int16_t motor5, int16_
     TxData[5] = motor7;
     TxData[6] = motor8 >> 8;
     TxData[7] = motor8;
+
+    //将信息推送到邮箱
+    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+}
+
+HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11) {
+    //三要素：帧头，数据，邮箱
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t TxData[8];
+    uint32_t TxMailbox;
+
+    //帧头组成
+    TxHeader.StdId = 0x2FF; //标准标识符
+    TxHeader.IDE = CAN_ID_STD;
+    TxHeader.RTR = CAN_RTR_DATA;
+    TxHeader.DLC = 8;
+
+    //数据填充
+    TxData[0] = motor9 >> 8;
+    TxData[1] = motor9;
+    TxData[2] = motor10 >> 8;
+    TxData[3] = motor10;
+    TxData[4] = motor11 >> 8;
+    TxData[5] = motor11;
 
     //将信息推送到邮箱
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
@@ -216,6 +241,13 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     debug_angle4 = motor_8.total_angle;
                     break;
                 }
+                case 0x209: {
+                    motor_9.rotor_angle   = ((RxData[0] << 8) | RxData[1]);
+                    motor_9.rotor_speed   = ((RxData[2] << 8) | RxData[3]);
+                    motor_9.torque_current= ((RxData[4] << 8) | RxData[5]);
+                    motor_9.temp          =   RxData[6];
+                    break;
+                }
                 default: break;
             }
         }
@@ -236,5 +268,9 @@ extern "C" {
 
     HAL_StatusTypeDef bsp_can_sendmotorcmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
         return can.BSP_CAN_SendMotorCmdFive2Eight(motor5, motor6, motor7, motor8);
+    }
+
+    HAL_StatusTypeDef bsp_can_sendmotorcmdnine2eleven(int16_t motor9,int16_t motor10,int16_t motor11) {
+        return can.BSP_CAN_SendMotorCmdNine2Eleven(motor9,motor10,motor11);
     }
 }
