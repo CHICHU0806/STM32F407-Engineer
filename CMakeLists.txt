@@ -77,6 +77,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         Chassis/Inc/swerve.h
         Task/Src/swerveTask.cpp
         Task/Inc/swerveTask.h
+        Task/Src/targetCarTask.cpp
+        Task/Inc/targetCarTask.h
 )
 
 # Add STM32CubeMX generated sources

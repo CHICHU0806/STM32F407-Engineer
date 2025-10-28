@@ -31,6 +31,7 @@ extern void OmniWheelTask_Init(void);
 extern void MeasureSpeedTask_Init(void);
 extern void KeyTask_Init(void);
 extern void SwerveTask_Init(void);
+extern void TargetCarTask_Init(void);
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -107,7 +108,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 512);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 512);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL );
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -119,6 +120,7 @@ void MX_FREERTOS_Init(void) {
   //MecanumTask_Init();
   //OmniWheelTask_Init();
   SwerveTask_Init();
+  //TargetCarTask_Init();
 
   //弹速测量任务
   //MeasureSpeedTask_Init();
