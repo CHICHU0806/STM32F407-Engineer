@@ -25,16 +25,23 @@ public:
     static void IRQHandler(UART_HandleTypeDef* huart);
 
     // 可在需要时查询实例（例如测试）
-    static DT7Dma* GetInstance(UART_HandleTypeDef* huart) { return findInstance(huart); }
+    static DT7Dma* GetInstance(UART_HandleTypeDef* huart) {
+        return findInstance(huart);
+    }
 
+    // 通过 DMA 发送数据
+    HAL_StatusTypeDef Transmit_DMA(const uint8_t* data, uint16_t len);
 
 private:
     UART_HandleTypeDef* huart_;
     DecodeCallback decode_cb_;  // 回调函数指针
 
+    //接收相关
     volatile uint8_t rx_buf_[2][UART_RX_BUF_LEN] = {0};
     int rx_data_len_;
     uint8_t callback_busy_ = 0;
+
+    volatile uint8_t  tx_busy_ = 0;
 
     static inline DT7Dma* instances_[DT7DMA_MAX_INSTANCES] = { nullptr };
 
@@ -42,9 +49,9 @@ private:
     static int registerInstance(DT7Dma* inst);
     static DT7Dma* findInstance(UART_HandleTypeDef* huart);
 
-    void Remote_Init();
+    void Init();
     void uartRxIdleCallback();
-
+    void uartTxCpltCallback();
     void dmaM0RxCpltCallback();
     void dmaM1RxCpltCallback();
 
@@ -67,6 +74,10 @@ extern "C" {
 
     // IRQHandler，供 stm32f4xx_it.c 调用
     void Uart_IRQHandler(UART_HandleTypeDef* huart);
+
+    HAL_StatusTypeDef Uart_Transmit_DMA(UART_HandleTypeDef* huart,
+                                     const uint8_t* data,
+                                     uint16_t len);
 
 #ifdef __cplusplus
 }

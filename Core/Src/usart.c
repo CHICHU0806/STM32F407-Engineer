@@ -86,7 +86,9 @@ void MX_USART6_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART6_Init 2 */
-
+  __HAL_UART_ENABLE_IT(&huart6, UART_IT_IDLE);
+  extern DMA_HandleTypeDef hdma_usart6_rx; // CubeMX 生成
+  huart6.hdmarx = &hdma_usart6_rx;
   /* USER CODE END USART6_Init 2 */
 
 }

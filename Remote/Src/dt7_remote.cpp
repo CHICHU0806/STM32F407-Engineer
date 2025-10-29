@@ -7,7 +7,7 @@ DT7Dma::DT7Dma(UART_HandleTypeDef* huart, DecodeCallback cb)
     int idx = registerInstance(this);
     (void)idx;
 
-    Remote_Init();
+    Init();
 }
 
 int DT7Dma::registerInstance(DT7Dma* inst) {
@@ -28,8 +28,9 @@ DT7Dma* DT7Dma::findInstance(UART_HandleTypeDef* huart) {
     return nullptr;
 }
 
-void DT7Dma::Remote_Init()
+void DT7Dma::Init()
 {
+    /* ========= 接收 DMA 初始化 ========= */
     __HAL_UART_CLEAR_IDLEFLAG(huart_);
     __HAL_UART_ENABLE_IT(huart_, UART_IT_IDLE);
     SET_BIT(huart_->Instance->CR3, USART_CR3_DMAR);
@@ -39,19 +40,40 @@ void DT7Dma::Remote_Init()
                                 (uint32_t)rx_buf_[0],
                                 (uint32_t)rx_buf_[1],
                                 UART_RX_BUF_LEN);
+
+    /* ========= 发送 DMA 初始化 ========= */
+    SET_BIT(huart_->Instance->CR3, USART_CR3_DMAT);  // 允许 DMA 发送
 }
 
 void DT7Dma::IRQHandler(UART_HandleTypeDef* huart)
 {
     DT7Dma* inst = findInstance(huart);
-    if (inst && inst->callback_busy_ == 0)
+    if (!inst) {
+        return;
+    }
+
+    //接收
+    if (__HAL_UART_GET_FLAG(huart, UART_FLAG_IDLE) &&
+        __HAL_UART_GET_IT_SOURCE(huart, UART_IT_IDLE))
     {
-        if (__HAL_UART_GET_FLAG(huart, UART_FLAG_IDLE) &&
-            __HAL_UART_GET_IT_SOURCE(huart, UART_IT_IDLE))
-        {
+        if (inst->callback_busy_ == 0) {
             inst->uartRxIdleCallback();
         }
     }
+
+    //发送
+    if (__HAL_UART_GET_FLAG(huart, UART_FLAG_TC) &&
+        __HAL_UART_GET_IT_SOURCE(huart, UART_IT_TC))
+    {
+        inst->uartTxCpltCallback();
+    }
+}
+
+HAL_StatusTypeDef DT7Dma::Transmit_DMA(const uint8_t* data, uint16_t len)
+{
+    if (tx_busy_) return HAL_BUSY;
+    tx_busy_ = 1;
+    return HAL_UART_Transmit_DMA(huart_, data, len);
 }
 
 void DT7Dma::uartRxIdleCallback()
@@ -72,6 +94,11 @@ void DT7Dma::uartRxIdleCallback()
     __HAL_DMA_ENABLE(huart_->hdmarx);
 
     callback_busy_ = 0;
+}
+
+void DT7Dma::uartTxCpltCallback()
+{
+    tx_busy_ = 0;
 }
 
 void DT7Dma::dmaM0RxCpltCallback()
@@ -158,5 +185,12 @@ extern "C"{
     void Uart_IRQHandler(UART_HandleTypeDef* huart)
     {
         DT7Dma::IRQHandler(huart);
+    }
+
+    HAL_StatusTypeDef Uart_Transmit_DMA(UART_HandleTypeDef* huart, const uint8_t* data, uint16_t len)
+    {
+        DT7Dma* inst = DT7Dma::GetInstance(huart);
+        if (!inst) return HAL_ERROR;
+        return inst->Transmit_DMA(data, len);
     }
 }
