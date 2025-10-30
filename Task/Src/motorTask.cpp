@@ -8,12 +8,18 @@
 #include "angle_pid.h"
 #include "dbus.h"
 #include "debug_vars.h"
+#include "usart.h"
+#include "usart_decode.h"
+#include "dt7_remote.h"
+
 
 void MotorTask::run() {
-
+    static uint8_t frame[16];
+    uint8_t payload[3] = {0x55, 0x66, 0x77};
     for (;;) {
-        bsp_can_sendmotorcmdnine2eleven(5000, 5000, 1000);
-        osDelay(10);
+        uint8_t len = proto6.buildFrame(frame, 0x02, payload, 3);
+        Uart_Transmit_DMA(&huart6, frame, len);
+        osDelay(500);
     }
 }
 
