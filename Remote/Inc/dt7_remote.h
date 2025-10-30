@@ -68,13 +68,14 @@ private:
 extern "C" {
 #endif
 
-    // 初始化 USART3 DMA 双缓冲接收
+    // 初始化 USART DMA 双缓冲接收
     void Uart_Init(UART_HandleTypeDef* huart,
                     void (*decode_func)(volatile uint8_t* buf, int len));
 
     // IRQHandler，供 stm32f4xx_it.c 调用
     void Uart_IRQHandler(UART_HandleTypeDef* huart);
 
+    // 通过 DMA 发送数据
     HAL_StatusTypeDef Uart_Transmit_DMA(UART_HandleTypeDef* huart,
                                      const uint8_t* data,
                                      uint16_t len);

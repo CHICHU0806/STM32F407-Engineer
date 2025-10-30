@@ -21,7 +21,9 @@ int DT7Dma::registerInstance(DT7Dma* inst) {
 }
 
 DT7Dma* DT7Dma::findInstance(UART_HandleTypeDef* huart) {
-    if (!huart) return nullptr;
+    if (!huart) {
+        return nullptr;
+    }
     for (int i = 0; i < DT7DMA_MAX_INSTANCES; ++i) {
         if (instances_[i] && instances_[i]->huart_ == huart) return instances_[i];
     }
@@ -190,7 +192,11 @@ extern "C"{
     HAL_StatusTypeDef Uart_Transmit_DMA(UART_HandleTypeDef* huart, const uint8_t* data, uint16_t len)
     {
         DT7Dma* inst = DT7Dma::GetInstance(huart);
-        if (!inst) return HAL_ERROR;
+
+        if (!inst) {
+            return HAL_ERROR;
+        }
+
         return inst->Transmit_DMA(data, len);
     }
 }
