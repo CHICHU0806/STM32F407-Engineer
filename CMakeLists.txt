@@ -79,6 +79,12 @@ add_executable(${CMAKE_PROJECT_NAME}
         Task/Inc/swerveTask.h
         Task/Src/targetCarTask.cpp
         Task/Inc/targetCarTask.h
+        Remote/Src/usart_protocol.cpp
+        Remote/Inc/usart_protocol.h
+        Remote/Src/usart_decode.cpp
+        Remote/Inc/usart_decode.h
+        Task/Src/masterBoardTask.cpp
+        Task/Inc/masterBoardTask.h
 )
 
 # Add STM32CubeMX generated sources
