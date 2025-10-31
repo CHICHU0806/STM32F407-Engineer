@@ -104,7 +104,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   BSP_CAN_Init();
   Uart_Init(&huart3, DBUS_Decode);
-  Uart_Init(&huart6, MyUartCallback);
+  Uart_Init(&huart6, NULL);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
