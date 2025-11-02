@@ -10,22 +10,22 @@
 #endif
 
 #ifndef DT7DMA_MAX_INSTANCES
-#define DT7DMA_MAX_INSTANCES 3   // 支持最多 3 个 UART/DT7Dma 实例（可按需调整）
+#define DT7DMA_MAX_INSTANCES 3   // 支持最多 3 个 UART/UsartDma 实例（可按需调整）
 #endif
 
 #ifdef __cplusplus
-class DT7Dma
+class UsartDma
 {
 public:
     using DecodeCallback = void (*)(volatile uint8_t* buf, int len);
 
-    DT7Dma(UART_HandleTypeDef* huart, DecodeCallback cb);
+    UsartDma(UART_HandleTypeDef* huart, DecodeCallback cb);
 
     // IRQHandler 在 USART3_IRQHandler() 中调用
     static void IRQHandler(UART_HandleTypeDef* huart);
 
     // 可在需要时查询实例（例如测试）
-    static DT7Dma* GetInstance(UART_HandleTypeDef* huart) {
+    static UsartDma* GetInstance(UART_HandleTypeDef* huart) {
         return findInstance(huart);
     }
 
@@ -43,11 +43,11 @@ private:
 
     volatile uint8_t  tx_busy_ = 0;
 
-    static inline DT7Dma* instances_[DT7DMA_MAX_INSTANCES] = { nullptr };
+    static inline UsartDma* instances_[DT7DMA_MAX_INSTANCES] = { nullptr };
 
     // 注册 / 查找（在 cpp 中实现）
-    static int registerInstance(DT7Dma* inst);
-    static DT7Dma* findInstance(UART_HandleTypeDef* huart);
+    static int registerInstance(UsartDma* inst);
+    static UsartDma* findInstance(UART_HandleTypeDef* huart);
 
     void Init();
     void uartRxIdleCallback();
