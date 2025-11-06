@@ -11,15 +11,16 @@
 #include "usart.h"
 #include "usart_decode.h"
 #include "dt7_remote.h"
+#include "message_bus.h"
 
+extern motor_info motor_1;
 
 void MotorTask::run() {
-    static uint8_t frame[16];
-    uint8_t payload[3] = {0x55, 0x66, 0x77};
+    int output = 0;
     for (;;) {
-        uint8_t len = proto6.buildFrame(frame, 0x02, payload, 3);
-        Uart_Transmit_DMA(&huart6, frame, len);
-        osDelay(500);
+        output = speed_pid_calculate(motorCmd.target_speed,motor_1.rotor_speed ,0.05);
+        bsp_can_sendmotorcmd(output,0,0,0);
+        osDelay(5);
     }
 }
 
