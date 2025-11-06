@@ -3,3 +3,5 @@
 //
 
 #include "message_bus.h"
+
+MotorCmd motorCmd;
