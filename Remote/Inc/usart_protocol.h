@@ -16,7 +16,7 @@ class UartProtocol
 public:
     static constexpr uint8_t FRAME_HEAD_1 = 0xFE;
     static constexpr uint8_t FRAME_HEAD_2 = 0xEF;
-    static constexpr uint8_t FRAME_MAX_LEN = 64;
+    static constexpr uint8_t FRAME_MAX_LEN = 32;
 
     using FrameCallback = std::function<void(uint8_t frame_type, const uint8_t* payload, uint8_t len)>;
 

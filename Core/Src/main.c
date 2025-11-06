@@ -27,6 +27,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
+#include <string.h>
+
 #include "bsp_can.h"
 #include "speed_pid.h"
 #include "dt7_remote.h"
@@ -104,7 +106,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   BSP_CAN_Init();
   Uart_Init(&huart3, DBUS_Decode);
-  Uart_Init(&huart6, NULL);
+  Uart_Init(&huart6, MyUartCallback);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

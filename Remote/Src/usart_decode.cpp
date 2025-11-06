@@ -7,9 +7,14 @@
 #include "dt7_remote.h"
 #include "usart.h"
 #include "stdio.h"
+#include "string.h"
+#include "message_bus.h"
+#include "debug_vars.h"
+
 
 UartProtocol proto6(nullptr);
 UartDecoder decoder6(proto6);
+bool motor_cmd_triggered = false;
 
 UartDecoder::UartDecoder(UartProtocol& proto) {
     // 注册回调，让协议层在解出帧后自动调用 onFrame
@@ -30,11 +35,14 @@ void UartDecoder::onFrame(uint8_t type, const uint8_t* data, uint8_t len)
 
 void UartDecoder::handleMotorCmd(const uint8_t* data, uint8_t len)
 {
+    motor_cmd_triggered = true;
     if (len == 0 ) return;
-    uint8_t frame[32];  // 足够大以容纳回显数据
-    uint8_t sendLen = proto6.buildFrame(frame, 0x81, data, len); // 0x81 表示回显类型
-
-    Uart_Transmit_DMA(&huart6, frame, sendLen);  // 通过串口6发送
+    // //处理电机命令
+    float speed = 0.0f;
+    memcpy(&speed, data, sizeof(float));
+    debug_P = speed; // 用于调试观察
+    motorCmd.target_speed = speed;
+    debug_I = motorCmd.target_speed;
 }
 
 extern "C" {
