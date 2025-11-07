@@ -67,6 +67,11 @@ uint8_t UartProtocol::calcChecksum(const uint8_t* data, uint8_t len)
 
 uint8_t UartProtocol::buildFrame(uint8_t* out_buf, uint8_t frame_type, const uint8_t* payload, uint8_t len)
 {
+    // 检查
+    if (out_buf == nullptr || (len > FRAME_MAX_LEN - 5)) {
+        return 0; // 无效帧
+    }
+
     out_buf[0] = FRAME_HEAD_1;
     out_buf[1] = FRAME_HEAD_2;
     out_buf[2] = frame_type;

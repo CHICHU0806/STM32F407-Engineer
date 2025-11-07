@@ -36,11 +36,16 @@ void UartDecoder::onFrame(uint8_t type, const uint8_t* data, uint8_t len)
 void UartDecoder::handleMotorCmd(const uint8_t* data, uint8_t len)
 {
     motor_cmd_triggered = true;
-    if (len == 0 ) return;
-    // //处理电机命令
-    float speed = 0.0f;
-    memcpy(&speed, data, sizeof(float));
-    debug_P = speed; // 用于调试观察
+    if (len < 2) return; // 至少需要2字节表示int16_t
+
+    // 小端序解析：低位在前
+    auto raw_speed = static_cast<int16_t>(data[0] | (data[1] << 8));
+
+    // 转换为 float（方便后续控制）
+    float speed = raw_speed;
+
+    // 更新全局调试与控制变量
+    debug_P = speed;
     motorCmd.target_speed = speed;
     debug_I = motorCmd.target_speed;
 }
