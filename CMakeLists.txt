@@ -44,10 +44,10 @@ add_executable(${CMAKE_PROJECT_NAME}
         PID/Inc/speed_pid.h
         Debug-Vars/debug_vars.cpp
         Debug-Vars/debug_vars.h
-        Remote/Src/dt7_remote.cpp
-        Remote/Inc/dt7_remote.h
-        Remote/Src/dbus.cpp
-        Remote/Inc/dbus.h
+        Communication/Src/dt7_remote.cpp
+        Communication/Inc/dt7_remote.h
+        Communication/Src/dbus.cpp
+        Communication/Inc/dbus.h
         Task/Src/motorTask.cpp
         Task/Inc/motorTask.h
         Task/TaskBase.h
@@ -79,10 +79,10 @@ add_executable(${CMAKE_PROJECT_NAME}
         Task/Inc/swerveTask.h
         Task/Src/targetCarTask.cpp
         Task/Inc/targetCarTask.h
-        Remote/Src/usart_protocol.cpp
-        Remote/Inc/usart_protocol.h
-        Remote/Src/usart_decode.cpp
-        Remote/Inc/usart_decode.h
+        Communication/Src/usart_protocol.cpp
+        Communication/Inc/usart_protocol.h
+        Communication/Src/usart_decode.cpp
+        Communication/Inc/usart_decode.h
         Task/Src/masterBoardTask.cpp
         Task/Inc/masterBoardTask.h
 )
@@ -109,8 +109,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         PID/Inc
         PID/Src
         Debug-Vars
-        Remote/Inc
-        Remote/Src
+        Communication/Inc
+        Communication/Src
         Task
         Task/Inc
         Task/Src

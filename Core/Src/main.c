@@ -103,6 +103,7 @@ int main(void)
   MX_CAN1_Init();
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
+  MX_CAN2_Init();
   /* USER CODE BEGIN 2 */
   BSP_CAN_Init();
   Uart_Init(&huart3, DBUS_Decode);

@@ -7,6 +7,7 @@
 
 //外部CAN句柄 如果有更多的hcan句柄同样在这里进行定义
 extern CAN_HandleTypeDef hcan1;
+extern CAN_HandleTypeDef hcan2;
 
 //创建不同电机的结构体变量
 motor_info motor_1;
@@ -30,10 +31,16 @@ void bsp_can::bsp_can_init()
     if (HAL_CAN_Start(&hcan1) != HAL_OK) {
         Error_Handler(); // 启动失败，进入错误处理
     }
+    if (HAL_CAN_Start(&hcan2) != HAL_OK) {
+        Error_Handler(); // 启动失败，进入错误处理
+    }
     // 如果有其他 CAN 外设，也在这里启动
 
     // 3. 激活 CAN 接收中断 (当 FIFO0 中有新消息时触发)
     if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK) {
+        Error_Handler(); // 激活中断失败
+    }
+    if (HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK) {
         Error_Handler(); // 激活中断失败
     }
     // 如果有其他 CAN 外设，也在这里激活中断
@@ -53,6 +60,18 @@ void bsp_can::BSP_CAN_FilterConfig() {
     sFilterConfig.FilterActivation = ENABLE;
     sFilterConfig.SlaveStartFilterBank = 14;
     HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig);
+
+    // CAN2从这里开始
+    sFilterConfig.FilterBank = 14;
+    sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+    sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+    sFilterConfig.FilterIdHigh = 0x0000;
+    sFilterConfig.FilterIdLow = 0x0000;
+    sFilterConfig.FilterMaskIdHigh = 0x0000;
+    sFilterConfig.FilterMaskIdLow = 0x0000;
+    sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+    sFilterConfig.FilterActivation = ENABLE;
+    HAL_CAN_ConfigFilter(&hcan2, &sFilterConfig);
 }
 
 //CAN命令发送函数
