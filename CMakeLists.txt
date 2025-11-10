@@ -85,6 +85,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         Communication/Inc/usart_decode.h
         Task/Src/masterBoardTask.cpp
         Task/Inc/masterBoardTask.h
+        Communication/Src/can_communication.cpp
+        Communication/Src/can_communication.h
 )
 
 # Add STM32CubeMX generated sources
