@@ -14,11 +14,12 @@
 #include "message_bus.h"
 
 extern motor_info motor_1;
+extern motor_info motor_5;
 
 void MotorTask::run() {
     int output = 0;
     for (;;) {
-        output = speed_pid_calculate(motorCmd.target_speed,motor_1.rotor_speed ,0.05);
+        output = speed_pid_calculate(motor_5.rotor_angle,motor_1.rotor_speed ,0.05);
         bsp_can_sendmotorcmd(output,0,0,0);
         osDelay(5);
     }
