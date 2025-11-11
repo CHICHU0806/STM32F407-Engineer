@@ -59,8 +59,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         PID/Inc/angle_pid.h
         PID/Inc/PidBase.h
         Bsp/magictools.h
-        Task/Src/measureSpeedTask.cpp
-        Task/Inc/measureSpeedTask.h
+        Task/Src/measureHeroFourSpeedTask.cpp
+        Task/Inc/measureHeroFourSpeedTask.h
         Chassis/Src/omniwheel.cpp
         Chassis/Inc/omniwheel.h
         Task/Src/omniwheelTask.cpp
@@ -86,7 +86,9 @@ add_executable(${CMAKE_PROJECT_NAME}
         Task/Src/masterBoardTask.cpp
         Task/Inc/masterBoardTask.h
         Communication/Src/can_communication.cpp
-        Communication/Src/can_communication.h
+        Communication/Inc/can_communication.h
+        Task/Src/measureInfantryTwoSpeedTask.cpp
+        Task/Inc/measureInfantryTwoSpeedTask.h
 )
 
 # Add STM32CubeMX generated sources

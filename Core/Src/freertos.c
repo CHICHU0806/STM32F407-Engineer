@@ -28,7 +28,8 @@
 extern void MotorTask_Init(void);
 extern void MecanumTask_Init(void);
 extern void OmniWheelTask_Init(void);
-extern void MeasureSpeedTask_Init(void);
+extern void MeasureHeroFourSpeedTask_Init(void);
+extern void MeasureInfantryTwoSpeedTask_Init(void);
 extern void KeyTask_Init(void);
 extern void SwerveTask_Init(void);
 extern void TargetCarTask_Init(void);
@@ -123,7 +124,8 @@ void MX_FREERTOS_Init(void) {
   //TargetCarTask_Init();
 
   //弹速测量任务
-  //MeasureSpeedTask_Init();
+  //MeasureHeroFourSpeedTask_Init();
+  //MeasureInfantryTwoSpeedTask_Init();
 
   //串口通信任务
 
