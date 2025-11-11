@@ -9,7 +9,7 @@
 #include "../TaskBase.h"
 
 #ifdef __cplusplus
-class MeasureSpeedTask : public TaskBase {
+class HeroMeasureSpeedTask : public TaskBase {
 public:
     void run() override;   // 继承并实现 run()
 };
@@ -20,7 +20,7 @@ public:
 extern "C" {
 #endif
 
-    void MeasureSpeedTask_Init();
+    void MeasureHeroFourSpeedTask_Init();
 
 #ifdef __cplusplus
 }

@@ -2,7 +2,7 @@
 // Created by 20852 on 2025/9/25.
 //
 
-#include "../Inc/measureSpeedTask.h"
+#include "../Inc/measureHeroFourSpeedTask.h"
 #include "bsp_can.h"
 #include "dbus.h"
 #include "speed_pid.h"
@@ -22,7 +22,7 @@ int16_t motor2_cmd = 0;
 int16_t motor3_cmd = 0;
 int16_t motor4_cmd = 0;
 
-void MeasureSpeedTask::run() {;
+void HeroMeasureSpeedTask::run() {;
     speed_pid1.Clear();
     speed_pid2.Clear();
     speed_pid3.Clear();
@@ -41,9 +41,9 @@ void MeasureSpeedTask::run() {;
 }
 
 extern "C" {
-    static MeasureSpeedTask measureSpeedTask;
+    static HeroMeasureSpeedTask measureHeroFourSpeedTask;
 
-    void MeasureSpeedTask_Init() {
-        measureSpeedTask.start((char*)"MeasureSpeedTask", 256, osPriorityNormal);
+    void MeasureHeroFourSpeedTask_Init() {
+        measureHeroFourSpeedTask.start((char*)"measureHeroFourSpeedTask", 256, osPriorityNormal);
     }
 }
