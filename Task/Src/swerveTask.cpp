@@ -60,7 +60,7 @@ void SwerveTask::run() {
 
 
         //——————————电机部分——————————
-        int16_t V = dbus.ch[3]* 6;  // 目标速度
+        int16_t V = dbus.ch[3]* 10;  // 目标速度
 
         int16_t drive_cmd_rl = Drive_speed_pid.Calculate(-V, motor_1.rotor_speed, 0.005f);
         int16_t drive_cmd_fl = Drive_speed_pid.Calculate(-V, motor_2.rotor_speed, 0.005f);
@@ -71,7 +71,6 @@ void SwerveTask::run() {
         // ---------- 发送 ----------
          bsp_can_sendmotorcmdfive2eight(cmd_rl, cmd_fl, cmd_fr, cmd_rr);
          bsp_can_sendmotorcmd(drive_cmd_rl, drive_cmd_fl, drive_cmd_fr, drive_cmd_rr);
-        bsp_can_sendmotorcmdnine2eleven(5000,0,0);
         osDelay(5);
     }
 }
