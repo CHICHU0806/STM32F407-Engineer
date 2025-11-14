@@ -13,11 +13,19 @@
 #include "dt7_remote.h"
 #include "message_bus.h"
 
+SpeedPID example_speed_pid1(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
+SpeedPID example_speed_pid2(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
+
+int16_t example_motor1_cmd = 0;
+int16_t example_motor2_cmd = 0;
+
 void MotorTask::run() {
 
     for (;;) {
-        bsp_can_sendmotorcmd(1000,1000,1000,1000);
-        bsp_can_sendmotorcmdfive2eight(3000,3000,3000,30000);
+        example_motor1_cmd = example_speed_pid1.Calculate(3000, 0, 0.005f);
+        example_motor2_cmd = example_speed_pid2.Calculate(3000, 0, 0.005f);
+
+        bsp_can_sendmotorcmd(example_motor1_cmd,example_motor2_cmd,0,0);
         osDelay(5);
     }
 }

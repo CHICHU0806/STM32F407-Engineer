@@ -28,7 +28,10 @@ AnglePID Servo_angle_pid(15.0f, 0.05f, 0.005f, 5000.0f, 5000.0f);
 SpeedPID Servo_speed_pid(1.5f, 0.005f, 0.0001f, 5000.0f, 200.0f);
 
 //电机pid
-SpeedPID Drive_speed_pid(1.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
+SpeedPID Drive_speed_pid1(1.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
+SpeedPID Drive_speed_pid2(1.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
+SpeedPID Drive_speed_pid3(1.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
+SpeedPID Drive_speed_pid4(1.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
 
 void SwerveTask::run() {
     for (;;) {
@@ -37,9 +40,9 @@ void SwerveTask::run() {
         float ref_angle = motor_6.total_angle;  // 以左前轮为基准
 
         // 固定偏差（根据标定）
-        const int32_t diff_rl = -3450;
+        const int32_t diff_rl = -3400;
         const int32_t diff_fr = -1353;
-        const int32_t diff_rr = +1402;
+        const int32_t diff_rr = +1350;
 
         int32_t target_rl = ref_angle + diff_rl;
         int32_t target_fl = ref_angle + dbus.ch[0]*0.4;
@@ -62,10 +65,10 @@ void SwerveTask::run() {
         //——————————电机部分——————————
         int16_t V = dbus.ch[3]* 10;  // 目标速度
 
-        int16_t drive_cmd_rl = Drive_speed_pid.Calculate(-V, motor_1.rotor_speed, 0.005f);
-        int16_t drive_cmd_fl = Drive_speed_pid.Calculate(-V, motor_2.rotor_speed, 0.005f);
-        int16_t drive_cmd_fr = Drive_speed_pid.Calculate(-V, motor_3.rotor_speed, 0.005f);
-        int16_t drive_cmd_rr = Drive_speed_pid.Calculate(-V, motor_4.rotor_speed, 0.005f);
+        int16_t drive_cmd_rl = Drive_speed_pid1.Calculate(-V, motor_1.rotor_speed, 0.005f);
+        int16_t drive_cmd_fl = Drive_speed_pid2.Calculate(-V, motor_2.rotor_speed, 0.005f);
+        int16_t drive_cmd_fr = Drive_speed_pid3.Calculate(-V, motor_3.rotor_speed, 0.005f);
+        int16_t drive_cmd_rr = Drive_speed_pid4.Calculate(-V, motor_4.rotor_speed, 0.005f);
 
 
         // ---------- 发送 ----------

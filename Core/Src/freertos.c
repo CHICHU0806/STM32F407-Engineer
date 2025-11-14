@@ -115,7 +115,7 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   //电机驱动任务
-  //MotorTask_Init();
+  MotorTask_Init();
 
   //各类底盘任务
   //MecanumTask_Init();
@@ -127,7 +127,7 @@ void MX_FREERTOS_Init(void) {
 
   //弹速测量任务
   //MeasureHeroFourSpeedTask_Init();
-  MeasureInfantryTwoSpeedTask_Init();
+  //MeasureInfantryTwoSpeedTask_Init();
 
   //串口通信任务
 
