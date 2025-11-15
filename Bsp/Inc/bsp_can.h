@@ -26,9 +26,9 @@ class bsp_can {
 public:
     void bsp_can_init();
     void BSP_CAN_FilterConfig();
-    HAL_StatusTypeDef BSP_CAN_SendMotorCmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
-    HAL_StatusTypeDef BSP_CAN_SendMotorCmdFive2Eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8);
-    HAL_StatusTypeDef BSP_CAN_SendMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11);
+    HAL_StatusTypeDef BSP_CAN1_SendMotorCmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
+    HAL_StatusTypeDef BSP_CAN1_SendMotorCmdFive2Eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8);
+    HAL_StatusTypeDef BSP_CAN1_SendMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11);
 };
 #endif
 
@@ -37,9 +37,9 @@ extern "C" {
 #endif
 
     void BSP_CAN_Init();
-    HAL_StatusTypeDef bsp_can_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
-    HAL_StatusTypeDef bsp_can_sendmotorcmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8);
-    HAL_StatusTypeDef bsp_can_sendmotorcmdnine2eleven(int16_t motor9,int16_t motor10,int16_t motor11);
+    HAL_StatusTypeDef bsp_can1_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
+    HAL_StatusTypeDef bsp_can1_sendmotorcmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8);
+    HAL_StatusTypeDef bsp_can1_sendmotorcmdnine2eleven(int16_t motor9,int16_t motor10,int16_t motor11);
 
 #ifdef __cplusplus
 }

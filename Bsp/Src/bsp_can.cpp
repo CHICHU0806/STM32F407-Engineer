@@ -31,51 +31,50 @@ void bsp_can::bsp_can_init()
     if (HAL_CAN_Start(&hcan1) != HAL_OK) {
         Error_Handler(); // 启动失败，进入错误处理
     }
-    // if (HAL_CAN_Start(&hcan2) != HAL_OK) {
-    //     Error_Handler(); // 启动失败，进入错误处理
-    // }
+    if (HAL_CAN_Start(&hcan2) != HAL_OK) {
+        Error_Handler(); // 启动失败，进入错误处理
+    }
     // 如果有其他 CAN 外设，也在这里启动
 
     // 3. 激活 CAN 接收中断 (当 FIFO0 中有新消息时触发)
     if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK) {
         Error_Handler(); // 激活中断失败
     }
-    // if (HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK) {
-    //     Error_Handler(); // 激活中断失败
-    // }
+    if (HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK) {
+        Error_Handler(); // 激活中断失败
+    }
     // 如果有其他 CAN 外设，也在这里激活中断
 }
 
 //CAN过滤器配置
-void bsp_can::BSP_CAN_FilterConfig() {
-    CAN_FilterTypeDef sFilterConfig;
-    sFilterConfig.FilterBank = 0;
-    sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-    sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-    sFilterConfig.FilterIdHigh = 0x0000;
-    sFilterConfig.FilterIdLow = 0x0000;
-    sFilterConfig.FilterMaskIdHigh = 0x0000;
-    sFilterConfig.FilterMaskIdLow = 0x0000;
-    sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-    sFilterConfig.FilterActivation = ENABLE;
-    sFilterConfig.SlaveStartFilterBank = 14;
-    HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig);
+void bsp_can::BSP_CAN_FilterConfig()
+{
+    CAN_FilterTypeDef filter;
 
-    // CAN2从这里开始
-    // sFilterConfig.FilterBank = 14;
-    // sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-    // sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-    // sFilterConfig.FilterIdHigh = 0x0000;
-    // sFilterConfig.FilterIdLow = 0x0000;
-    // sFilterConfig.FilterMaskIdHigh = 0x0000;
-    // sFilterConfig.FilterMaskIdLow = 0x0000;
-    // sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-    // sFilterConfig.FilterActivation = ENABLE;
-    // HAL_CAN_ConfigFilter(&hcan2, &sFilterConfig);
+    /** ------------ CAN1：过滤器 0-13 全部接收 ------------ */
+    filter.FilterActivation       = ENABLE;
+    filter.FilterMode             = CAN_FILTERMODE_IDMASK;
+    filter.FilterScale            = CAN_FILTERSCALE_32BIT;
+    filter.FilterFIFOAssignment   = CAN_FILTER_FIFO0;
+
+    filter.FilterIdHigh           = 0x0000;
+    filter.FilterIdLow            = 0x0000;
+    filter.FilterMaskIdHigh       = 0x0000;
+    filter.FilterMaskIdLow        = 0x0000;
+
+    filter.FilterBank             = 0;       // CAN1 的第一个过滤器组
+    filter.SlaveStartFilterBank   = 14;      // 14 之后给 CAN2 用
+
+    HAL_CAN_ConfigFilter(&hcan1, &filter);
+
+
+    /** ------------ CAN2：过滤器 14-27 全部接收 ------------ */
+    filter.FilterBank = 14;                 // CAN2 的第一个过滤器组
+    HAL_CAN_ConfigFilter(&hcan1, &filter);  // 注意：必须用 hcan1 配置 CAN2 过滤器
 }
 
 //CAN命令发送函数
-HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
+HAL_StatusTypeDef bsp_can::BSP_CAN1_SendMotorCmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
     uint8_t TxData[8];
@@ -98,10 +97,10 @@ HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmd(int16_t motor1, int16_t motor2, 
     TxData[7] = motor4;
 
     //将信息推送到邮箱
-    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+    return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
-HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmdFive2Eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
+HAL_StatusTypeDef bsp_can::BSP_CAN1_SendMotorCmdFive2Eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
     uint8_t TxData[8];
@@ -127,7 +126,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmdFive2Eight(int16_t motor5, int16_
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
-HAL_StatusTypeDef bsp_can::BSP_CAN_SendMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11) {
+HAL_StatusTypeDef bsp_can::BSP_CAN1_SendMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
     uint8_t TxData[8];
@@ -281,15 +280,17 @@ extern "C" {
         can.bsp_can_init();
     }
 
-    HAL_StatusTypeDef bsp_can_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
-        return can.BSP_CAN_SendMotorCmd(motor1, motor2, motor3, motor4);
+    HAL_StatusTypeDef bsp_can1_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
+        return can.BSP_CAN1_SendMotorCmd(motor1, motor2, motor3, motor4);
     }
 
-    HAL_StatusTypeDef bsp_can_sendmotorcmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
-        return can.BSP_CAN_SendMotorCmdFive2Eight(motor5, motor6, motor7, motor8);
+    HAL_StatusTypeDef bsp_can1_sendmotorcmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
+        return can.BSP_CAN1_SendMotorCmdFive2Eight(motor5, motor6, motor7, motor8);
     }
 
-    HAL_StatusTypeDef bsp_can_sendmotorcmdnine2eleven(int16_t motor9,int16_t motor10,int16_t motor11) {
-        return can.BSP_CAN_SendMotorCmdNine2Eleven(motor9,motor10,motor11);
+    HAL_StatusTypeDef bsp_can1_sendmotorcmdnine2eleven(int16_t motor9,int16_t motor10,int16_t motor11) {
+        return can.BSP_CAN1_SendMotorCmdNine2Eleven(motor9,motor10,motor11);
     }
+
+
 }
