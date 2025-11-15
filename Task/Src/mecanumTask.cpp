@@ -13,12 +13,13 @@ extern motor_info motor_1;
 extern motor_info motor_2;
 extern motor_info motor_3;
 extern motor_info motor_4;
+extern remote_control_info remote_control;
 
 void MecanumTask::run() {
     for (;;){
-        float Vx = dbus.ch[3] * 0.5f;
-        float Vy = -dbus.ch[2] * 0.5f;
-        float omega = -dbus.ch[0] * 0.5f;
+        float Vx = remote_control.X * 0.5f;
+        float Vy = -remote_control.Y * 0.5f;
+        float omega = remote_control.Z * 0.5f;
 
         auto MotorSpeeds = Mecanum(0.5f, 0.5f, 0.076f).Mecanum_Calculate(Vx, Vy, omega);
 
