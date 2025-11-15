@@ -3,6 +3,9 @@
 //
 
 #include "bsp_can.h"
+
+#include <concepts>
+
 #include "debug_vars.h"
 
 //外部CAN句柄 如果有更多的hcan句柄同样在这里进行定义
@@ -19,6 +22,8 @@ motor_info motor_6;
 motor_info motor_7;
 motor_info motor_8;
 motor_info motor_9;
+
+remote_control_info remote_control;
 
 //BSP_CAN相关内容初始化
 void bsp_can::bsp_can_init()
@@ -97,7 +102,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_SendMotorCmd(int16_t motor1, int16_t motor2,
     TxData[7] = motor4;
 
     //将信息推送到邮箱
-    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+    return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
 HAL_StatusTypeDef bsp_can::BSP_CAN1_SendMotorCmdFive2Eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
@@ -123,7 +128,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_SendMotorCmdFive2Eight(int16_t motor5, int16
     TxData[7] = motor8;
 
     //将信息推送到邮箱
-    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+    return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
 HAL_StatusTypeDef bsp_can::BSP_CAN1_SendMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11) {
@@ -145,6 +150,30 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_SendMotorCmdNine2Eleven(int16_t motor9,int16
     TxData[3] = motor10;
     TxData[4] = motor11 >> 8;
     TxData[5] = motor11;
+
+    //将信息推送到邮箱
+    return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
+}
+
+HAL_StatusTypeDef bsp_can::BSP_CAN2_SendRemoteControlCmd(int16_t X,int16_t Y,int16_t Z) {
+    //三要素：帧头，数据，邮箱
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t TxData[8];
+    uint32_t TxMailbox;
+
+    //帧头组成
+    TxHeader.StdId = 0x301; //标准标识符
+    TxHeader.IDE = CAN_ID_STD;
+    TxHeader.RTR = CAN_RTR_DATA;
+    TxHeader.DLC = 8;
+
+    //数据填充
+    TxData[0] = X >> 8;
+    TxData[1] = X;
+    TxData[2] = Y >> 8;
+    TxData[3] = Y;
+    TxData[4] = Z >> 8;
+    TxData[5] = Z;
 
     //将信息推送到邮箱
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
@@ -186,7 +215,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
     uint8_t RxData[8];
     if (HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &RxHeader, RxData) == HAL_OK) {
         // 在这里解析RxData，更新电机状态等
-        if(hcan->Instance == CAN1)
+        if(hcan->Instance == CAN2)
         {
             switch(RxHeader.StdId)
             {
@@ -269,6 +298,18 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                 default: break;
             }
         }
+        else if(hcan->Instance == CAN1) {
+            switch(RxHeader.StdId) {
+                case 0x301: {
+                    // 处理遥控器数据
+                    remote_control.X = (RxData[0] << 8) | RxData[1];
+                    remote_control.Y = (RxData[2] << 8) | RxData[3];
+                    remote_control.Z = (RxData[4] << 8) | RxData[5];
+                    break;
+                }
+                default: break;
+            }
+        }
     }
 }
 
@@ -292,5 +333,7 @@ extern "C" {
         return can.BSP_CAN1_SendMotorCmdNine2Eleven(motor9,motor10,motor11);
     }
 
-
+    HAL_StatusTypeDef bsp_can2_sendremotecontrolcmd(int16_t X,int16_t Y,int16_t Z) {
+        return can.BSP_CAN2_SendRemoteControlCmd(X,Y,Z);
+    }
 }
