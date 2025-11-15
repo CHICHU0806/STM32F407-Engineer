@@ -25,7 +25,7 @@ void MotorTask::run() {
         example_motor1_cmd = example_speed_pid1.Calculate(3000, 0, 0.005f);
         example_motor2_cmd = example_speed_pid2.Calculate(3000, 0, 0.005f);
 
-        bsp_can_sendmotorcmd(example_motor1_cmd,example_motor2_cmd,0,0);
+        bsp_can1_sendmotorcmd(example_motor1_cmd,example_motor2_cmd,0,0);
         osDelay(5);
     }
 }

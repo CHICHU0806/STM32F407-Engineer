@@ -34,7 +34,7 @@ void HeroMeasureSpeedTask::run() {;
         motor3_cmd = speed_pid3.Calculate(3600, motor_3.rotor_speed, 0.005f);
         motor4_cmd = speed_pid4.Calculate(-3600, motor_4.rotor_speed, 0.005f);
 
-        bsp_can_sendmotorcmd(motor1_cmd,motor2_cmd,motor3_cmd,motor4_cmd);
+        bsp_can1_sendmotorcmd(motor1_cmd,motor2_cmd,motor3_cmd,motor4_cmd);
 
         osDelay(5);
     }
