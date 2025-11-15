@@ -33,6 +33,8 @@ extern void MeasureInfantryTwoSpeedTask_Init(void);
 extern void KeyTask_Init(void);
 extern void SwerveTask_Init(void);
 extern void TargetCarTask_Init(void);
+extern void MasterBoardTask_Init(void);
+extern void SlaveBoardTask_Init(void);
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -115,12 +117,10 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   //电机驱动任务
-  MotorTask_Init();
+  //MotorTask_Init();
 
   //各类底盘任务
-  //MecanumTask_Init();
-
-
+  MecanumTask_Init();
   //OmniWheelTask_Init();
   //SwerveTask_Init();
   //TargetCarTask_Init();
@@ -133,6 +133,11 @@ void MX_FREERTOS_Init(void) {
 
   //按键任务
   //KeyTask_Init();
+
+  //主从板任务
+  //MasterBoardTask_Init();
+  //SlaveBoardTask_Init();
+
   /* USER CODE END RTOS_THREADS */
 
 }

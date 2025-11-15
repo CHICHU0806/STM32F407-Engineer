@@ -89,6 +89,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         Communication/Inc/can_communication.h
         Task/Src/measureInfantryTwoSpeedTask.cpp
         Task/Inc/measureInfantryTwoSpeedTask.h
+        Task/Src/slaveBoardTask.cpp
+        Task/Inc/slaveBoardTask.h
 )
 
 # Add STM32CubeMX generated sources
