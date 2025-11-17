@@ -91,6 +91,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         Task/Inc/measureInfantryTwoSpeedTask.h
         Task/Src/slaveBoardTask.cpp
         Task/Inc/slaveBoardTask.h
+        Bsp/Src/BMI088.cpp
+        Bsp/Inc/BMI088.h
 )
 
 # Add STM32CubeMX generated sources
