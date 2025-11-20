@@ -27,7 +27,4 @@ extern "C" {
 }
 #endif
 
-
-
-
 #endif //STARTM3508_MASTERBOARDTASK_H

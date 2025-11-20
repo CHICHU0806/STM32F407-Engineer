@@ -117,10 +117,10 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   //电机驱动任务
-  //MotorTask_Init();
+  MotorTask_Init();
 
   //各类底盘任务
-  MecanumTask_Init();
+  //MecanumTask_Init();
   //OmniWheelTask_Init();
   //SwerveTask_Init();
   //TargetCarTask_Init();

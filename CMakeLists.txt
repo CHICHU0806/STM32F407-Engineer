@@ -91,8 +91,15 @@ add_executable(${CMAKE_PROJECT_NAME}
         Task/Inc/measureInfantryTwoSpeedTask.h
         Task/Src/slaveBoardTask.cpp
         Task/Inc/slaveBoardTask.h
-        Bsp/Src/BMI088.cpp
-        Bsp/Inc/BMI088.h
+        BMI088/Src/BMI088driver.c
+        BMI088/Inc/BMI088driver.h
+        BMI088/Src/BMI088Middleware.c
+        BMI088/Inc/BMI088Middleware.h
+        BMI088/BMI088reg.h
+        Bsp/Src/bsp_dwt.cpp
+        Bsp/Inc/bsp_dwt.h
+        BMI088/Src/bmi088.cpp
+        BMI088/Inc/bmi088.h
 )
 
 # Add STM32CubeMX generated sources
@@ -127,6 +134,9 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         Algorithm/Inc
         Algorithm/Src
         Message_Bus
+        BMI088/Inc
+        BMI088/Src
+        BMI088
 )
 
 # Add project symbols (macros)

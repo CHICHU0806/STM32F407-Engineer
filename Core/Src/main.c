@@ -31,16 +31,18 @@
 #include <string.h>
 
 #include "bsp_can.h"
+#include "bsp_dwt.h"
 #include "speed_pid.h"
 #include "dt7_remote.h"
 #include "dbus.h"
 #include "usart_decode.h"
+#include "BMI088driver.h"
 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+float gyro[3],accel[3],temp;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -107,16 +109,18 @@ int main(void)
   MX_CAN2_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
+  DWT_Init();
   BSP_CAN_Init();
   Uart_Init(&huart3, DBUS_Decode);
   Uart_Init(&huart6, MyUartCallback);
+  BMI088_init();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
-  MX_FREERTOS_Init();
+  //MX_FREERTOS_Init();
 
   /* Start scheduler */
-  osKernelStart();
+  //osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
 
@@ -124,6 +128,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    BMI088_read(gyro,accel,&temp);
+    DWT_Delay_ms(1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
