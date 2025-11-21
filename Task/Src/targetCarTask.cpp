@@ -40,7 +40,7 @@ void TargetCarTask::run() {
         speed_output1 = speed_pid_down.Calculate(target_angle1,motor_1.rotor_speed, 0.005f);
 
         speed_output2 = speed_pid_up.Calculate(target_angle2, motor_2.rotor_speed, 0.005f);
-        bsp_can1_sendmotorcmd(speed_output1, speed_output2, 0, 0);
+        bsp_can2_sendmotorcmd(speed_output1, speed_output2, 0, 0);
         osDelay(10);
     }
 }

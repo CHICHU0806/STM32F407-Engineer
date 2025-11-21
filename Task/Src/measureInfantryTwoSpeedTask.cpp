@@ -30,7 +30,7 @@ void MeasureInfantryTwoSpeedTask::run() {
         motor11_cmd= speed_pid11.Calculate(-5000, motor_1.rotor_speed, 0.005f);
         motor22_cmd = speed_pid22.Calculate(5000, motor_2.rotor_speed, 0.005f);
 
-        bsp_can1_sendmotorcmd(motor11_cmd,0,0,0);
+        bsp_can2_sendmotorcmd(motor11_cmd,0,0,0);
 
         osDelay(5);
     }

@@ -72,8 +72,8 @@ void SwerveTask::run() {
 
 
         // ---------- 发送 ----------
-         bsp_can1_sendmotorcmdfive2eight(cmd_rl, cmd_fl, cmd_fr, cmd_rr);
-         bsp_can1_sendmotorcmd(drive_cmd_rl, drive_cmd_fl, drive_cmd_fr, drive_cmd_rr);
+         bsp_can2_sendmotorcmdfive2eight(cmd_rl, cmd_fl, cmd_fr, cmd_rr);
+         bsp_can2_sendmotorcmd(drive_cmd_rl, drive_cmd_fl, drive_cmd_fr, drive_cmd_rr);
         osDelay(5);
     }
 }

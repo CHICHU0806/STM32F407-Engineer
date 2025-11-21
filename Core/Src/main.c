@@ -21,6 +21,7 @@
 #include "cmsis_os.h"
 #include "can.h"
 #include "dma.h"
+#include "i2c.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -37,12 +38,12 @@
 #include "dbus.h"
 #include "usart_decode.h"
 #include "BMI088driver.h"
-
+#include "ist8310driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-float gyro[3],accel[3],temp;
+//float gyro[3], accel[3], temp, mag[3];
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -108,19 +109,21 @@ int main(void)
   MX_USART6_UART_Init();
   MX_CAN2_Init();
   MX_SPI1_Init();
+  MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
-  DWT_Init();
+  BSP_DWT_Init();
   BSP_CAN_Init();
   Uart_Init(&huart3, DBUS_Decode);
   Uart_Init(&huart6, MyUartCallback);
-  BMI088_init();
+  // BMI088_init();
+  // ist8310_init();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
-  //MX_FREERTOS_Init();
+  MX_FREERTOS_Init();
 
   /* Start scheduler */
-  //osKernelStart();
+  osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
 
@@ -128,7 +131,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    BMI088_read(gyro,accel,&temp);
+    // BMI088_read(gyro, accel,&temp);
+    // ist8310_read_mag(mag);
     DWT_Delay_ms(1);
     /* USER CODE END WHILE */
 

@@ -98,8 +98,14 @@ add_executable(${CMAKE_PROJECT_NAME}
         BMI088/BMI088reg.h
         Bsp/Src/bsp_dwt.cpp
         Bsp/Inc/bsp_dwt.h
-        BMI088/Src/bmi088.cpp
-        BMI088/Inc/bmi088.h
+        IST8310/Src/ist8310driver_middleware.c
+        IST8310/Inc/ist8310driver.h
+        IST8310/Src/ist8310driver.c
+        IST8310/Inc/ist8310driver_middleware.h
+        Algorithm/Src/attitude_ekf.cpp
+        Algorithm/Inc/attitude_ekf.h
+        Task/Src/imuTask.cpp
+        Task/Inc/imuTask.h
 )
 
 # Add STM32CubeMX generated sources
@@ -137,6 +143,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         BMI088/Inc
         BMI088/Src
         BMI088
+        IST8310/Inc
+        IST8310/Src
 )
 
 # Add project symbols (macros)
