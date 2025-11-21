@@ -32,10 +32,14 @@ class bsp_can {
 public:
     void bsp_can_init();
     void BSP_CAN_FilterConfig();
-    HAL_StatusTypeDef BSP_CAN1_SendMotorCmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
-    HAL_StatusTypeDef BSP_CAN1_SendMotorCmdFive2Eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8);
-    HAL_StatusTypeDef BSP_CAN1_SendMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11);
-    HAL_StatusTypeDef BSP_CAN2_SendRemoteControlCmd(int16_t X,int16_t Y,int16_t Z);
+    HAL_StatusTypeDef BSP_CAN2_SendMotorCmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
+    HAL_StatusTypeDef BSP_CAN2_SendMotorCmdFive2Eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8);
+    HAL_StatusTypeDef BSP_CAN2_SendMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11);
+    HAL_StatusTypeDef BSP_CAN1_SendRemoteControlCmd(int16_t X,int16_t Y,int16_t Z);
+
+    HAL_StatusTypeDef BSP_CAN1_LKMotorCloseCmd();
+    HAL_StatusTypeDef BSP_CAN1_LKMotorStartCmd();
+    HAL_StatusTypeDef BSP_CAN1_LKMotorCurrentCmd(int16_t current);
 };
 #endif
 
@@ -44,10 +48,18 @@ extern "C" {
 #endif
 
     void BSP_CAN_Init();
-    HAL_StatusTypeDef bsp_can1_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
-    HAL_StatusTypeDef bsp_can1_sendmotorcmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8);
-    HAL_StatusTypeDef bsp_can1_sendmotorcmdnine2eleven(int16_t motor9,int16_t motor10,int16_t motor11);
-    HAL_StatusTypeDef bsp_can2_sendremotecontrolcmd(int16_t X,int16_t Y,int16_t Z);
+
+    //DJI Motor CAN发送函数接口
+    HAL_StatusTypeDef bsp_can2_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
+    HAL_StatusTypeDef bsp_can2_sendmotorcmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8);
+    HAL_StatusTypeDef bsp_can2_sendmotorcmdnine2eleven(int16_t motor9,int16_t motor10,int16_t motor11);
+    HAL_StatusTypeDef bsp_can1_sendremotecontrolcmd(int16_t X,int16_t Y,int16_t Z);
+
+    //LK motor CAN发送函数接口
+    HAL_StatusTypeDef bsp_can1_lkmotorclosecmd();
+    HAL_StatusTypeDef bsp_can1_lkmotorstartcmd();
+    HAL_StatusTypeDef bsp_can1_lkmotorcurrentcmd(int16_t current);
+
 #ifdef __cplusplus
 }
 #endif
