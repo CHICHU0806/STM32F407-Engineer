@@ -23,14 +23,14 @@
 
 void MotorTask::run() {
 
-     // bsp_can1_lkmotorclosecmd();
-     // bsp_can1_lkmotorstartcmd();
+     bsp_can1_lkmotorclosecmd();
+     bsp_can1_lkmotorstartcmd();
     for (;;) {
         // example_motor1_cmd = example_speed_pid1.Calculate(3000, 0, 0.005f);
         // example_motor2_cmd = example_speed_pid2.Calculate(3000, 0, 0.005f);
         //
-        // bsp_can1_sendmotorcmd(example_motor1_cmd,example_motor2_cmd,0,0);
-        bsp_can1_lkmotorcurrentcmd(300);
+         bsp_can2_sendmotorcmdfive2eight(20000,1000,1000,1000);
+        //bsp_can1_lkmotorcurrentcmd(1000);
         osDelay(1);
     }
 }

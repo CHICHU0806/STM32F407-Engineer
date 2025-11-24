@@ -48,7 +48,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+float motorspeed[4];
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/

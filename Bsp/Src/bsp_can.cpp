@@ -128,7 +128,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN2_SendMotorCmdFive2Eight(int16_t motor5, int16
     TxData[7] = motor8;
 
     //将信息推送到邮箱
-    return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
+    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
 HAL_StatusTypeDef bsp_can::BSP_CAN2_SendMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11) {
