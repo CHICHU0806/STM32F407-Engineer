@@ -177,4 +177,12 @@
 #define BMI088_GYRO_TRIG_BIST_SHFITS 0x0
 #define BMI088_GYRO_TRIG_BIST (0x1 << BMI088_GYRO_TRIG_BIST_SHFITS)
 
+// ACC SPI command
+#define BMI088_ACC_READ_ADDR(reg)   ((reg) | 0x80)
+#define BMI088_ACC_WRITE_ADDR(reg)  ((reg) & 0x7F)
+
+// GYR SPI command
+#define BMI088_GYR_READ_ADDR(reg)   (((reg) << 1) | 0x80)
+#define BMI088_GYR_WRITE_ADDR(reg)  ((reg) << 1)
+
 #endif

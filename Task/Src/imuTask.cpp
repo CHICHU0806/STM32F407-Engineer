@@ -7,6 +7,7 @@
 #include "BMI088driver.h"
 #include "ist8310driver.h"
 #include "attitude_ekf.h"
+#include "ImuTempControl.h"
 
 AttitudeEKF attitude_filter;
 
@@ -17,15 +18,21 @@ float roll ,pitch, yaw;
 void ImuTask::run() {;
     BMI088_init();
     ist8310_init();
+    ImuTempControl_Init();
 
     attitude_filter.init();
 
     float last_time = DWT_GetSeconds();
 
     for (;;) {
+
+
+
         //--- 1. 读取9轴数据 ---
         BMI088_read(gyro, accel,&temp);
         ist8310_read_mag(mag);
+
+        ImuTempControl_Update(40, temp, 0.001f); // 目标温度 40 度，假设周期 10ms
 
         // --- 2. 计算 dt 时间 ---
         float now = DWT_GetSeconds();
