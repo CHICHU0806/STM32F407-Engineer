@@ -4,13 +4,9 @@
 
 #include "angle_pid.h"
 
-void AnglePID::setTarget(int32_t target) {
-    target_angle = target;
-}
-
-int16_t AnglePID::calculate(int32_t feedback, float dt) {
-    int32_t fb = handleZeroCross(target_angle, feedback);
-    float output = Calculate(static_cast<float>(target_angle), static_cast<float>(fb), dt);
+int16_t AnglePID::calculate(int32_t target,int32_t feedback, float dt) {
+    int32_t fb = handleZeroCross(target, feedback);
+    float output = Calculate(static_cast<float>(target), static_cast<float>(fb), dt);
     return static_cast<int16_t>(output);
 }
 
@@ -34,7 +30,6 @@ extern "C" {
     }
 
     int16_t angle_pid_calculate(int32_t target, int32_t actual_angle, float dt) {
-        angle_pid.setTarget(target);
-        return angle_pid.calculate(actual_angle,dt);
+        return angle_pid.calculate(target, actual_angle, dt);
     }
 }
