@@ -3,6 +3,7 @@
 //
 // spi_dma.cpp
 #include "spi_dma.h"
+#include "spi_decode.h"
 #include <cstring>
 
 SPI_Dma* SPI_Dma::instance_ = nullptr;
@@ -128,7 +129,7 @@ void SPI_Dma::DMA_RxCpltIRQ(DMA_HandleTypeDef* hdma)
         // payload starts at rx[1], length PAYLOAD_LEN
         uint8_t* payload = acc_rx_buf_[completed_idx] + 1;
         // call decode
-        if (decode_cb_) decode_cb_(payload, PAYLOAD_LEN);
+        if (decode_cb_) decode_cb_(1,payload, PAYLOAD_LEN);
         // raise CS
         CS_High(acc_cs_port_, acc_cs_pin_);
         acc_busy_ = 0;
@@ -136,7 +137,7 @@ void SPI_Dma::DMA_RxCpltIRQ(DMA_HandleTypeDef* hdma)
     else if (gyr_busy_) {
         uint8_t completed_idx = 1 - gyr_next_idx_;
         uint8_t* payload = gyr_rx_buf_[completed_idx] + 1;
-        if (decode_cb_) decode_cb_(payload, PAYLOAD_LEN);
+        if (decode_cb_) decode_cb_(2,payload, PAYLOAD_LEN);
         CS_High(gyr_cs_port_, gyr_cs_pin_);
         gyr_busy_ = 0;
     } else {
@@ -148,6 +149,22 @@ void SPI_Dma::DMA_RxCpltIRQ(DMA_HandleTypeDef* hdma)
 void SPI_Dma::DMA_TxCpltIRQ(DMA_HandleTypeDef* hdma)
 {
     // nothing by default
+}
+
+const uint8_t* SPI_Dma::GetAccelPayloadBuf(int idx) const
+{
+    if (idx < 0 || idx > 1) return nullptr;
+
+    // payload = 去掉第一个 dummy/cmd 字节
+    return &acc_rx_buf_[idx][1];
+}
+
+const uint8_t* SPI_Dma::GetGyroPayloadBuf(int idx) const
+{
+    if (idx < 0 || idx > 1) return nullptr;
+
+    // payload = 去掉第一个 dummy/cmd 字节
+    return &acc_rx_buf_[idx][1];
 }
 
 void SPI_Dma::IRQHandler_EXTI_Accel()
@@ -181,6 +198,21 @@ void SPI_Dma::IRQHandler_DMA_Tx(DMA_HandleTypeDef* hdma)
 }
 
 extern "C" {
+    void IMU_SPI_DMA_Init(SPI_HandleTypeDef* hspi)
+    {
+        // 创建单例对象
+        static SPI_Dma spi_dma(hspi);
+
+        // 绑定到你的 BMI088 引脚
+        spi_dma.Init(
+            GPIOA, GPIO_PIN_4,
+            GPIOB,  GPIO_PIN_0,
+            BMI088_DecodeCallback   // 你自定义的回调
+        );
+
+        // 注意：EXTI IRQ 和 DMA IRQ 你已经在 .cpp 里通过 C 接口导出了，
+        // 这里只需要确保它们在 stm32xx_it.c 里被调用即可。
+    }
 
     // EXTI PC4
     void SPI_EXTI_Accel_IRQHandler()

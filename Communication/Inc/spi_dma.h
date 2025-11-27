@@ -14,9 +14,10 @@
 
 #include "main.h"
 #include "BMI088reg.h"
-#include <cstdint>
+#include <stdint.h>
 
-using SpiDecodeCb = void(*)(volatile uint8_t* payload, int len);
+#ifdef __cplusplus
+using SpiDecodeCb = void(*)(int type, const uint8_t* payload, uint16_t len);
 
 class SPI_Dma {
 public:
@@ -93,10 +94,12 @@ private:
     // singleton
     static SPI_Dma* instance_;
 };
+#endif
 
 #ifdef __cplusplus
 extern "C"{
 #endif
+    void IMU_SPI_DMA_Init(SPI_HandleTypeDef* hspi);
 
     void SPI_EXTI_Accel_IRQHandler();
     void SPI_EXTI_Gyro_IRQHandler();
