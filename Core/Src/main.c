@@ -23,6 +23,7 @@
 #include "dma.h"
 #include "i2c.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -34,7 +35,7 @@
 #include "bsp_can.h"
 #include "bsp_dwt.h"
 #include "speed_pid.h"
-#include "dt7_remote.h"
+#include "usart_dma.h"
 #include "dbus.h"
 #include "usart_decode.h"
 #include "BMI088driver.h"
@@ -110,13 +111,13 @@ int main(void)
   MX_CAN2_Init();
   MX_SPI1_Init();
   MX_I2C3_Init();
+  MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
   BSP_DWT_Init();
   BSP_CAN_Init();
   Uart_Init(&huart3, DBUS_Decode);
   Uart_Init(&huart6, MyUartCallback);
-  // BMI088_init();
-  // ist8310_init();
+
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

@@ -44,8 +44,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         PID/Inc/speed_pid.h
         Debug-Vars/debug_vars.cpp
         Debug-Vars/debug_vars.h
-        Communication/Src/dt7_remote.cpp
-        Communication/Inc/dt7_remote.h
+        Communication/Src/usart_dma.cpp
+        Communication/Inc/usart_dma.h
         Communication/Src/dbus.cpp
         Communication/Inc/dbus.h
         Task/Src/motorTask.cpp
@@ -57,7 +57,7 @@ add_executable(${CMAKE_PROJECT_NAME}
         Chassis/Inc/mecanum.h
         PID/Src/angle_pid.cpp
         PID/Inc/angle_pid.h
-        PID/Inc/PidBase.h
+        PID/PidBase.h
         Bsp/magictools.h
         Task/Src/measureHeroFourSpeedTask.cpp
         Task/Inc/measureHeroFourSpeedTask.h
@@ -85,8 +85,6 @@ add_executable(${CMAKE_PROJECT_NAME}
         Communication/Inc/usart_decode.h
         Task/Src/masterBoardTask.cpp
         Task/Inc/masterBoardTask.h
-        Communication/Src/can_communication.cpp
-        Communication/Inc/can_communication.h
         Task/Src/measureInfantryTwoSpeedTask.cpp
         Task/Inc/measureInfantryTwoSpeedTask.h
         Task/Src/slaveBoardTask.cpp
@@ -106,6 +104,14 @@ add_executable(${CMAKE_PROJECT_NAME}
         Algorithm/Inc/attitude_ekf.h
         Task/Src/imuTask.cpp
         Task/Inc/imuTask.h
+        PID/Src/temp_pid.cpp
+        PID/Inc/temp_pid.h
+        BMI088/Src/ImuTempControl.cpp
+        BMI088/Inc/ImuTempControl.h
+        Communication/Src/spi_dma.cpp
+        Communication/Inc/spi_dma.h
+        Communication/Src/spi_decode.cpp
+        Communication/Inc/spi_decode.h
 )
 
 # Add STM32CubeMX generated sources
@@ -129,6 +135,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         Bsp/Src
         PID/Inc
         PID/Src
+        PID
         Debug-Vars
         Communication/Inc
         Communication/Src
