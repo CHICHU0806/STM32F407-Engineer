@@ -4,7 +4,7 @@
 
 #include "usart_decode.h"
 
-#include "dt7_remote.h"
+#include "usart_dma.h"
 #include "usart.h"
 #include "stdio.h"
 #include "string.h"

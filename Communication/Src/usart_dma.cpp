@@ -1,4 +1,4 @@
-#include "dt7_remote.h"
+#include "usart_dma.h"
 
 UsartDma::UsartDma(UART_HandleTypeDef* huart, DecodeCallback cb)
     : huart_(huart), decode_cb_(cb), rx_data_len_(0)
