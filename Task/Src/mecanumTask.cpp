@@ -17,18 +17,59 @@ extern remote_control_info remote_control;
 
 void MecanumTask::run() {
     for (;;){
-        float Vx = remote_control.X * 0.5f;
-        float Vy = -remote_control.Y * 0.5f;
-        float omega = remote_control.Z * 0.5f;
+        switch (remote_control.s1) {
+            case 0:
+                switch (remote_control.s2) {
+                    case 0: {
+                        float Vx = remote_control.X * 0.5f;
+                        float Vy = -remote_control.Y * 0.5f;
+                        float omega = remote_control.Z * 0.5f;
 
-        auto MotorSpeeds = Mecanum(0.5f, 0.5f, 0.076f).Mecanum_Calculate(Vx, Vy, omega);
+                        auto MotorSpeeds = Mecanum(0.5f, 0.5f, 0.076f).Mecanum_Calculate(Vx, Vy, omega);
 
-        int16_t motor1_cmd = speed_pid_calculate(MotorSpeeds[0],motor_1.rotor_speed,0.01f);
-        int16_t motor2_cmd = speed_pid_calculate(MotorSpeeds[1],motor_2.rotor_speed,0.01f);
-        int16_t motor3_cmd = speed_pid_calculate(MotorSpeeds[2],motor_3.rotor_speed,0.01f);
-        int16_t motor4_cmd = speed_pid_calculate(MotorSpeeds[3],motor_4.rotor_speed,0.01f);
+                        int16_t motor1_cmd = speed_pid_calculate(MotorSpeeds[0],motor_1.rotor_speed,0.01f);
+                        int16_t motor2_cmd = speed_pid_calculate(MotorSpeeds[1],motor_2.rotor_speed,0.01f);
+                        int16_t motor3_cmd = speed_pid_calculate(MotorSpeeds[2],motor_3.rotor_speed,0.01f);
+                        int16_t motor4_cmd = speed_pid_calculate(MotorSpeeds[3],motor_4.rotor_speed,0.01f);
 
-        bsp_can2_sendmotorcmd(motor1_cmd, motor2_cmd, motor3_cmd, motor4_cmd);
+                        bsp_can2_sendmotorcmd(motor1_cmd, motor2_cmd, motor3_cmd, motor4_cmd);
+
+                        break;
+                    }
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    default:break;
+                }
+                break;
+            case 1:
+                switch (remote_control.s2) {
+                case 0: {
+                    break;
+                }
+                case 1:
+                        break;
+                case 2:
+                        break;
+                default:break;
+                }
+                break;
+            case 2:
+                switch (remote_control.s2) {
+                case 0:
+                        break;
+                case 1:
+                        break;
+                case 2: {
+
+                    break;
+                }
+                default:break;
+                }
+                break;
+            default:break;
+        }
 
         osDelay(10);
     }

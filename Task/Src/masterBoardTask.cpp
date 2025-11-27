@@ -31,11 +31,11 @@ void MasterBoardTask::run() {
 
     for (;;) {
         pitch_target_speed = pitch_speed_pid.Calculate(dbus.ch[1]*3.0f, motor_6.rotor_speed, 0.01f);
-        HeroShoot_target_speed1 = HeroShoot_speed_pid1.Calculate(-3000, motor_1.rotor_speed, 0.01f);
-        HeroShoot_target_speed2 = HeroShoot_speed_pid1.Calculate(3000, motor_2.rotor_speed, 0.01f);
-        HeroShoot_target_speed3 = HeroShoot_speed_pid1.Calculate(-3000, motor_3.rotor_speed, 0.01f);
+        HeroShoot_target_speed1 = HeroShoot_speed_pid1.Calculate(-5000, motor_1.rotor_speed, 0.01f);
+        HeroShoot_target_speed2 = HeroShoot_speed_pid1.Calculate(5000, motor_2.rotor_speed, 0.01f);
+        HeroShoot_target_speed3 = HeroShoot_speed_pid1.Calculate(-5000, motor_3.rotor_speed, 0.01f);
 
-        bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4]);
+        bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4], dbus.s1,dbus.s2);
         bsp_can1_lkmotorcurrentcmd(-dbus.ch[0]*0.5f);
         bsp_can2_sendmotorcmdfive2eight(0,pitch_target_speed,0,0);
         bsp_can2_sendmotorcmd(HeroShoot_target_speed1,HeroShoot_target_speed2,HeroShoot_target_speed3,0);

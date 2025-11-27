@@ -10,7 +10,7 @@
 #include "debug_vars.h"
 #include "usart.h"
 #include "usart_decode.h"
-#include "dt7_remote.h"
+#include "usart_dma.h"
 #include "message_bus.h"
 
 extern motor_info motor_1;

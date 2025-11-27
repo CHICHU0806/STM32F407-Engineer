@@ -6,7 +6,7 @@
 #define STARTM3508_PID_H
 
 #pragma once
-#include "PidBase.h"
+#include "../PidBase.h"
 
 #ifdef __cplusplus
 class SpeedPID : public PidBase {
