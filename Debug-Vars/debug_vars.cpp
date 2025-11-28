@@ -16,3 +16,4 @@ volatile int16_t debug_angle1 = 0;
 volatile int16_t debug_angle2 = 0;
 volatile int16_t debug_angle3 = 0;
 volatile int16_t debug_angle4 = 0;
+volatile int16_t debug_st = 0;

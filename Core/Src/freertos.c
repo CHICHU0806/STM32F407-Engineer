@@ -35,7 +35,6 @@ extern void SwerveTask_Init(void);
 extern void TargetCarTask_Init(void);
 extern void MasterBoardTask_Init(void);
 extern void SlaveBoardTask_Init(void);
-extern void ImuTask_Init(void);
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -118,7 +117,7 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   //电机驱动任务
-  //MotorTask_Init();
+  MotorTask_Init();
 
   //各类底盘任务
   //MecanumTask_Init();
@@ -139,8 +138,6 @@ void MX_FREERTOS_Init(void) {
   //MasterBoardTask_Init();
   //SlaveBoardTask_Init();
 
-  //IMU任务
-  ImuTask_Init();
   /* USER CODE END RTOS_THREADS */
 
 }

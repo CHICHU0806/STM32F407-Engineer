@@ -1,6 +1,7 @@
 #ifndef BMI088MIDDLEWARE_H
 #define BMI088MIDDLEWARE_H
-#include "stdint.h"
+
+#include "main.h"
 
 #define BMI088_USE_SPI
 //#define BMI088_USE_IIC

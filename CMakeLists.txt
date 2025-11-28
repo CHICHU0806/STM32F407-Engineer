@@ -100,18 +100,18 @@ add_executable(${CMAKE_PROJECT_NAME}
         IST8310/Inc/ist8310driver.h
         IST8310/Src/ist8310driver.c
         IST8310/Inc/ist8310driver_middleware.h
-        Algorithm/Src/attitude_ekf.cpp
-        Algorithm/Inc/attitude_ekf.h
-        Task/Src/imuTask.cpp
-        Task/Inc/imuTask.h
         PID/Src/temp_pid.cpp
         PID/Inc/temp_pid.h
-        BMI088/Src/ImuTempControl.cpp
-        BMI088/Inc/ImuTempControl.h
-        Communication/Src/spi_dma.cpp
-        Communication/Inc/spi_dma.h
-        Communication/Src/spi_decode.cpp
-        Communication/Inc/spi_decode.h
+        Bsp/Src/bsp_spi.c
+        Bsp/Inc/bsp_spi.h
+        Algorithm/Src/MahonyAHRS.c
+        Algorithm/Inc/MahonyAHRS.h
+        Task/Src/INS_Task.c
+        Task/Inc/INS_Task.h
+        Bsp/Src/bsp_imu_pwm.c
+        Bsp/Inc/bsp_imu_pwm.h
+        PID/Src/dji_pid.c
+        PID/Inc/dji_pid.h
 )
 
 # Add STM32CubeMX generated sources
@@ -152,6 +152,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         BMI088
         IST8310/Inc
         IST8310/Src
+        Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS
 )
 
 # Add project symbols (macros)

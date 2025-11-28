@@ -177,12 +177,18 @@
 #define BMI088_GYRO_TRIG_BIST_SHFITS 0x0
 #define BMI088_GYRO_TRIG_BIST (0x1 << BMI088_GYRO_TRIG_BIST_SHFITS)
 
-// ACC SPI command
-#define BMI088_ACC_READ_ADDR(reg)   ((reg) | 0x80)
-#define BMI088_ACC_WRITE_ADDR(reg)  ((reg) & 0x7F)
-
-// GYR SPI command
-#define BMI088_GYR_READ_ADDR(reg)   (((reg) << 1) | 0x80)
-#define BMI088_GYR_WRITE_ADDR(reg)  ((reg) << 1)
+#define DRDY_IST8310_Pin GPIO_PIN_3
+#define DRDY_IST8310_GPIO_Port GPIOG
+#define DRDY_IST8310_EXTI_IRQn EXTI3_IRQn
+#define CS1_ACCEL_Pin GPIO_PIN_4
+#define CS1_ACCEL_GPIO_Port GPIOA
+#define INT1_ACCEL_Pin GPIO_PIN_4
+#define INT1_ACCEL_GPIO_Port GPIOC
+#define INT1_ACCEL_EXTI_IRQn EXTI4_IRQn
+#define INT1_GYRO_Pin GPIO_PIN_5
+#define INT1_GYRO_GPIO_Port GPIOC
+#define INT1_GYRO_EXTI_IRQn EXTI9_5_IRQn
+#define CS1_GYRO_Pin GPIO_PIN_0
+#define CS1_GYRO_GPIO_Port GPIOB
 
 #endif

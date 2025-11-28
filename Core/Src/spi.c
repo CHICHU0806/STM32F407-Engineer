@@ -56,7 +56,8 @@ void MX_SPI1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN SPI1_Init 2 */
-
+  __HAL_SPI_ENABLE(&hspi1);
+  SET_BIT(hspi1.Instance->CR2, SPI_CR2_SSOE);
   /* USER CODE END SPI1_Init 2 */
 
 }

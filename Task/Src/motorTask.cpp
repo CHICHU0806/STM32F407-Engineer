@@ -3,6 +3,9 @@
 //
 
 #include "../Inc/motorTask.h"
+
+#include <cstring>
+
 #include "bsp_can.h"
 #include "speed_pid.h"
 #include "angle_pid.h"
@@ -13,7 +16,9 @@
 #include "usart_dma.h"
 #include "message_bus.h"
 #include "BMI088driver.h"
+#include "bsp_dwt.h"
 #include "ist8310driver.h"
+
 //
 // SpeedPID example_speed_pid1(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
 // SpeedPID example_speed_pid2(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
@@ -22,15 +27,7 @@
 // int16_t example_motor2_cmd = 0;
 
 void MotorTask::run() {
-
-     bsp_can1_lkmotorclosecmd();
-     bsp_can1_lkmotorstartcmd();
-    for (;;) {
-        // example_motor1_cmd = example_speed_pid1.Calculate(3000, 0, 0.005f);
-        // example_motor2_cmd = example_speed_pid2.Calculate(3000, 0, 0.005f);
-        //
-         bsp_can2_sendmotorcmdfive2eight(20000,1000,1000,1000);
-        //bsp_can1_lkmotorcurrentcmd(1000);
+for (;;) {
         osDelay(1);
     }
 }

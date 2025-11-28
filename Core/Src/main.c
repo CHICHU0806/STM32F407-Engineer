@@ -40,16 +40,17 @@
 #include "usart_decode.h"
 #include "BMI088driver.h"
 #include "ist8310driver.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-//float gyro[3], accel[3], temp, mag[3];
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-float motorspeed[4];
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -132,9 +133,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    // BMI088_read(gyro, accel,&temp);
-    // ist8310_read_mag(mag);
-    DWT_Delay_ms(1);
+    HAL_GPIO_TogglePin(GPIOH, GPIO_PIN_11);
+    DWT_Delay_ms(100);
+    HAL_GPIO_TogglePin(GPIOH, GPIO_PIN_11);
+    DWT_Delay_ms(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

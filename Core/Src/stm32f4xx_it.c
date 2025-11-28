@@ -22,9 +22,11 @@
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "bsp_dwt.h"
+#include "spi.h"
 #include "usart_dma.h"
 #include "usart.h"
-#include "spi_dma.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -182,8 +184,6 @@ void EXTI4_IRQHandler(void)
   /* USER CODE END EXTI4_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
   /* USER CODE BEGIN EXTI4_IRQn 1 */
-  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_4); // 清中断
-  SPI_EXTI_Accel_IRQHandler();          // C wrapper
   /* USER CODE END EXTI4_IRQn 1 */
 }
 
@@ -239,8 +239,6 @@ void EXTI9_5_IRQHandler(void)
   /* USER CODE END EXTI9_5_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */
-  __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_5); // 清中断
-  SPI_EXTI_Gyro_IRQHandler();
   /* USER CODE END EXTI9_5_IRQn 1 */
 }
 
@@ -297,7 +295,7 @@ void DMA2_Stream2_IRQHandler(void)
   /* USER CODE END DMA2_Stream2_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_spi1_rx);
   /* USER CODE BEGIN DMA2_Stream2_IRQn 1 */
-  SPI_DMA_Rx_IRQHandler(&hdma_spi1_rx);
+  Demo_DMA2_Stream2_IRQHandler();
   /* USER CODE END DMA2_Stream2_IRQn 1 */
 }
 
@@ -311,7 +309,7 @@ void DMA2_Stream3_IRQHandler(void)
   /* USER CODE END DMA2_Stream3_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_spi1_tx);
   /* USER CODE BEGIN DMA2_Stream3_IRQn 1 */
-  SPI_DMA_Tx_IRQHandler(&hdma_spi1_tx);
+
   /* USER CODE END DMA2_Stream3_IRQn 1 */
 }
 

@@ -21,6 +21,7 @@ extern volatile int16_t debug_angle1;
 extern volatile int16_t debug_angle2;
 extern volatile int16_t debug_angle3;
 extern volatile int16_t debug_angle4;
+extern volatile int16_t debug_st;
 
 #ifdef __cplusplus
 }
