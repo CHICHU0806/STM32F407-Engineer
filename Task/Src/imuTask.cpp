@@ -20,7 +20,7 @@ void ImuTask::run() {;
     for (;;) {
         BMI088_Read(gyro, accel, &temp);
         ist8310_read_mag(mag);
-        DWT_Delay_ms(1);
+
         ImuTempControl_Update(40, temp, 0.001f);
 
         MahonyAHRSupdate(q,
