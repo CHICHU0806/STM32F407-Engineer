@@ -10,7 +10,6 @@
 #include "stdint.h"
 
 #ifdef __cplusplus
-
 class PidBase {
 public:
     PidBase(float kp, float ki, float kd, float max_out, float max_iout)

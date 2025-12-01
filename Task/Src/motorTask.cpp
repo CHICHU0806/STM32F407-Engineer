@@ -3,9 +3,7 @@
 //
 
 #include "../Inc/motorTask.h"
-
 #include <cstring>
-
 #include "bsp_can.h"
 #include "speed_pid.h"
 #include "angle_pid.h"
@@ -18,14 +16,13 @@
 #include "BMI088driver.h"
 #include "bsp_dwt.h"
 #include "ist8310driver.h"
+#include "BMI088.h"
 
-//
 // SpeedPID example_speed_pid1(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
 // SpeedPID example_speed_pid2(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
 //
 // int16_t example_motor1_cmd = 0;
 // int16_t example_motor2_cmd = 0;
-
 void MotorTask::run() {
 for (;;) {
         osDelay(1);

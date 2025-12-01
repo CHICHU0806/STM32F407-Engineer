@@ -1,0 +1,242 @@
+#ifndef BMI088REG_H
+#define BMI088REG_H
+
+/***********************  加速度计寄存器（ACC）  ************************/
+
+#define BMI088_ACC_CHIP_ID 0x00                    // ACC 芯片 ID 寄存器地址（Who am I）
+#define BMI088_ACC_CHIP_ID_VALUE 0x1E              // ACC 正常的芯片 ID 固定值
+
+#define BMI088_ACC_ERR_REG 0x02                    // ACC 错误状态寄存器
+#define BMI088_ACCEL_CONGIF_ERROR_SHFITS 0x2       // 配置错误标志位偏移
+#define BMI088_ACCEL_CONGIF_ERROR (1 << BMI088_ACCEL_CONGIF_ERROR_SHFITS)     // 配置错误位掩码
+#define BMI088_FATAL_ERROR_SHFITS 0x0              // 致命错误标志位偏移
+#define BMI088_FATAL_ERROR (1 << BMI088_FATAL_ERROR)   // 致命错误位掩码（注：此处似乎是原始代码的 bug，应为 SHIFT）
+
+#define BMI088_ACC_STATUS 0x03                     // 加速度计状态寄存器
+#define BMI088_ACCEL_DRDY_SHFITS 0x7               // 加速度 DRDY（数据准备好）位偏移
+#define BMI088_ACCEL_DRDY (1 << BMI088_ACCEL_DRDY_SHFITS)   // DRDY 位掩码
+
+// 加速度计 XYZ 轴输出寄存器（低位在前，高位在后）
+#define BMI088_ACCEL_XOUT_L 0x12
+#define BMI088_ACCEL_XOUT_M 0x13
+#define BMI088_ACCEL_YOUT_L 0x14
+#define BMI088_ACCEL_YOUT_M 0x15
+#define BMI088_ACCEL_ZOUT_L 0x16
+#define BMI088_ACCEL_ZOUT_M 0x17
+
+// 传感器时间戳寄存器（24bit）
+#define BMI088_SENSORTIME_DATA_L 0x18
+#define BMI088_SENSORTIME_DATA_M 0x19
+#define BMI088_SENSORTIME_DATA_H 0x1A
+
+#define BMI088_ACC_INT_STAT_1 0x1D                 // 加速度中断状态寄存器
+#define BMI088_ACCEL_DRDY_INTERRUPT_SHFITS 0x7     // 加速度 DRDY 中断位偏移
+#define BMI088_ACCEL_DRDY_INTERRUPT (1 << BMI088_ACCEL_DRDY_INTERRUPT_SHFITS)  // DRDY 中断掩码
+
+#define BMI088_TEMP_M 0x22                         // 温度高 8bit
+#define BMI088_TEMP_L 0x23                         // 温度低 8bit（温度共 16bit）
+
+#define BMI088_ACC_CONF 0x40                       // 加速度计配置寄存器（带宽、ODR）
+#define BMI088_ACC_CONF_MUST_Set 0x80              // ACC_CONF 的固定必须为 1 的位（位7）
+
+// 带宽选择（BWP）
+#define BMI088_ACC_BWP_SHFITS 0x4
+#define BMI088_ACC_OSR4 (0x0 << BMI088_ACC_BWP_SHFITS)   // 过采样 x4
+#define BMI088_ACC_OSR2 (0x1 << BMI088_ACC_BWP_SHFITS)   // 过采样 x2
+#define BMI088_ACC_NORMAL (0x2 << BMI088_ACC_BWP_SHFITS) // 正常模式
+
+// ODR（输出数据率）
+#define BMI088_ACC_ODR_SHFITS 0x0
+#define BMI088_ACC_12_5_HZ (0x5 << BMI088_ACC_ODR_SHFITS)
+#define BMI088_ACC_25_HZ (0x6 << BMI088_ACC_ODR_SHFITS)
+#define BMI088_ACC_50_HZ (0x7 << BMI088_ACC_ODR_SHFITS)
+#define BMI088_ACC_100_HZ (0x8 << BMI088_ACC_ODR_SHFITS)
+#define BMI088_ACC_200_HZ (0x9 << BMI088_ACC_ODR_SHFITS)
+#define BMI088_ACC_400_HZ (0xA << BMI088_ACC_ODR_SHFITS)
+#define BMI088_ACC_800_HZ (0xB << BMI088_ACC_ODR_SHFITS)
+#define BMI088_ACC_1600_HZ (0xC << BMI088_ACC_ODR_SHFITS)
+
+#define BMI088_ACC_RANGE 0x41                      // 加速度量程配置寄存器
+#define BMI088_ACC_RANGE_SHFITS 0x0
+#define BMI088_ACC_RANGE_3G (0x0 << BMI088_ACC_RANGE_SHFITS)
+#define BMI088_ACC_RANGE_6G (0x1 << BMI088_ACC_RANGE_SHFITS)
+#define BMI088_ACC_RANGE_12G (0x2 << BMI088_ACC_RANGE_SHFITS)
+#define BMI088_ACC_RANGE_24G (0x3 << BMI088_ACC_RANGE_SHFITS)
+
+#define BMI088_INT1_IO_CTRL 0x53                   // INT1 引脚控制
+#define BMI088_ACC_INT1_IO_ENABLE_SHFITS 0x3       // INT1 使能位
+#define BMI088_ACC_INT1_IO_ENABLE (0x1 << BMI088_ACC_INT1_IO_ENABLE_SHFITS)
+#define BMI088_ACC_INT1_GPIO_MODE_SHFITS 0x2       // 推挽/开漏
+#define BMI088_ACC_INT1_GPIO_PP (0x0 << BMI088_ACC_INT1_GPIO_MODE_SHFITS)
+#define BMI088_ACC_INT1_GPIO_OD (0x1 << BMI088_ACC_INT1_GPIO_MODE_SHFITS)
+#define BMI088_ACC_INT1_GPIO_LVL_SHFITS 0x1        // 电平极性
+#define BMI088_ACC_INT1_GPIO_LOW (0x0 << BMI088_ACC_INT1_GPIO_LVL_SHFITS)
+#define BMI088_ACC_INT1_GPIO_HIGH (0x1 << BMI088_ACC_INT1_GPIO_LVL_SHFITS)
+
+#define BMI088_INT2_IO_CTRL 0x54                   // INT2 引脚控制
+#define BMI088_ACC_INT2_IO_ENABLE_SHFITS 0x3
+#define BMI088_ACC_INT2_IO_ENABLE (0x1 << BMI088_ACC_INT2_IO_ENABLE_SHFITS)
+#define BMI088_ACC_INT2_GPIO_MODE_SHFITS 0x2
+#define BMI088_ACC_INT2_GPIO_PP (0x0 << BMI088_ACC_INT2_GPIO_MODE_SHFITS)
+#define BMI088_ACC_INT2_GPIO_OD (0x1 << BMI088_ACC_INT2_GPIO_MODE_SHFITS)
+#define BMI088_ACC_INT2_GPIO_LVL_SHFITS 0x1
+#define BMI088_ACC_INT2_GPIO_LOW (0x0 << BMI088_ACC_INT2_GPIO_LVL_SHFITS)
+#define BMI088_ACC_INT2_GPIO_HIGH (0x1 << BMI088_ACC_INT2_GPIO_LVL_SHFITS)
+
+#define BMI088_INT_MAP_DATA 0x58                   // 中断映射寄存器
+#define BMI088_ACC_INT2_DRDY_INTERRUPT_SHFITS 0x6
+#define BMI088_ACC_INT2_DRDY_INTERRUPT (0x1 << BMI088_ACC_INT2_DRDY_INTERRUPT_SHFITS)
+#define BMI088_ACC_INT1_DRDY_INTERRUPT_SHFITS 0x2
+#define BMI088_ACC_INT1_DRDY_INTERRUPT (0x1 << BMI088_ACC_INT1_DRDY_INTERRUPT_SHFITS)
+
+#define BMI088_ACC_SELF_TEST 0x6D                  // 加速度自检寄存器
+#define BMI088_ACC_SELF_TEST_OFF 0x00              // 自检关闭
+#define BMI088_ACC_SELF_TEST_POSITIVE_SIGNAL 0x0D  // 正向自检
+#define BMI088_ACC_SELF_TEST_NEGATIVE_SIGNAL 0x09  // 反向自检
+
+#define BMI088_ACC_PWR_CONF 0x7C                   // 加速度电源配置
+#define BMI088_ACC_PWR_SUSPEND_MODE 0x03           // 低功耗挂起模式
+#define BMI088_ACC_PWR_ACTIVE_MODE 0x00            // 正常工作模式
+
+#define BMI088_ACC_PWR_CTRL 0x7D                   // 加速度电源控制
+#define BMI088_ACC_ENABLE_ACC_OFF 0x00             // 关闭加速度计
+#define BMI088_ACC_ENABLE_ACC_ON 0x04              // 启用加速度计
+
+#define BMI088_ACC_SOFTRESET 0x7E                 // 加速度软复位寄存器
+#define BMI088_ACC_SOFTRESET_VALUE 0xB6           // 复位指令值
+
+
+/************************  陀螺仪寄存器（GYRO）  ************************/
+
+#define BMI088_GYRO_CHIP_ID 0x00                   // GYRO 芯片 ID 寄存器
+#define BMI088_GYRO_CHIP_ID_VALUE 0x0F             // GYRO 正常的芯片 ID
+
+// 陀螺仪 XYZ 输出
+#define BMI088_GYRO_X_L 0x02
+#define BMI088_GYRO_X_H 0x03
+#define BMI088_GYRO_Y_L 0x04
+#define BMI088_GYRO_Y_H 0x05
+#define BMI088_GYRO_Z_L 0x06
+#define BMI088_GYRO_Z_H 0x07
+
+#define BMI088_GYRO_INT_STAT_1 0x0A                // 陀螺仪中断状态寄存器
+#define BMI088_GYRO_DYDR_SHFITS 0x7                // 陀螺仪 DRDY 位偏移
+#define BMI088_GYRO_DYDR (0x1 << BMI088_GYRO_DYDR_SHFITS)
+
+#define BMI088_GYRO_RANGE 0x0F                     // 陀螺仪量程范围寄存器
+#define BMI088_GYRO_RANGE_SHFITS 0x0
+#define BMI088_GYRO_2000 (0x0 << BMI088_GYRO_RANGE_SHFITS)
+#define BMI088_GYRO_1000 (0x1 << BMI088_GYRO_RANGE_SHFITS)
+#define BMI088_GYRO_500  (0x2 << BMI088_GYRO_RANGE_SHFITS)
+#define BMI088_GYRO_250  (0x3 << BMI088_GYRO_RANGE_SHFITS)
+#define BMI088_GYRO_125  (0x4 << BMI088_GYRO_RANGE_SHFITS)
+
+#define BMI088_GYRO_BANDWIDTH 0x10                // 陀螺仪带宽/ODR 配置寄存器
+#define BMI088_GYRO_BANDWIDTH_MUST_Set 0x80       // 位7 必须置1
+
+// ODR + 带宽组合配置
+#define BMI088_GYRO_2000_532_HZ 0x00
+#define BMI088_GYRO_2000_230_HZ 0x01
+#define BMI088_GYRO_1000_116_HZ 0x02
+#define BMI088_GYRO_400_47_HZ 0x03
+#define BMI088_GYRO_200_23_HZ 0x04
+#define BMI088_GYRO_100_12_HZ 0x05
+#define BMI088_GYRO_200_64_HZ 0x06
+#define BMI088_GYRO_100_32_HZ 0x07
+
+#define BMI088_GYRO_LPM1 0x11                     // 陀螺仪低功耗模式
+#define BMI088_GYRO_NORMAL_MODE 0x00              // 正常模式
+#define BMI088_GYRO_SUSPEND_MODE 0x80             // 挂起模式
+#define BMI088_GYRO_DEEP_SUSPEND_MODE 0x20        // 深度挂起（最低功耗）
+
+#define BMI088_GYRO_SOFTRESET 0x14                // GYRO 软复位寄存器
+#define BMI088_GYRO_SOFTRESET_VALUE 0xB6          // 软复位指令
+
+#define BMI088_GYRO_CTRL 0x15                     // 陀螺仪控制寄存器
+#define BMI088_DRDY_OFF 0x00                      // DRDY 中断关闭
+#define BMI088_DRDY_ON 0x80                       // DRDY 中断开启
+
+#define BMI088_GYRO_INT3_INT4_IO_CONF 0x16        // INT3/INT4 IO 配置
+#define BMI088_GYRO_INT4_GPIO_MODE_SHFITS 0x3
+#define BMI088_GYRO_INT4_GPIO_PP (0x0 << BMI088_GYRO_INT4_GPIO_MODE_SHFITS)
+#define BMI088_GYRO_INT4_GPIO_OD (0x1 << BMI088_GYRO_INT4_GPIO_MODE_SHFITS)
+#define BMI088_GYRO_INT4_GPIO_LVL_SHFITS 0x2
+#define BMI088_GYRO_INT4_GPIO_LOW (0x0 << BMI088_GYRO_INT4_GPIO_LVL_SHFITS)
+#define BMI088_GYRO_INT4_GPIO_HIGH (0x1 << BMI088_GYRO_INT4_GPIO_LVL_SHFITS)
+
+#define BMI088_GYRO_INT3_GPIO_MODE_SHFITS 0x1
+#define BMI088_GYRO_INT3_GPIO_PP (0x0 << BMI088_GYRO_INT3_GPIO_MODE_SHFITS)
+#define BMI088_GYRO_INT3_GPIO_OD (0x1 << BMI088_GYRO_INT3_GPIO_MODE_SHFITS)
+#define BMI088_GYRO_INT3_GPIO_LVL_SHFITS 0x0
+#define BMI088_GYRO_INT3_GPIO_LOW (0x0 << BMI088_GYRO_INT3_GPIO_LVL_SHFITS)
+#define BMI088_GYRO_INT3_GPIO_HIGH (0x1 << BMI088_GYRO_INT3_GPIO_LVL_SHFITS)
+
+#define BMI088_GYRO_INT3_INT4_IO_MAP 0x18         // INT3/INT4 中断映射
+
+// DRDY 映射到哪个 IO
+#define BMI088_GYRO_DRDY_IO_OFF 0x00
+#define BMI088_GYRO_DRDY_IO_INT3 0x01
+#define BMI088_GYRO_DRDY_IO_INT4 0x80
+#define BMI088_GYRO_DRDY_IO_BOTH (BMI088_GYRO_DRDY_IO_INT3 | BMI088_GYRO_DRDY_IO_INT4)
+
+#define BMI088_GYRO_SELF_TEST 0x3C                // 自检寄存器
+#define BMI088_GYRO_RATE_OK_SHFITS 0x4
+#define BMI088_GYRO_RATE_OK (0x1 << BMI088_GYRO_RATE_OK_SHFITS)   // 速率 OK 标志
+#define BMI088_GYRO_BIST_FAIL_SHFITS 0x2
+#define BMI088_GYRO_BIST_FAIL (0x1 << BMI088_GYRO_BIST_FAIL_SHFITS) // 自检失败
+#define BMI088_GYRO_BIST_RDY_SHFITS 0x1
+#define BMI088_GYRO_BIST_RDY (0x1 << BMI088_GYRO_BIST_RDY_SHFITS)   // 自检就绪
+#define BMI088_GYRO_TRIG_BIST_SHFITS 0x0
+#define BMI088_GYRO_TRIG_BIST (0x1 << BMI088_GYRO_TRIG_BIST_SHFITS) // 触发自检
+
+// 温度转换参数
+#define BMI088_TEMP_FACTOR 0.125f// BMI088 温度寄存器的 LSB 转换系数：1 LSB = 0.125 °C
+#define BMI088_TEMP_OFFSET 23.0f// BMI088 温度零点偏移：寄存器值 0 对应实际 23°C（芯片内部基准）
+
+// 初始化流程中写入的寄存器数量
+#define BMI088_WRITE_ACCEL_REG_NUM 6// 加速度计初始化需要配置 6 个寄存器
+#define BMI088_WRITE_GYRO_REG_NUM 6// 陀螺仪初始化需要配置 6 个寄存器
+
+// DRDY（数据准备完成）状态寄存器中的 bit 位
+#define BMI088_GYRO_DATA_READY_BIT 0// bit0：陀螺仪数据是否准备好（1 = ready）
+#define BMI088_ACCEL_DATA_READY_BIT 1// bit1：加速度计数据是否准备好（1 = ready）
+#define BMI088_ACCEL_TEMP_DATA_READY_BIT 2// bit2：加速度计测量的温度数据是否准备好（1 = ready）
+
+// 传感器初始化延迟（根据官方推荐时序）
+#define BMI088_LONG_DELAY_TIME 80// BMI088 复位等操作后，官方推荐延迟约 80 ms
+#define BMI088_COM_WAIT_SENSOR_TIME 150// SPI 或 I2C 通信间的短延迟（us），保证寄存器写入稳定生效
+
+// I2C 地址（如果选择 I2C 模式）
+#define BMI088_ACCEL_IIC_ADDRESSE (0x18 << 1)// BMI088 加速度计 I2C 地址（默认 0x18，左移 1 因为 HAL 使用 8bit 地址）
+#define BMI088_GYRO_IIC_ADDRESSE (0x68 << 1)// BMI088 陀螺仪 I2C 地址（默认 0x68，左移 1 因为 HAL 使用 8bit 地址）
+
+// 加速度量程选择（只允许启用一个）
+#define BMI088_ACCEL_RANGE_3G
+//#define BMI088_ACCEL_RANGE_6G
+//#define BMI088_ACCEL_RANGE_12G
+//#define BMI088_ACCEL_RANGE_24G
+
+// 陀螺仪量程选择
+#define BMI088_GYRO_RANGE_2000
+//# define BMI088_GYRO_RANGE_1000
+//# define BMI088_GYRO_RANGE_500
+//# define BMI088_GYRO_RANGE_250
+//# define BMI088_GYRO_RANGE_125
+
+// 加速度计灵敏度（单位：g per LSB）
+#define BMI088_ACCEL_3G_SEN 0.0008974358974f// 3g / 32768 = 0.000091553... × 9.8 标准化后的值
+#define BMI088_ACCEL_6G_SEN 0.00179443359375f// 6g / 32768
+#define BMI088_ACCEL_12G_SEN 0.0035888671875f// 12g / 32768
+#define BMI088_ACCEL_24G_SEN 0.007177734375f// 24g / 32768
+
+// 陀螺仪灵敏度（单位：°/s per LSB）
+#define BMI088_GYRO_2000_SEN 0.00106526443603169529841533860381f// 2000 / 32768
+#define BMI088_GYRO_1000_SEN 0.00053263221801584764920766930190693f// 1000 / 32768
+#define BMI088_GYRO_500_SEN 0.00026631610900792382460383465095346f// 500 / 32768
+#define BMI088_GYRO_250_SEN 0.00013315805450396191230191732547673f// 250 / 32768
+#define BMI088_GYRO_125_SEN 0.000066579027251980956150958662738366f// 125 / 32768
+
+// 根据选择的量程，设置对应的灵敏度值
+
+
+#endif // BMI088REG_H

@@ -31,7 +31,6 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <string.h>
-
 #include "bsp_can.h"
 #include "bsp_dwt.h"
 #include "speed_pid.h"
@@ -40,7 +39,8 @@
 #include "usart_decode.h"
 #include "BMI088driver.h"
 #include "ist8310driver.h"
-
+#include "BMI088.h"
+#include "ImuTempControl.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,7 +50,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+extern volatile uint32_t temp;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -118,7 +118,6 @@ int main(void)
   BSP_CAN_Init();
   Uart_Init(&huart3, DBUS_Decode);
   Uart_Init(&huart6, MyUartCallback);
-
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
@@ -133,10 +132,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    HAL_GPIO_TogglePin(GPIOH, GPIO_PIN_11);
-    DWT_Delay_ms(100);
-    HAL_GPIO_TogglePin(GPIOH, GPIO_PIN_11);
-    DWT_Delay_ms(100);
+    DWT_Delay_ms(1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -195,7 +191,7 @@ void SystemClock_Config(void)
 
 /**
   * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM1 interrupt took place, inside
+  * @note   This function is called  when TIM2 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
   * @param  htim : TIM handle
@@ -206,7 +202,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM1)
+  if (htim->Instance == TIM2)
   {
     HAL_IncTick();
   }
