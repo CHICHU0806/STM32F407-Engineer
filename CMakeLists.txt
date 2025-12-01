@@ -89,10 +89,6 @@ add_executable(${CMAKE_PROJECT_NAME}
         Task/Inc/measureInfantryTwoSpeedTask.h
         Task/Src/slaveBoardTask.cpp
         Task/Inc/slaveBoardTask.h
-        BMI088/Src/BMI088driver.c
-        BMI088/Inc/BMI088driver.h
-        BMI088/Src/BMI088Middleware.c
-        BMI088/Inc/BMI088Middleware.h
         BMI088/BMI088config.h
         Bsp/Src/bsp_dwt.cpp
         Bsp/Inc/bsp_dwt.h
