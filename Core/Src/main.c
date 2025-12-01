@@ -37,7 +37,6 @@
 #include "usart_dma.h"
 #include "dbus.h"
 #include "usart_decode.h"
-#include "BMI088driver.h"
 #include "ist8310driver.h"
 #include "BMI088.h"
 #include "ImuTempControl.h"

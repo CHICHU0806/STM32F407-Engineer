@@ -41,7 +41,8 @@ public:
 
     HAL_StatusTypeDef BSP_CAN1_LKMotorCloseCmd();
     HAL_StatusTypeDef BSP_CAN1_LKMotorStartCmd();
-    HAL_StatusTypeDef BSP_CAN1_LKMotorCurrentCmd(int16_t current);
+    HAL_StatusTypeDef BSP_CAN1_LKMotorTorqueCmd(int16_t current);
+    HAL_StatusTypeDef BSP_CAN1_LKMotorSpeedCmd(int32_t speed);
 };
 #endif
 
@@ -60,7 +61,8 @@ extern "C" {
     //LK motor CAN发送函数接口
     HAL_StatusTypeDef bsp_can1_lkmotorclosecmd();
     HAL_StatusTypeDef bsp_can1_lkmotorstartcmd();
-    HAL_StatusTypeDef bsp_can1_lkmotorcurrentcmd(int16_t current);
+    HAL_StatusTypeDef bsp_can1_lkmotortorquecmd(int16_t torque);
+    HAL_StatusTypeDef bsp_can1_lkmotorspeedcmd(int32_t speed);
 
 #ifdef __cplusplus
 }

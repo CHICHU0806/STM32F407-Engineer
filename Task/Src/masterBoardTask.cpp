@@ -14,11 +14,15 @@ extern motor_info motor_3;
 extern motor_info motor_6;
 
 SpeedPID pitch_speed_pid(3.0f, 0.05f, 0.005f, 9000.0f, 400.0f);
+
 SpeedPID HeroShoot_speed_pid1(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
 SpeedPID HeroShoot_speed_pid2(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
 SpeedPID HeroShoot_speed_pid3(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
 
+//云台pitch轴
 int16_t pitch_target_speed = 0;
+
+//英雄三摩擦
 int16_t HeroShoot_target_speed1 = 0;
 int16_t HeroShoot_target_speed2 = 0;
 int16_t HeroShoot_target_speed3 = 0;
@@ -36,7 +40,7 @@ void MasterBoardTask::run() {
         HeroShoot_target_speed3 = HeroShoot_speed_pid1.Calculate(-5000, motor_3.rotor_speed, 0.01f);
 
         bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4], dbus.s1,dbus.s2);
-        bsp_can1_lkmotorcurrentcmd(-dbus.ch[0]*0.5f);
+        bsp_can1_lkmotortorquecmd(-dbus.ch[0]*0.5f);
         bsp_can2_sendmotorcmdfive2eight(0,pitch_target_speed,0,0);
         bsp_can2_sendmotorcmd(HeroShoot_target_speed1,HeroShoot_target_speed2,HeroShoot_target_speed3,0);
         osDelay(10);

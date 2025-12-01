@@ -13,7 +13,6 @@
 #include "usart_decode.h"
 #include "usart_dma.h"
 #include "message_bus.h"
-#include "BMI088driver.h"
 #include "bsp_dwt.h"
 #include "ist8310driver.h"
 #include "BMI088.h"
@@ -25,6 +24,8 @@
 // int16_t example_motor2_cmd = 0;
 void MotorTask::run() {
 for (;;) {
+
+    bsp_can1_lkmotorspeedcmd(10000);
         osDelay(1);
     }
 }

@@ -219,7 +219,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorStartCmd() {
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
-HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorCurrentCmd(int16_t current) {
+HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorTorqueCmd(int16_t current) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
     uint8_t TxData[8];
@@ -242,6 +242,33 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorCurrentCmd(int16_t current) {
 
     TxData[6] = 0x00;
     TxData[7] = 0x00;
+
+    //将信息推送到邮箱
+    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+}
+
+HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorSpeedCmd(int32_t speed) {
+    //三要素：帧头，数据，邮箱
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t TxData[8];
+    uint32_t TxMailbox;
+
+    //帧头组成
+    TxHeader.StdId = 0x141; //标准标识符
+    TxHeader.IDE = CAN_ID_STD;
+    TxHeader.RTR = CAN_RTR_DATA;
+    TxHeader.DLC = 8;
+
+    //数据填充
+    TxData[0] = 0xA2;   // 命令字：力矩控制
+    TxData[1] = 0x00;
+    TxData[2] = 0x00;
+    TxData[3] = 0x00;
+
+    TxData[4] = (uint8_t)(speed & 0xFF);          // 最低字节
+    TxData[5] = (uint8_t)((speed >> 8) & 0xFF);   // 次低字节
+    TxData[6] = (uint8_t)((speed >> 16) & 0xFF);  // 次高字节
+    TxData[7] = (uint8_t)((speed >> 24) & 0xFF);  // 最高字节
 
     //将信息推送到邮箱
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
@@ -415,7 +442,11 @@ extern "C" {
         return can.BSP_CAN1_LKMotorStartCmd();
     }
 
-    HAL_StatusTypeDef bsp_can1_lkmotorcurrentcmd(int16_t current) {
-        return can.BSP_CAN1_LKMotorCurrentCmd(current);
+    HAL_StatusTypeDef bsp_can1_lkmotortorquecmd(int16_t torque) {
+        return can.BSP_CAN1_LKMotorTorqueCmd(torque);
+    }
+
+    HAL_StatusTypeDef bsp_can1_lkmotorspeedcmd(int32_t speed) {
+        return can.BSP_CAN1_LKMotorSpeedCmd(speed);
     }
 }
