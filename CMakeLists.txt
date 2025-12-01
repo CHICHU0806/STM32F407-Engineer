@@ -102,8 +102,6 @@ add_executable(${CMAKE_PROJECT_NAME}
         IST8310/Inc/ist8310driver_middleware.h
         PID/Src/temp_pid.cpp
         PID/Inc/temp_pid.h
-        Bsp/Src/bsp_spi.c
-        Bsp/Inc/bsp_spi.h
         Algorithm/Src/MahonyAHRS.c
         Algorithm/Inc/MahonyAHRS.h
         BMI088/Src/ImuTempControl.cpp

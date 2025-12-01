@@ -26,7 +26,6 @@
 #include "spi.h"
 #include "usart_dma.h"
 #include "usart.h"
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

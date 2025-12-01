@@ -7,13 +7,22 @@
 
 extern SPI_HandleTypeDef hspi1;
 
+// 最大支持一次 DMA 读取的字节数（按需调整，但不要超出 MCU DMA/内存限制）
+#ifndef BMI088_DMA_MAX_LEN
+#define BMI088_DMA_MAX_LEN 32
+#endif
+
+static volatile uint8_t bmi088_spi_dma_done = 0;
+static volatile uint8_t bmi088_spi_dma_error = 0;
+static uint8_t bmi088_dma_tx_buf[BMI088_DMA_MAX_LEN];
+
 //构造函数
 BMI088::BMI088(SPI_HandleTypeDef* hspi,
                  GPIO_TypeDef* cs_accel_port, uint16_t cs_accel_pin,
                  GPIO_TypeDef* cs_gyro_port, uint16_t cs_gyro_pin)
     : hspi_(hspi),
       cs_accel_port_(cs_accel_port), cs_accel_pin_(cs_accel_pin),
-      cs_gyro_port_(cs_gyro_port), cs_gyro_pin_(cs_gyro_pin) {}
+      cs_gyro_port_(cs_gyro_port), cs_gyro_pin_(cs_gyro_pin){}
 
 //初始化BMI088
 uint8_t BMI088::init() {
@@ -206,7 +215,13 @@ inline uint8_t BMI088::accelReadReg(uint8_t reg) {
 inline void BMI088::accelReadMulti(uint8_t reg, uint8_t *data, uint16_t len) {
     csAccelLow();
     BMI088_readandwrite_byte((reg) | 0x80);
-    BMI088_read_multiple_reg(reg, data, len);                // 循环发送dummy以接收多次数据
+    // 使用 DMA 读取（内部先发送 reg|0x80，再 DMA 收 len 字节）
+    HAL_StatusTypeDef st = BMI088_read_multiple_reg_dma(reg, data, (uint8_t)len);
+    // 如果 DMA 失败或超时，你可以选择 fallback 到原阻塞实现（可选）
+    if (st != HAL_OK) {
+        // fallback（可选）：按原逻辑用阻塞方式读取，保证可靠性
+        BMI088_read_multiple_reg(reg, data, len); // 你原先的阻塞实现
+    }             // 循环发送dummy以接收多次数据
     csAccelHigh();
 }
 
@@ -222,6 +237,7 @@ inline void BMI088::gyroWriteReg(uint8_t reg, uint8_t data) {
 inline uint8_t BMI088::gyroReadReg(uint8_t reg) {
     csGyroLow();
     BMI088_readandwrite_byte(reg | 0x80);             // 读操作，最高位为1
+    //HAL_SPI_Transmit(&hspi1, reinterpret_cast<const uint8_t *>(reg | 0x80), 1, 1000);
     uint8_t data = BMI088_readandwrite_byte(0x55);            // 发送一个dummy字节以接收数据
     csGyroHigh();
     return data;
@@ -230,7 +246,13 @@ inline uint8_t BMI088::gyroReadReg(uint8_t reg) {
 //陀螺仪读多个寄存器
 inline void BMI088::gyroReadMulti(uint8_t reg, uint8_t *data, uint16_t len) {
     csGyroLow();
-    BMI088_read_multiple_reg(reg, data, len);                // 循环发送dummy以接收多次数据
+    // 使用 DMA 读取（内部先发送 reg|0x80，再 DMA 收 len 字节）
+    HAL_StatusTypeDef st = BMI088_read_multiple_reg_dma(reg, data, (uint8_t)len);
+    // 如果 DMA 失败或超时，你可以选择 fallback 到原阻塞实现（可选）
+    if (st != HAL_OK) {
+        // fallback（可选）：按原逻辑用阻塞方式读取，保证可靠性
+        BMI088_read_multiple_reg(reg, data, len); // 你原先的阻塞实现
+    }           // 循环发送dummy以接收多次数据
     csGyroHigh();
 }
 
@@ -242,17 +264,57 @@ inline uint8_t BMI088::BMI088_readandwrite_byte(uint8_t txdata)
     return rx_data;
 }
 
-//从IMU读取多个寄存器数据
-void BMI088::BMI088_read_multiple_reg(uint8_t reg, uint8_t *buf, uint8_t len)
+// 从IMU读取多个寄存器数据
+ void BMI088::BMI088_read_multiple_reg(uint8_t reg, uint8_t *buf, uint8_t len)
+ {
+     BMI088_readandwrite_byte(reg | 0x80);
+     while (len != 0)
+     {
+         *buf = BMI088_readandwrite_byte(0x55);
+         buf++;
+         len--;
+     }
+ }
+
+ // 返回 HAL_OK / HAL_ERROR / HAL_TIMEOUT
+HAL_StatusTypeDef BMI088::BMI088_read_multiple_reg_dma(uint8_t reg, uint8_t *buf, uint8_t len)
 {
+    if (!buf || len == 0 || len > BMI088_DMA_MAX_LEN) return HAL_ERROR;
+
+    bmi088_spi_dma_done = 0;
+    bmi088_spi_dma_error = 0;
+
+    // 1) 按原流程先发送寄存器地址 + 读标志。使用现有同步单字节函数保持时序一致性。
+    //    这个调用会把寄存器地址发送出去（CS 必须已经拉低，调用者负责）。
     BMI088_readandwrite_byte(reg | 0x80);
-    while (len != 0)
-    {
-        *buf = BMI088_readandwrite_byte(0x55);
-        buf++;
-        len--;
+
+    // 2) 填充 tx dummy buffer（0x55），长度为 len
+    for (uint8_t i = 0; i < len; ++i) bmi088_dma_tx_buf[i] = 0x55;
+
+    // 3) 启动 HAL SPI 双向 DMA 传输（发送 dummy，接收数据到 buf）
+    //    这里使用 extern 定义的 hspi1（你的文件中已有 extern SPI_HandleTypeDef hspi1;）
+    if (HAL_SPI_TransmitReceive_DMA(&hspi1, bmi088_dma_tx_buf, buf, len) != HAL_OK) {
+        return HAL_ERROR;
     }
+
+    // 4) 等待 DMA 完成标志（短超时）——保持同步调用风格
+    uint32_t t0 = HAL_GetTick();
+    const uint32_t timeout_ms = 10; // 根据需要可调（不宜太大）
+    while (!bmi088_spi_dma_done && !bmi088_spi_dma_error) {
+        if ((HAL_GetTick() - t0) > timeout_ms) {
+            // 超时：尝试中止 DMA，清状态
+            HAL_SPI_Abort(&hspi1);
+            return HAL_TIMEOUT;
+        }
+    }
+
+    if (bmi088_spi_dma_error) {
+        return HAL_ERROR;
+    }
+
+    return HAL_OK;
 }
+
 
 //加速度计配置状态检查数组写入
 uint8_t BMI088::writeAccelConfig[BMI088_WRITE_ACCEL_REG_NUM][3] =
@@ -290,4 +352,21 @@ extern "C"{
     void BMI088_Read(float gyro[3], float accel[3], float *temperate) {
         bmi088_instance.read(gyro, accel, temperate);
     }
+
+    // SPI 传输完成（TxRx 完成）回调
+    void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
+    {
+        if (hspi == &hspi1) {
+            bmi088_spi_dma_done = 1;
+        }
+    }
+
+    // SPI 错误回调
+    void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
+    {
+        if (hspi == &hspi1) {
+            bmi088_spi_dma_error = 1;
+        }
+    }
+
 }

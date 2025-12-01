@@ -34,9 +34,18 @@ typedef struct ist8310_real_data_t {
     float mag[3];
 } ist8310_real_data_t;
 
-extern uint8_t ist8310_init(void);
+#ifdef __cplusplus
+extern "C"{
+#endif
 
-extern void ist8310_read_over(uint8_t *status_buf, ist8310_real_data_t *mpu6500_real_data);
+    uint8_t ist8310_init(void);
 
-extern void ist8310_read_mag(float mag[3]);
+    void ist8310_read_over(uint8_t *status_buf, ist8310_real_data_t *mpu6500_real_data);
+
+    void ist8310_read_mag(float mag[3]);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

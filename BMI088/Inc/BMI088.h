@@ -83,6 +83,7 @@ private:
 
     static inline uint8_t BMI088_readandwrite_byte(uint8_t txdata);
     static void BMI088_read_multiple_reg(uint8_t reg, uint8_t *data, uint8_t len);
+    static HAL_StatusTypeDef BMI088_read_multiple_reg_dma(uint8_t reg, uint8_t *buf, uint8_t len);
 
     //配置状态检查数组写入函数
     //主要用于写入精度范围，量程等内容，并且返回是否成功
