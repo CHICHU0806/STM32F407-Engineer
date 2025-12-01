@@ -93,7 +93,7 @@ add_executable(${CMAKE_PROJECT_NAME}
         BMI088/Inc/BMI088driver.h
         BMI088/Src/BMI088Middleware.c
         BMI088/Inc/BMI088Middleware.h
-        BMI088/BMI088reg.h
+        BMI088/BMI088config.h
         Bsp/Src/bsp_dwt.cpp
         Bsp/Inc/bsp_dwt.h
         IST8310/Src/ist8310driver_middleware.c
@@ -106,12 +106,11 @@ add_executable(${CMAKE_PROJECT_NAME}
         Bsp/Inc/bsp_spi.h
         Algorithm/Src/MahonyAHRS.c
         Algorithm/Inc/MahonyAHRS.h
-        Task/Src/INS_Task.c
-        Task/Inc/INS_Task.h
-        Bsp/Src/bsp_imu_pwm.c
-        Bsp/Inc/bsp_imu_pwm.h
-        PID/Src/dji_pid.c
-        PID/Inc/dji_pid.h
+        BMI088/Src/ImuTempControl.cpp
+        BMI088/Src/BMI088.cpp
+        BMI088/Inc/BMI088.h
+        Task/Src/imuTask.cpp
+        Task/Inc/imuTask.h
 )
 
 # Add STM32CubeMX generated sources
