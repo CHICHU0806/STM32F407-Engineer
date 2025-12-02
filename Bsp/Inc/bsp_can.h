@@ -29,16 +29,30 @@ typedef struct {
     uint8_t s2;
 }  remote_control_info;
 
+typedef struct {
+    int16_t roll;
+    int16_t pitch;
+    int16_t yaw;
+} imu_data_info;
+
 #ifdef __cplusplus
 class bsp_can {
 public:
     void bsp_can_init();
     void BSP_CAN_FilterConfig();
+
+    //DJI Motor CAN发送函数接口
     HAL_StatusTypeDef BSP_CAN2_SendMotorCmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
     HAL_StatusTypeDef BSP_CAN2_SendMotorCmdFive2Eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8);
     HAL_StatusTypeDef BSP_CAN2_SendMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11);
+
+    //遥控器数据 CAN发送函数接口
     HAL_StatusTypeDef BSP_CAN1_SendRemoteControlCmd(int16_t X,int16_t Y,int16_t Z, uint8_t s1,uint8_t s2);
 
+    //IMU数据 CAN发送函数接口
+    HAL_StatusTypeDef BSP_CAN1_SendIMUData(int16_t roll, int16_t pitch, int16_t yaw);
+
+    //LK motor CAN发送函数接口
     HAL_StatusTypeDef BSP_CAN1_LKMotorCloseCmd();
     HAL_StatusTypeDef BSP_CAN1_LKMotorStartCmd();
     HAL_StatusTypeDef BSP_CAN1_LKMotorTorqueCmd(int16_t current);
@@ -56,7 +70,12 @@ extern "C" {
     HAL_StatusTypeDef bsp_can2_sendmotorcmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4);
     HAL_StatusTypeDef bsp_can2_sendmotorcmdfive2eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8);
     HAL_StatusTypeDef bsp_can2_sendmotorcmdnine2eleven(int16_t motor9,int16_t motor10,int16_t motor11);
+
+    //遥控器数据 CAN发送函数接口
     HAL_StatusTypeDef bsp_can1_sendremotecontrolcmd(int16_t X,int16_t Y,int16_t Z,uint8_t s1,uint8_t s2);
+
+    //IMU数据 CAN发送函数接口
+    HAL_StatusTypeDef bsp_can1_sendimudata(int16_t roll, int16_t pitch, int16_t yaw);
 
     //LK motor CAN发送函数接口
     HAL_StatusTypeDef bsp_can1_lkmotorclosecmd();

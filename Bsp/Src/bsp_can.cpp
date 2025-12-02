@@ -22,8 +22,13 @@ motor_info motor_6;
 motor_info motor_7;
 motor_info motor_8;
 motor_info motor_9;
+motor_info LK_motor_1;
 
+//遥控器数据结构体变量
 remote_control_info remote_control;
+
+//IMU数据结构体变量
+imu_data_info imu_data_chassis;
 
 //BSP_CAN相关内容初始化
 void bsp_can::bsp_can_init()
@@ -128,7 +133,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN2_SendMotorCmdFive2Eight(int16_t motor5, int16
     TxData[7] = motor8;
 
     //将信息推送到邮箱
-    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+    return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
 HAL_StatusTypeDef bsp_can::BSP_CAN2_SendMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11) {
@@ -176,6 +181,35 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_SendRemoteControlCmd(int16_t X,int16_t Y,int
     TxData[5] = Z;
     TxData[6] = s1;
     TxData[7] = s2;
+
+    //将信息推送到邮箱
+    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+}
+
+HAL_StatusTypeDef bsp_can::BSP_CAN1_SendIMUData(int16_t roll, int16_t pitch, int16_t yaw) {
+    //三要素：帧头，数据，邮箱
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t TxData[8];
+    uint32_t TxMailbox;
+
+    // 放大 100 倍，转换为 int16_t
+    int16_t roll_int  = (int16_t)(roll  * 100.0f);
+    int16_t pitch_int = (int16_t)(pitch * 100.0f);
+    int16_t yaw_int   = (int16_t)(yaw   * 100.0f);
+
+    //帧头组成
+    TxHeader.StdId = 0x401; //标准标识符
+    TxHeader.IDE = CAN_ID_STD;
+    TxHeader.RTR = CAN_RTR_DATA;
+    TxHeader.DLC = 8;
+
+    //数据填充
+    TxData[0] = (roll_int  >> 8) & 0xFF;
+    TxData[1] = roll_int  & 0xFF;
+    TxData[2] = (pitch_int >> 8) & 0xFF;
+    TxData[3] = pitch_int & 0xFF;
+    TxData[4] = (yaw_int   >> 8) & 0xFF;
+    TxData[5] = yaw_int   & 0xFF;
 
     //将信息推送到邮箱
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
@@ -260,7 +294,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorSpeedCmd(int32_t speed) {
     TxHeader.DLC = 8;
 
     //数据填充
-    TxData[0] = 0xA2;   // 命令字：力矩控制
+    TxData[0] = 0xA2;   // 命令字：速度控制
     TxData[1] = 0x00;
     TxData[2] = 0x00;
     TxData[3] = 0x00;
@@ -404,6 +438,40 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     remote_control.s2 = RxData[7];
                     break;
                 }
+                case 0x401: {
+                    // 高字节在前，恢复 int16_t
+                    auto roll_int  = (int16_t)((RxData[0] << 8) | RxData[1]);
+                    auto pitch_int = (int16_t)((RxData[2] << 8) | RxData[3]);
+                    auto yaw_int   = (int16_t)((RxData[4] << 8) | RxData[5]);
+
+                    // 转回 float
+                    imu_data_chassis.roll  = roll_int  / 100.0f;
+                    imu_data_chassis.pitch = pitch_int / 100.0f;
+                    imu_data_chassis.yaw   = yaw_int   / 100.0f;
+
+                    debug_P = imu_data_chassis.roll;
+                    debug_I = imu_data_chassis.pitch;
+                    debug_D = imu_data_chassis.yaw;
+                    break;
+                }
+                case 0x141: {
+                    switch (RxData[0]) {
+                        case 0xA1: {
+                            // 处理力矩反馈
+                            break;
+                        }
+                        case 0xA2: {
+                            // 处理速度反馈
+                            LK_motor_1.temp = RxData[1];
+                            LK_motor_1.torque_current = (RxData[3] << 8) | RxData[2];
+                            LK_motor_1.rotor_speed = (RxData[5] << 8) | RxData[4];
+                            LK_motor_1.rotor_angle = (RxData[7] << 8) | RxData[6];
+                            break;
+                        }
+                            default:break;
+                    }
+
+                }
                 default: break;
             }
         }
@@ -432,6 +500,10 @@ extern "C" {
 
     HAL_StatusTypeDef bsp_can1_sendremotecontrolcmd(int16_t X,int16_t Y,int16_t Z, uint8_t s1, uint8_t s2) {
         return can.BSP_CAN1_SendRemoteControlCmd(X,Y,Z, s1, s2);
+    }
+
+    HAL_StatusTypeDef bsp_can1_sendimudata(int16_t roll, int16_t pitch, int16_t yaw) {
+        return can.BSP_CAN1_SendIMUData(roll, pitch, yaw);
     }
 
     HAL_StatusTypeDef bsp_can1_lkmotorclosecmd() {
