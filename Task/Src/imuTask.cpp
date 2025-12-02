@@ -5,6 +5,7 @@
 #include "imuTask.h"
 #include <cmath>
 #include "BMI088.h"
+#include "bsp_can.h"
 #include "bsp_dwt.h"
 #include "ist8310driver.h"
 #include "ImuTempControl.h"
@@ -46,6 +47,8 @@ void ImuTask::run() {;
         pitch *= (180.0f / PI);
         yaw *= (180.0f / PI);
 
+        bsp_can1_sendimudata(roll,pitch,yaw);
+
         DWT_Delay_ms(1); // 1ms
     }
 }
@@ -54,6 +57,6 @@ extern "C" {
     static ImuTask imu_task;
 
     void ImuTask_Init() {
-        imu_task.start((char*)"ImuTask", 1024, osPriorityRealtime);
+        imu_task.start((char*)"ImuTask", 800, osPriorityHigh);
     }
 }

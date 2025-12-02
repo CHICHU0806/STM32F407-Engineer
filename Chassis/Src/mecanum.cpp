@@ -23,7 +23,7 @@ std::array<float, 4> Mecanum::Mecanum_Calculate(float Vx, float Vy, float omega)
 }
 
 extern "C"{
-    static Mecanum mecanum(0.5f, 0.5f, 0.076f);
+    static Mecanum mecanum(0.6f, 0.42f, 0.08f);
 
     void mecanum_calculate(float Vx, float Vy, float omega) {
         mecanum.Mecanum_Calculate(Vx, Vy, omega);
