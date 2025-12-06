@@ -38,9 +38,6 @@
         * Output
         * EVENT_OUT
         * EXTI
-     PA12   ------> USB_OTG_FS_DP
-     PA11   ------> USB_OTG_FS_DM
-     PA10   ------> USB_OTG_FS_ID
 */
 void MX_GPIO_Init(void)
 {
@@ -67,14 +64,6 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-
-  /*Configure GPIO pins : PA12 PA11 PA10 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_11|GPIO_PIN_10;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  GPIO_InitStruct.Alternate = GPIO_AF10_OTG_FS;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PG6 */
   GPIO_InitStruct.Pin = GPIO_PIN_6;
