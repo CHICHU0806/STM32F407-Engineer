@@ -25,17 +25,17 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-extern void MotorTask_Init(void);
-extern void MecanumTask_Init(void);
-extern void OmniWheelTask_Init(void);
-extern void MeasureHeroFourSpeedTask_Init(void);
-extern void MeasureInfantryTwoSpeedTask_Init(void);
-extern void KeyTask_Init(void);
-extern void SwerveTask_Init(void);
-extern void TargetCarTask_Init(void);
-extern void MasterBoardTask_Init(void);
-extern void SlaveBoardTask_Init(void);
-extern void ImuTask_Init(void);
+// extern void MotorTask_Init(void);
+// extern void MecanumTask_Init(void);
+// extern void OmniWheelTask_Init(void);
+// extern void MeasureHeroFourSpeedTask_Init(void);
+// extern void MeasureInfantryTwoSpeedTask_Init(void);
+// extern void KeyTask_Init(void);
+// extern void SwerveTask_Init(void);
+// extern void TargetCarTask_Init(void);
+// extern void MasterBoardTask_Init(void);
+// extern void SlaveBoardTask_Init(void);
+// extern void ImuTask_Init(void);
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -140,7 +140,7 @@ void MX_FREERTOS_Init(void) {
   //KeyTask_Init();
 
   //主板任务
-  MasterBoardTask_Init();
+  //MasterBoardTask_Init();
 
   /* USER CODE END RTOS_THREADS */
 

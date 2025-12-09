@@ -18,12 +18,12 @@ void KeyTask::run() {;
         if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET)
         {
             float pushout = key_speed_pid.Calculate(1500, motor_5.rotor_speed, 0.01f);
-            bsp_can2_sendmotorcmdfive2eight(pushout, 0, 0, 0);
+            bsp_can2_djimotorcmdfive2eight(pushout, 0, 0, 0);
             osDelay(10);
         }
         else {
             float pushout = key_speed_pid.Calculate(-850, motor_5.rotor_speed, 0.01f);
-            bsp_can2_sendmotorcmdfive2eight(pushout, 0, 0, 0);
+            bsp_can2_djimotorcmdfive2eight(pushout, 0, 0, 0);
             osDelay(10);
         }
     }

@@ -31,7 +31,7 @@ void OmniWheelTask::run() {
         int16_t motor4_cmd = speed_pid_calculate(wheel_speeds[3], motor_4.rotor_speed, 0.01f);
 
         // === 4. 通过 CAN 发送给电机 ===
-        bsp_can2_sendmotorcmd(motor1_cmd, motor2_cmd, motor3_cmd, motor4_cmd);
+        bsp_can2_djimotorcmd(motor1_cmd, motor2_cmd, motor3_cmd, motor4_cmd);
 
         // === 5. 周期调度 ===
         osDelay(10);

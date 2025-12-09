@@ -32,7 +32,7 @@ void MecanumTask::run() {
         int16_t motor3_cmd = speed_pid_calculate(MotorSpeeds[2],motor_3.rotor_speed,0.01f);
         int16_t motor4_cmd = speed_pid_calculate(MotorSpeeds[3],motor_4.rotor_speed,0.01f);
 
-        bsp_can2_sendmotorcmd(motor1_cmd, motor2_cmd, motor3_cmd, motor4_cmd);
+        bsp_can2_djimotorcmd(motor1_cmd, motor2_cmd, motor3_cmd, motor4_cmd);
 
         osDelay(10);
     }

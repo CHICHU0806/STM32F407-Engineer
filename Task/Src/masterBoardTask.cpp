@@ -48,14 +48,14 @@ void MasterBoardTask::run() {
         //云台pitch轴速度控制
         pitch_target_speed = pitch_speed_pid.Calculate(dbus.ch[1]*3.0f, motor_6.rotor_speed, 0.001f);
 
-        bsp_can2_sendmotorcmdfive2eight(0,pitch_target_speed,0,0);
+        bsp_can2_djimotorcmdfive2eight(0,pitch_target_speed,0,0);
 
         //英雄三摩擦轮速度控制
         // HeroShoot_target_speed1 = HeroShoot_speed_pid1.Calculate(-5000, motor_1.rotor_speed, 0.01f);
         // HeroShoot_target_speed2 = HeroShoot_speed_pid1.Calculate(5000, motor_2.rotor_speed, 0.01f);
         // HeroShoot_target_speed3 = HeroShoot_speed_pid1.Calculate(-5000, motor_3.rotor_speed, 0.01f);
         //
-        // bsp_can2_sendmotorcmd(HeroShoot_target_speed1,HeroShoot_target_speed2,HeroShoot_target_speed3,0);
+        // bsp_can2_djimotorcmd(HeroShoot_target_speed1,HeroShoot_target_speed2,HeroShoot_target_speed3,0);
 
         switch (dbus.s1) {
             case 1:
@@ -63,7 +63,7 @@ void MasterBoardTask::run() {
                     case 1: {
                         //小陀螺模式
                         bsp_can1_sendremotecontrolcmd(0,0,660, dbus.s1,dbus.s2);
-                        bsp_can1_lkmotorspeedcmd(-660 * 23-dbus.ch[0] * 13);
+                        bsp_can1_lkmotorvelocitycmd(-660 * 23-dbus.ch[0] * 13);
                         break;
                     }
                     default: break;
@@ -74,7 +74,7 @@ void MasterBoardTask::run() {
                     case 2: {
                         //自由控制
                         bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4], dbus.s1,dbus.s2);
-                        bsp_can1_lkmotorspeedcmd(-dbus.ch[0] * 13);
+                        bsp_can1_lkmotorvelocitycmd(-dbus.ch[0] * 13);
                         break;
                     }
                 }
@@ -87,7 +87,7 @@ void MasterBoardTask::run() {
                         if (!yaw_initialized) {
                             yaw_initial = imu_data_chassis.yaw; // 直接取底盘发过来的 yaw yaw_initialized = true;
                         }
-                        bsp_can1_lkmotorspeedcmd(-dbus.ch[4] * 23-dbus.ch[0] * 13);
+                        bsp_can1_lkmotorvelocitycmd(-dbus.ch[4] * 23-dbus.ch[0] * 13);
                         break;
                     }
                     default: break;

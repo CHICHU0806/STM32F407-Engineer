@@ -50,7 +50,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-extern volatile uint32_t temp;
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -118,13 +118,18 @@ int main(void)
   BSP_CAN_Init();
   Uart_Init(&huart3, DBUS_Decode);
   Uart_Init(&huart6, MyUartCallback);
+
+  HAL_Delay(1000);
+
+  bsp_can2_dmmotordisablecmd(0x01,0x200);
+  bsp_can2_dmmotorenablecmd(0x01,0x200);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
-  MX_FREERTOS_Init();
+  //MX_FREERTOS_Init();
 
   /* Start scheduler */
-  osKernelStart();
+  //osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
 
@@ -132,6 +137,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    if (bsp_can2_dmmotorvelocitycmd(0x01,5) != HAL_OK) {
+      Error_Handler();
+    }
+
     DWT_Delay_ms(1);
     /* USER CODE END WHILE */
 
