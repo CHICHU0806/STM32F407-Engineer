@@ -10,6 +10,7 @@
 #include "ist8310driver.h"
 #include "ImuTempControl.h"
 #include "MahonyAHRS.h"
+#include "debug_vars.h"
 
 #define PI 3.14159265358979323846f
 
@@ -49,6 +50,10 @@ void ImuTask::run() {;
 
         bsp_can1_sendimudata(roll,pitch,yaw);
 
+        debug_P = roll;
+        debug_I = pitch;
+        debug_D = yaw;
+
         DWT_Delay_ms(1); // 1ms
     }
 }
@@ -57,6 +62,6 @@ extern "C" {
     static ImuTask imu_task;
 
     void ImuTask_Init() {
-        imu_task.start((char*)"ImuTask", 800, osPriorityHigh);
+        imu_task.start((char*)"ImuTask", 1024, osPriorityRealtime);
     }
 }

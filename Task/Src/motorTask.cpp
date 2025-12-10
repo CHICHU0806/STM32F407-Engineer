@@ -26,10 +26,12 @@ extern motor_info LK_motor_1;
 int16_t example_motor1_cmd = 0;
 // int16_t example_motor2_cmd = 0;
 void MotorTask::run() {
+    bsp_can2_dmmotordisablecmd(0x01,0x100);
+    osDelay(1000);
+    bsp_can2_dmmotorenablecmd(0x01,0x100);
 for (;;) {
     //example_motor1_cmd = example_speed_pid1.Calculate(dbus.ch[1]*3.0f, motor_6.rotor_speed, 0.01f);
-    bsp_can2_dmmotorenablecmd(0x001,0x200);
-    bsp_can2_dmmotorvelocitycmd(0x001,5);
+    //bsp_can2_dmmotorvelocitycmd(0x01,-dbus.ch[0]/220);
 
     osDelay(10);
     }

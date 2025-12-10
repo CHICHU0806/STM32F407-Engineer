@@ -521,11 +521,11 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
         else if(hcan->Instance == CAN1) {
             switch(RxHeader.StdId) {
                 case 0x11: {
-                    DM_motor_1.id  = RxData[1] & 0x0F;
-                    DM_motor_1.err = RxData[1] >> 4;
-                    DM_motor_1.pos_raw     = (RxData[2] << 8) | RxData[3];
-                    DM_motor_1.vel_raw     = (RxData[4] << 4) | (RxData[5] >> 4);
-                    DM_motor_1.torque_raw  = ((RxData[5] & 0x0F) << 8) | RxData[6];
+                    DM_motor_1.id  = RxData[0] & 0x0F;
+                    DM_motor_1.err = RxData[0] >> 4;
+                    DM_motor_1.pos_raw     = (RxData[1] << 8) | RxData[2];
+                    DM_motor_1.vel_raw     = (RxData[3] << 4) | (RxData[4] >> 4);
+                    DM_motor_1.torque_raw  = ((RxData[4] & 0x0F) << 8) | RxData[5];
                     DM_motor_1.temp_mos    = RxData[7];
                 }
                 case 0x141: {
