@@ -528,6 +528,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     DM_motor_1.torque_raw  = ((RxData[4] & 0x0F) << 8) | RxData[5];
                     DM_motor_1.temp_mos    = RxData[7];
                 }
+
                 case 0x141: {
                     switch (RxData[0]) {
                         case 0xA1: {
