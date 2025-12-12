@@ -155,9 +155,9 @@ void BMI088::convertData() {
     real_.accel[1] = raw_.accel[1] * BMI088_ACCEL_3G_SEN;
     real_.accel[2] = raw_.accel[2] * BMI088_ACCEL_3G_SEN;
     //陀螺仪转换
-    real_.gyro[0] = raw_.gyro[0] * BMI088_GYRO_2000_SEN;
-    real_.gyro[1] = raw_.gyro[1] * BMI088_GYRO_2000_SEN;
-    real_.gyro[2] = raw_.gyro[2] * BMI088_GYRO_2000_SEN;
+    real_.gyro[0] = raw_.gyro[0] * BMI088_GYRO_2000_SEN * 1.2f;
+    real_.gyro[1] = raw_.gyro[1] * BMI088_GYRO_2000_SEN * 1.2f;
+    real_.gyro[2] = raw_.gyro[2] * BMI088_GYRO_2000_SEN * 1.2f;
     //温度转换
     real_.temp = (static_cast<float>(raw_.temp) * BMI088_TEMP_FACTOR) + BMI088_TEMP_OFFSET;
 }

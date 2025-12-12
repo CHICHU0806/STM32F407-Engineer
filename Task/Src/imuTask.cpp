@@ -12,8 +12,6 @@
 #include "MahonyAHRS.h"
 #include "debug_vars.h"
 
-#define PI 3.14159265358979323846f
-
 float gyro[3], accel[3], temp, mag[3];
 float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};
 float roll, pitch, yaw;
@@ -23,32 +21,34 @@ void ImuTask::run() {;
     ist8310_init();
     ImuTempControl_Init();
 
+    DWT_Delay_ms(1000);
+
     for (;;) {
         BMI088_Read(gyro, accel, &temp);
-        ist8310_read_mag(mag);
+        //ist8310_read_mag(mag);
 
-        ImuTempControl_Update(40, temp, 0.001f);
+        ImuTempControl_Update(45, temp, 0.001f);
 
-        MahonyAHRSupdate(q,
+        MahonyAHRSupdateIMU(q,
                          gyro[0],
                          gyro[1],
                          gyro[2],
                          accel[0],
                          accel[1],
-                         accel[2],
-                         mag[0],
-                         mag[1],
-                         mag[2]);
+                         accel[2]);
+                         // mag[0],
+                         // mag[1],
+                         // mag[2]);
 
         roll  = atan2f(2.0f*(q[0]*q[1] + q[2]*q[3]), 1.0f - 2.0f*(q[1]*q[1] + q[2]*q[2]));
         pitch = asinf(2.0f*(q[0]*q[2] - q[3]*q[1]));
         yaw   = atan2f(2.0f*(q[0]*q[3] + q[1]*q[2]), 1.0f - 2.0f*(q[2]*q[2] + q[3]*q[3]));
 
-        roll *= (180.0f / PI);
-        pitch *= (180.0f / PI);
-        yaw *= (180.0f / PI);
+        roll *= (180.0f / M_PI);
+        pitch *= (180.0f / M_PI);
+        yaw *= (180.0f / M_PI);
 
-        bsp_can1_sendimudata(roll,pitch,yaw);
+        //bsp_can1_sendimudata(roll,pitch,yaw);
 
         debug_P = roll;
         debug_I = pitch;
