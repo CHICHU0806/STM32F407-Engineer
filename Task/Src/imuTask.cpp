@@ -37,6 +37,7 @@ void ImuTask::run() {;
                          accel[1],
                          accel[2]);
 
+
         //根据四元数计算欧拉角
         roll  = atan2f(2.0f*(q[0]*q[1] + q[2]*q[3]), 1.0f - 2.0f*(q[1]*q[1] + q[2]*q[2]));
         pitch = asinf(2.0f*(q[0]*q[2] - q[3]*q[1]));
