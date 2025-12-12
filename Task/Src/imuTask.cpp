@@ -18,17 +18,17 @@ float roll, pitch, yaw;
 
 void ImuTask::run() {;
     BMI088_Init();
-    ist8310_init();
     ImuTempControl_Init();
-
     DWT_Delay_ms(1000);
 
     for (;;) {
+        //真实数据读取
         BMI088_Read(gyro, accel, &temp);
-        //ist8310_read_mag(mag);
 
+        //控温
         ImuTempControl_Update(45, temp, 0.001f);
 
+        //Mahony算法更新四元数
         MahonyAHRSupdateIMU(q,
                          gyro[0],
                          gyro[1],
@@ -36,14 +36,13 @@ void ImuTask::run() {;
                          accel[0],
                          accel[1],
                          accel[2]);
-                         // mag[0],
-                         // mag[1],
-                         // mag[2]);
 
+        //根据四元数计算欧拉角
         roll  = atan2f(2.0f*(q[0]*q[1] + q[2]*q[3]), 1.0f - 2.0f*(q[1]*q[1] + q[2]*q[2]));
         pitch = asinf(2.0f*(q[0]*q[2] - q[3]*q[1]));
         yaw   = atan2f(2.0f*(q[0]*q[3] + q[1]*q[2]), 1.0f - 2.0f*(q[2]*q[2] + q[3]*q[3]));
 
+        //角度制转换
         roll *= (180.0f / M_PI);
         pitch *= (180.0f / M_PI);
         yaw *= (180.0f / M_PI);
