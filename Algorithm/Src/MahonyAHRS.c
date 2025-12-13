@@ -16,6 +16,7 @@
 
 #include "MahonyAHRS.h"
 #include <math.h>
+#include <stdint.h>
 
 //---------------------------------------------------------------------------------------------------
 // Definitions
@@ -24,13 +25,18 @@
 #define twoKpDef	(2.0f * 0.5f)	// 2 * proportional gain
 #define twoKiDef	(2.0f * 0.0f)	// 2 * integral gain
 
+#define GYRO_STATIC_THRESH  0.015f   // rad/s ≈ 1.1 deg/s
+
 //---------------------------------------------------------------------------------------------------
 // Variable definitions
 
 volatile float twoKp = twoKpDef;											// 2 * proportional gain (Kp)
 volatile float twoKi = twoKiDef;											// 2 * integral gain (Ki)
-//volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;					// quaternion of sensor frame relative to auxiliary frame
+//volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;				// quaternion of sensor frame relative to auxiliary frame
 volatile float integralFBx = 0.0f,  integralFBy = 0.0f, integralFBz = 0.0f;	// integral error terms scaled by Ki
+
+volatile float gyroZ_bias = 0.0f;   // software-estimated gyro Z bias
+volatile uint8_t imu_static = 0;      // static state flag
 
 //---------------------------------------------------------------------------------------------------
 // Function declarations
@@ -153,6 +159,27 @@ void MahonyAHRSupdateIMU(float q[4], float gx, float gy, float gz, float ax, flo
 	float halfex, halfey, halfez;
 	float qa, qb, qc;
 
+	// // ---------- PATCH: gyro-only static detection ----------
+	// if (fabsf(gx) < GYRO_STATIC_THRESH &&
+	// 	fabsf(gy) < GYRO_STATIC_THRESH &&
+	// 	fabsf(gz) < GYRO_STATIC_THRESH)
+	// {
+	// 	imu_static = 1;
+	//
+	// 	// aggressive Z bias update during static
+	// 	gyroZ_bias += 0.015f * (gz - gyroZ_bias);
+	// }
+	// else
+	// {
+	// 	imu_static = 0;
+	//
+	// 	// very slow bias tracking during motion
+	// 	gyroZ_bias += 0.00005f * (gz - gyroZ_bias);
+	// }
+	//
+	// // apply bias compensation
+	// gz -= gyroZ_bias;
+
 	// Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
 	if(!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
 
@@ -171,12 +198,14 @@ void MahonyAHRSupdateIMU(float q[4], float gx, float gy, float gz, float ax, flo
 		halfex = (ay * halfvz - az * halfvy);
 		halfey = (az * halfvx - ax * halfvz);
 		halfez = (ax * halfvy - ay * halfvx);
+		// halfez = 0.0f;   // <<< PATCH: yaw is unobservable in 6-axis
 
 		// Compute and apply integral feedback if enabled
 		if(twoKi > 0.0f) {
 			integralFBx += twoKi * halfex * (1.0f / sampleFreq);	// integral error scaled by Ki
 			integralFBy += twoKi * halfey * (1.0f / sampleFreq);
 			integralFBz += twoKi * halfez * (1.0f / sampleFreq);
+			// integralFBz = 0.0f;     // <<< PATCH: disable Z integral
 			gx += integralFBx;	// apply integral feedback
 			gy += integralFBy;
 			gz += integralFBz;
@@ -197,6 +226,15 @@ void MahonyAHRSupdateIMU(float q[4], float gx, float gy, float gz, float ax, flo
 	gx *= (0.5f * (1.0f / sampleFreq));		// pre-multiply common factors
 	gy *= (0.5f * (1.0f / sampleFreq));
 	gz *= (0.5f * (1.0f / sampleFreq));
+	// if (imu_static)
+	// {
+	// 	gz = 0.0f;   // PATCH: freeze yaw during static
+	// }
+	// else
+	// {
+	// 	gz *= (0.5f * (1.0f / sampleFreq));
+	// }
+
 	qa = q[0];
 	qb = q[1];
 	qc = q[2];
