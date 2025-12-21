@@ -121,6 +121,9 @@ void MX_FREERTOS_Init(void) {
   //电机驱动任务
   //MotorTask_Init();
 
+  //主板任务
+  MasterBoardTask_Init();
+
   //IMU任务
   ImuTask_Init();
 
@@ -139,8 +142,6 @@ void MX_FREERTOS_Init(void) {
   //按键任务
   //KeyTask_Init();
 
-  //主板任务
-  //MasterBoardTask_Init();
 
   /* USER CODE END RTOS_THREADS */
 

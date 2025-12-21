@@ -13,8 +13,8 @@
 #include "usart_dma.h"
 #include "message_bus.h"
 
-extern motor_info motor_1;
-extern motor_info motor_2;
+extern DJI_motor_info motor_1;
+extern DJI_motor_info motor_2;
 
 SpeedPID speed_pid11(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
 SpeedPID speed_pid22(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);

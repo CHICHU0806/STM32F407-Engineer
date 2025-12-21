@@ -8,10 +8,10 @@
 #include "dbus.h"
 #include "debug_vars.h"
 
-extern motor_info motor_1;
-extern motor_info motor_2;
-extern motor_info motor_3;
-extern motor_info motor_4;
+extern DJI_motor_info motor_1;
+extern DJI_motor_info motor_2;
+extern DJI_motor_info motor_3;
+extern DJI_motor_info motor_4;
 
 void OmniWheelTask::run() {
     for (;;) {

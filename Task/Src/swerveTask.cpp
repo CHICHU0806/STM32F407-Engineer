@@ -12,16 +12,16 @@
 #include <cmath>
 
 // ---- 四个驱动电机 (M3508) ----
-extern motor_info motor_1;
-extern motor_info motor_2;
-extern motor_info motor_3;
-extern motor_info motor_4;
+extern DJI_motor_info motor_1;
+extern DJI_motor_info motor_2;
+extern DJI_motor_info motor_3;
+extern DJI_motor_info motor_4;
 
 // ---- 四个舵向电机 (GM6020) ----'
-extern motor_info motor_5;
-extern motor_info motor_6;
-extern motor_info motor_7;
-extern motor_info motor_8;
+extern DJI_motor_info motor_5;
+extern DJI_motor_info motor_6;
+extern DJI_motor_info motor_7;
+extern DJI_motor_info motor_8;
 
 //舵pid
 AnglePID Servo_angle_pid(15.0f, 0.05f, 0.005f, 5000.0f, 5000.0f);

@@ -159,27 +159,6 @@ void MahonyAHRSupdateIMU(float q[4], float gx, float gy, float gz, float ax, flo
 	float halfex, halfey, halfez;
 	float qa, qb, qc;
 
-	// // ---------- PATCH: gyro-only static detection ----------
-	// if (fabsf(gx) < GYRO_STATIC_THRESH &&
-	// 	fabsf(gy) < GYRO_STATIC_THRESH &&
-	// 	fabsf(gz) < GYRO_STATIC_THRESH)
-	// {
-	// 	imu_static = 1;
-	//
-	// 	// aggressive Z bias update during static
-	// 	gyroZ_bias += 0.015f * (gz - gyroZ_bias);
-	// }
-	// else
-	// {
-	// 	imu_static = 0;
-	//
-	// 	// very slow bias tracking during motion
-	// 	gyroZ_bias += 0.00005f * (gz - gyroZ_bias);
-	// }
-	//
-	// // apply bias compensation
-	// gz -= gyroZ_bias;
-
 	// Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
 	if(!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
 
@@ -198,14 +177,13 @@ void MahonyAHRSupdateIMU(float q[4], float gx, float gy, float gz, float ax, flo
 		halfex = (ay * halfvz - az * halfvy);
 		halfey = (az * halfvx - ax * halfvz);
 		halfez = (ax * halfvy - ay * halfvx);
-		// halfez = 0.0f;   // <<< PATCH: yaw is unobservable in 6-axis
 
 		// Compute and apply integral feedback if enabled
 		if(twoKi > 0.0f) {
 			integralFBx += twoKi * halfex * (1.0f / sampleFreq);	// integral error scaled by Ki
 			integralFBy += twoKi * halfey * (1.0f / sampleFreq);
 			integralFBz += twoKi * halfez * (1.0f / sampleFreq);
-			// integralFBz = 0.0f;     // <<< PATCH: disable Z integral
+
 			gx += integralFBx;	// apply integral feedback
 			gy += integralFBy;
 			gz += integralFBz;
@@ -226,14 +204,6 @@ void MahonyAHRSupdateIMU(float q[4], float gx, float gy, float gz, float ax, flo
 	gx *= (0.5f * (1.0f / sampleFreq));		// pre-multiply common factors
 	gy *= (0.5f * (1.0f / sampleFreq));
 	gz *= (0.5f * (1.0f / sampleFreq));
-	// if (imu_static)
-	// {
-	// 	gz = 0.0f;   // PATCH: freeze yaw during static
-	// }
-	// else
-	// {
-	// 	gz *= (0.5f * (1.0f / sampleFreq));
-	// }
 
 	qa = q[0];
 	qb = q[1];

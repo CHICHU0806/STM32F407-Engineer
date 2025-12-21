@@ -11,17 +11,17 @@
 #include "speed_pid.h"
 #include "dbus.h"
 
-extern motor_info motor_1;
-extern motor_info motor_2;
-extern motor_info motor_3;
-extern motor_info motor_6;
-extern motor_info LK_motor_1;
+extern DJI_motor_info motor_1;
+extern DJI_motor_info motor_2;
+extern DJI_motor_info motor_3;
+extern DJI_motor_info motor_6;
+extern DJI_motor_info LK_motor_1;
 
 extern float yaw, pitch, roll;
 
 extern imu_data_info imu_data_chassis;
 
-SpeedPID pitch_speed_pid(3.0f, 0.05f, 0.005f, 9000.0f, 400.0f);
+SpeedPID pitch_speed_pid(3.0f, 0.01f, 0.001f, 3500.0f, 250.0f);
 
 SpeedPID HeroShoot_speed_pid1(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
 SpeedPID HeroShoot_speed_pid2(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
@@ -35,9 +35,6 @@ int16_t HeroShoot_target_speed1 = 0;
 int16_t HeroShoot_target_speed2 = 0;
 int16_t HeroShoot_target_speed3 = 0;
 
-bool yaw_initialized = false;
-float yaw_initial = 0.0f;
-
 void MasterBoardTask::run() {
     pitch_speed_pid.Clear();
     HeroShoot_speed_pid1.Clear();
@@ -46,8 +43,13 @@ void MasterBoardTask::run() {
 
     for (;;) {
         //云台pitch轴速度控制
-        pitch_target_speed = pitch_speed_pid.Calculate(dbus.ch[1]*3.0f, motor_6.rotor_speed, 0.001f);
+        pitch_target_speed = pitch_speed_pid.Calculate(dbus.ch[1]*1.5f, motor_6.rotor_speed, 0.001f);
 
+        if (pitch < -7 && pitch_target_speed > 0) {
+            pitch_target_speed = 0 ;
+        } else if (pitch > 43 && pitch_target_speed < 0) {
+            pitch_target_speed = 0 ;
+        }
         bsp_can2_djimotorcmdfive2eight(0,pitch_target_speed,0,0);
 
         //英雄三摩擦轮速度控制
@@ -63,7 +65,7 @@ void MasterBoardTask::run() {
                     case 1: {
                         //小陀螺模式
                         bsp_can1_sendremotecontrolcmd(0,0,660, dbus.s1,dbus.s2);
-                        bsp_can1_lkmotorvelocitycmd(-660 * 23-dbus.ch[0] * 13);
+                        bsp_can1_lkmotortorquecmd(100);
                         break;
                     }
                     default: break;
@@ -74,7 +76,7 @@ void MasterBoardTask::run() {
                     case 2: {
                         //自由控制
                         bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4], dbus.s1,dbus.s2);
-                        bsp_can1_lkmotorvelocitycmd(-dbus.ch[0] * 13);
+                        bsp_can1_lkmotortorquecmd(-dbus.ch[0]*1.5f);
                         break;
                     }
                 }
@@ -84,20 +86,14 @@ void MasterBoardTask::run() {
                     case 3: {
                         //云台自稳
                         bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4], dbus.s1,dbus.s2);
-                        if (!yaw_initialized) {
-                            yaw_initial = imu_data_chassis.yaw; // 直接取底盘发过来的 yaw yaw_initialized = true;
-                        }
-                        bsp_can1_lkmotorvelocitycmd(-dbus.ch[4] * 23-dbus.ch[0] * 13);
+                        //bsp_can1_lkmotorvelocitycmd(-dbus.ch[4] * 23-dbus.ch[0] * 13);
+                        bsp_can1_lkmotortorquecmd(-dbus.ch[0]*0.00001f);
                         break;
                     }
                     default: break;
                 }
                 break;
             default: break;
-        }
-
-        if (dbus.s1 != 3 || dbus.s2 != 3) {
-            yaw_initialized = false; // 重置初始化标志
         }
 
         osDelay(1);

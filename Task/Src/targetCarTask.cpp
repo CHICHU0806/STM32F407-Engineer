@@ -10,10 +10,10 @@
 #include "dbus.h"
 #include "debug_vars.h"
 
-extern motor_info motor_1;
-extern motor_info motor_2;
-extern motor_info motor_4;
-extern motor_info motor_5;
+extern DJI_motor_info motor_1;
+extern DJI_motor_info motor_2;
+extern DJI_motor_info motor_4;
+extern DJI_motor_info motor_5;
 
 int angle_output1 = 0;
 int speed_output1 = 0;

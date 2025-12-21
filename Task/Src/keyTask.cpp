@@ -8,7 +8,7 @@
 #include "speed_pid.h"
 #include "usart.h"
 
-extern motor_info motor_5;
+extern DJI_motor_info motor_5;
 
 SpeedPID key_speed_pid(1.5f, 0.01f, 0.001f, 5000.0f, 200.0f);
 

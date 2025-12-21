@@ -19,10 +19,9 @@ typedef struct {
     int16_t  total_angle;     // 累计角度
     int32_t  round_count;     // 圈数计数
     uint8_t  inited;          // 是否初始化标志
-} motor_info;
+} DJI_motor_info;
 
-typedef struct
-{
+typedef struct {
     uint8_t  id;           // 电机 ID (0~15)
     uint8_t  err;          // 电机错误码
 
@@ -36,7 +35,14 @@ typedef struct
     float vel;             // 物理量（可选）
     float torque;          // 物理量（可选）
 
-} DMMotor_t;
+} DM_motor_info;
+
+typedef struct {
+    uint16_t rotor_angle;      // 电机转子角度
+    int16_t rotor_speed;      // 电机转子速度
+    int16_t torque_current;   // 电机转矩电流
+    int8_t  temp;             // 电机温度
+} LK_motor_info;
 
 typedef struct {
     int16_t X;

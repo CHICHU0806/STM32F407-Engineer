@@ -155,9 +155,9 @@ void BMI088::convertData() {
     real_.accel[1] = raw_.accel[1] * BMI088_ACCEL_3G_SEN;
     real_.accel[2] = raw_.accel[2] * BMI088_ACCEL_3G_SEN;
     //陀螺仪转换
-    real_.gyro[0] = raw_.gyro[0] * BMI088_GYRO_2000_SEN * 1.2f;
-    real_.gyro[1] = raw_.gyro[1] * BMI088_GYRO_2000_SEN * 1.2f;
-    real_.gyro[2] = raw_.gyro[2] * BMI088_GYRO_2000_SEN * 1.2f;
+    real_.gyro[0] = raw_.gyro[0] * BMI088_GYRO_2000_SEN * 1.19f;
+    real_.gyro[1] = raw_.gyro[1] * BMI088_GYRO_2000_SEN * 1.19f;
+    real_.gyro[2] = raw_.gyro[2] * BMI088_GYRO_2000_SEN * 1.19f;
     //温度转换
     real_.temp = (static_cast<float>(raw_.temp) * BMI088_TEMP_FACTOR) + BMI088_TEMP_OFFSET;
 }
@@ -276,7 +276,6 @@ inline uint8_t BMI088::BMI088_readandwrite_byte(uint8_t txdata)
      }
  }
 
- // 返回 HAL_OK / HAL_ERROR / HAL_TIMEOUT
 HAL_StatusTypeDef BMI088::BMI088_read_multiple_reg_dma(uint8_t reg, uint8_t *buf, uint8_t len)
 {
     if (!buf || len == 0 || len > BMI088_DMA_MAX_LEN) return HAL_ERROR;

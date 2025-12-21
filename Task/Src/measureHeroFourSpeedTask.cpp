@@ -7,10 +7,10 @@
 #include "dbus.h"
 #include "speed_pid.h"
 
-extern motor_info motor_1;
-extern motor_info motor_2;
-extern motor_info motor_3;
-extern motor_info motor_4;
+extern DJI_motor_info motor_1;
+extern DJI_motor_info motor_2;
+extern DJI_motor_info motor_3;
+extern DJI_motor_info motor_4;
 
 SpeedPID speed_pid1(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
 SpeedPID speed_pid2(1.5f, 0.08f, 0.003f, 9000.0f, 250.0f);
