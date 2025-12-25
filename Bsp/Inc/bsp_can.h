@@ -80,6 +80,7 @@ public:
     HAL_StatusTypeDef BSP_CAN1_LKMotorStartCmd();
     HAL_StatusTypeDef BSP_CAN1_LKMotorTorqueCmd(int16_t current);
     HAL_StatusTypeDef BSP_CAN1_LKMotorVelocityCmd(int32_t velocity);
+    HAL_StatusTypeDef BSP_CAN1_LKMotorIncrePosCmd(int32_t degree);
 
     //遥控器数据 CAN发送函数接口
     HAL_StatusTypeDef BSP_CAN1_SendRemoteControlCmd(int16_t X,int16_t Y,int16_t Z, uint8_t s1,uint8_t s2);
@@ -111,6 +112,7 @@ extern "C" {
     HAL_StatusTypeDef bsp_can1_lkmotorstartcmd();
     HAL_StatusTypeDef bsp_can1_lkmotortorquecmd(int16_t torque);
     HAL_StatusTypeDef bsp_can1_lkmotorvelocitycmd(int32_t velocity);
+    HAL_StatusTypeDef bsp_can1_lkmotorincreposcmd(int32_t degree);
 
     //遥控器数据 CAN发送函数接口
     HAL_StatusTypeDef bsp_can1_sendremotecontrolcmd(int16_t X,int16_t Y,int16_t Z,uint8_t s1,uint8_t s2);

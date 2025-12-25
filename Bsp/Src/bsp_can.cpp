@@ -107,7 +107,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN2_DJIMotorCmd(int16_t motor1, int16_t motor2, 
     TxData[7] = motor4;
 
     //将信息推送到邮箱
-    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+    return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
 HAL_StatusTypeDef bsp_can::BSP_CAN2_DJIMotorCmdFive2Eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
@@ -343,6 +343,33 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorVelocityCmd(int32_t velocity) {
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
+HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorIncrePosCmd(int32_t degree) {
+    //三要素：帧头，数据，邮箱
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t TxData[8];
+    uint32_t TxMailbox;
+
+    //帧头组成
+    TxHeader.StdId = 0x141; //标准标识符
+    TxHeader.IDE = CAN_ID_STD;
+    TxHeader.RTR = CAN_RTR_DATA;
+    TxHeader.DLC = 8;
+
+    //数据填充
+    TxData[0] = 0xA7;   // 命令字：增量位置控制
+    TxData[1] = 0x00;
+    TxData[2] = 0x00;
+    TxData[3] = 0x00;
+
+    TxData[4] = degree;          // 最低字节
+    TxData[5] = degree >> 8;   // 次低字节
+    TxData[6] = degree >> 16;  // 次高字节
+    TxData[7] = degree >> 24;  // 最高字节
+
+    //将信息推送到邮箱
+    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+}
+
 HAL_StatusTypeDef bsp_can::BSP_CAN1_SendRemoteControlCmd(int16_t X,int16_t Y,int16_t Z,uint8_t s1,uint8_t s2) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -570,9 +597,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     imu_data_chassis.pitch = pitch_int / 100.0f;
                     imu_data_chassis.yaw   = yaw_int   / 100.0f;
 
-                    debug_P = imu_data_chassis.roll;
-                    debug_I = imu_data_chassis.pitch;
-                    debug_D = imu_data_chassis.yaw;
+                    debug_roll = imu_data_chassis.roll;
+                    debug_pitch = imu_data_chassis.pitch;
+                    debug_yaw = imu_data_chassis.yaw;
                     break;
                 }
 
@@ -632,6 +659,10 @@ extern "C" {
 
     HAL_StatusTypeDef bsp_can1_lkmotorvelocitycmd(int32_t velocity) {
         return can.BSP_CAN1_LKMotorVelocityCmd(velocity);
+    }
+
+    HAL_StatusTypeDef bsp_can1_lkmotorincreposcmd(int32_t degree) {
+        return can.BSP_CAN1_LKMotorIncrePosCmd(degree);
     }
 
     HAL_StatusTypeDef bsp_can1_sendremotecontrolcmd(int16_t X,int16_t Y,int16_t Z, uint8_t s1, uint8_t s2) {
