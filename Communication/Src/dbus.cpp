@@ -31,9 +31,9 @@ void dbus_decode(volatile uint8_t* buf, int len)
 
     dbus.key = buf[14] | (buf[15] << 8);
 
-    debug_D = dbus.s1;
-    debug_P = dbus.s2;
-    debug_I = dbus.ch[0];
+    debug_yaw = dbus.s1;
+    debug_roll = dbus.s2;
+    debug_pitch = dbus.ch[0];
     debug_actual_speed = dbus.ch[4];
 }
 

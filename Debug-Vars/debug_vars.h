@@ -13,9 +13,9 @@ extern "C" {
 
 //基本框架
 //extern volatile 类型 变量名；
-extern volatile float debug_P;
-extern volatile float debug_I;
-extern volatile float debug_D;
+extern volatile float debug_roll;
+extern volatile float debug_pitch;
+extern volatile float debug_yaw;
 extern volatile float debug_actual_speed;
 extern volatile int16_t debug_angle1;
 extern volatile int16_t debug_angle2;

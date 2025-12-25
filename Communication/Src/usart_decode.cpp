@@ -45,9 +45,9 @@ void UartDecoder::handleMotorCmd(const uint8_t* data, uint8_t len)
     float speed = raw_speed;
 
     // 更新全局调试与控制变量
-    debug_P = speed;
+    debug_roll = speed;
     motorCmd.target_speed = speed;
-    debug_I = motorCmd.target_speed;
+    debug_pitch = motorCmd.target_speed;
 }
 
 extern "C" {

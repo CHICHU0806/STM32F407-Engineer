@@ -15,6 +15,7 @@
 float gyro[3], accel[3], temp, mag[3];
 float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};
 float roll, pitch, yaw;
+float roll_out, pitch_out, yaw_out;
 
 // 上电零点
 static float yaw_zero = 0.0f;
@@ -82,11 +83,22 @@ void ImuTask::run() {;
 
         // 积分得到实际 yaw_total
         yaw_total += (gyro_z - yaw_bias) * LOOP_DT;
-        float yaw_out = yaw_total*(180.0f / M_PI);
+        float yaw_temp = yaw_total*(180.0f / M_PI);
 
-        debug_P = roll;
-        debug_I = pitch;
-        debug_D = yaw_out;
+        //直接滤除因为接收过程中丢失而引起的低频毛刺，但是我认为这个地方还有优化的可能
+        if (roll != 0.0f) {
+            roll_out = roll;
+        }
+        if (pitch != 0.0f) {
+            pitch_out = pitch;
+        }
+        if (yaw_temp != 0.0f) {
+            yaw_out = yaw_temp;
+        }
+
+        debug_roll = roll;
+        debug_pitch = pitch;
+        debug_yaw = yaw_out;
 
         DWT_Delay_ms(1); // 1ms
     }

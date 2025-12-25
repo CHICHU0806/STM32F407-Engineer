@@ -8,9 +8,9 @@
 // ==== 定义调试变量 ====
 //基本框架
 //volatile 类型 变量名:
-volatile float debug_P = 0.0f;
-volatile float debug_I = 0.0f;
-volatile float debug_D = 0.0f;
+volatile float debug_roll = 0.0f;
+volatile float debug_pitch = 0.0f;
+volatile float debug_yaw = 0.0f;
 volatile float debug_actual_speed = -1.0f;
 volatile int16_t debug_angle1 = 0;
 volatile int16_t debug_angle2 = 0;
