@@ -35,6 +35,9 @@ int16_t HeroShoot_target_speed1 = 0;
 int16_t HeroShoot_target_speed2 = 0;
 int16_t HeroShoot_target_speed3 = 0;
 
+//发射机构推弹电机
+
+
 void MasterBoardTask::run() {
     pitch_speed_pid.Clear();
     HeroShoot_speed_pid1.Clear();
@@ -43,29 +46,28 @@ void MasterBoardTask::run() {
 
     for (;;) {
         //云台pitch轴速度控制
-        pitch_target_speed = pitch_speed_pid.Calculate(dbus.ch[1]*1.5f, motor_6.rotor_speed, 0.001f);
+        pitch_target_speed = pitch_speed_pid.Calculate(dbus.ch[1]*1.8f, motor_6.rotor_speed, 0.001f);
 
         if (pitch < -7 && pitch_target_speed > 0) {
             pitch_target_speed = 0 ;
         } else if (pitch > 43 && pitch_target_speed < 0) {
             pitch_target_speed = 0 ;
         }
-        bsp_can2_djimotorcmdfive2eight(0,pitch_target_speed,0,0);
-
-        //英雄三摩擦轮速度控制
-        // HeroShoot_target_speed1 = HeroShoot_speed_pid1.Calculate(-5000, motor_1.rotor_speed, 0.01f);
-        // HeroShoot_target_speed2 = HeroShoot_speed_pid1.Calculate(5000, motor_2.rotor_speed, 0.01f);
-        // HeroShoot_target_speed3 = HeroShoot_speed_pid1.Calculate(-5000, motor_3.rotor_speed, 0.01f);
-        //
-        // bsp_can2_djimotorcmd(HeroShoot_target_speed1,HeroShoot_target_speed2,HeroShoot_target_speed3,0);
+        // bsp_can2_djimotorcmdfive2eight(0,pitch_target_speed,0,0);
 
         switch (dbus.s1) {
             case 1:
                 switch (dbus.s2) {
                     case 1: {
                         //小陀螺模式
-                        bsp_can1_sendremotecontrolcmd(0,0,660, dbus.s1,dbus.s2);
-                        bsp_can1_lkmotortorquecmd(100);
+                        bsp_can1_sendremotecontrolcmd(0,0,900, dbus.s1,dbus.s2);
+                        bsp_can1_lkmotorvelocitycmd(-21950);
+                        break;
+                    }
+                    case 2: {
+                        break;
+                    }
+                    case 3: {
                         break;
                     }
                     default: break;
@@ -73,21 +75,50 @@ void MasterBoardTask::run() {
                 break;
             case 2:
                 switch (dbus.s2) {
+                    case 1: {
+                        //发射模式
+                        //英雄三摩擦轮速度控制
+                        // HeroShoot_target_speed1 = HeroShoot_speed_pid1.Calculate(-6000, motor_1.rotor_speed, 0.01f);
+                        // HeroShoot_target_speed2 = HeroShoot_speed_pid1.Calculate(6000, motor_2.rotor_speed, 0.01f);
+                        // HeroShoot_target_speed3 = HeroShoot_speed_pid1.Calculate(-6000, motor_3.rotor_speed, 0.01f);
+                        //
+                        // bsp_can2_djimotorcmd(HeroShoot_target_speed1,HeroShoot_target_speed2,HeroShoot_target_speed3,0);
+
+                        if (dbus.ch[2] == 0) {
+                            bsp_can2_djimotorcmdfive2eight(-dbus.ch[3]*2,pitch_target_speed,0,0);
+                            bsp_can1_lkmotortorquecmd(-dbus.ch[0]*0.45f);
+                        }
+                        else if (dbus.ch[2] != 0) {
+                            bsp_can2_djimotorcmdfive2eight(-dbus.ch[3]*2,pitch_target_speed,0,0);
+                            bsp_can1_lkmotortorquecmd(-dbus.ch[0]*0.45f);
+                            bsp_can2_djimotorcmd(HeroShoot_target_speed1,HeroShoot_target_speed2,HeroShoot_target_speed3,dbus.ch[2]*2);
+                        }
+                        break;
+                    }
                     case 2: {
                         //自由控制
                         bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4], dbus.s1,dbus.s2);
-                        bsp_can1_lkmotortorquecmd(-dbus.ch[0]*1.5f);
+                        bsp_can1_lkmotortorquecmd(-dbus.ch[0] * 0.45f);
+                        break;
+                    }
+                    case 3: {
                         break;
                     }
                 }
                 break;
             case 3:
                 switch (dbus.s2) {
+                    case 1: {
+                        break;
+                    }
+                    case 2: {
+                        break;
+                    }
                     case 3: {
                         //云台自稳
                         bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4], dbus.s1,dbus.s2);
                         //bsp_can1_lkmotorvelocitycmd(-dbus.ch[4] * 23-dbus.ch[0] * 13);
-                        bsp_can1_lkmotortorquecmd(-dbus.ch[0]*0.00001f);
+                        bsp_can1_lkmotortorquecmd(-dbus.ch[0]*0.45f);
                         break;
                     }
                     default: break;
@@ -96,7 +127,7 @@ void MasterBoardTask::run() {
             default: break;
         }
 
-        osDelay(1);
+        osDelay(10);
     }
 }
 
