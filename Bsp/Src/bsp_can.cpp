@@ -30,6 +30,9 @@ remote_control_info remote_control;
 //IMU数据结构体变量
 imu_data_info imu_data_chassis;
 
+//底盘数据结构体变量
+chassis_data chassis;
+
 //BSP_CAN相关内容初始化
 void bsp_can::bsp_can_init()
 {
@@ -56,7 +59,7 @@ void bsp_can::bsp_can_init()
     // 如果有其他 CAN 外设，也在这里激活中断
 }
 
-//CAN过滤器配置
+//CAN过滤器配置，配置了CAN1与CAN2
 void bsp_can::BSP_CAN_FilterConfig()
 {
     CAN_FilterTypeDef filter;
@@ -83,7 +86,7 @@ void bsp_can::BSP_CAN_FilterConfig()
     HAL_CAN_ConfigFilter(&hcan1, &filter);  // 注意：必须用 hcan1 配置 CAN2 过滤器
 }
 
-//CAN命令发送函数
+//DJI电机CAN命令，ID：1--4
 HAL_StatusTypeDef bsp_can::BSP_CAN2_DJIMotorCmd(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -110,6 +113,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN2_DJIMotorCmd(int16_t motor1, int16_t motor2, 
     return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
+//DJI电机CAN命令，ID：5--8
 HAL_StatusTypeDef bsp_can::BSP_CAN2_DJIMotorCmdFive2Eight(int16_t motor5, int16_t motor6, int16_t motor7, int16_t motor8) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -136,6 +140,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN2_DJIMotorCmdFive2Eight(int16_t motor5, int16_
     return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
+//DJI电机CAN命令，ID：9--11
 HAL_StatusTypeDef bsp_can::BSP_CAN2_DJIMotorCmdNine2Eleven(int16_t motor9,int16_t motor10,int16_t motor11) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -160,6 +165,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN2_DJIMotorCmdNine2Eleven(int16_t motor9,int16_
     return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
+//DM电机失能命令
 HAL_StatusTypeDef bsp_can::BSP_CAN2_DMMotorDisableCmd(uint16_t ID, uint16_t mode) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -183,6 +189,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN2_DMMotorDisableCmd(uint16_t ID, uint16_t mode
     return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
+//DM电机使能命令
 HAL_StatusTypeDef bsp_can::BSP_CAN2_DMMotorEnableCmd(uint16_t ID, uint16_t mode) {
     CAN_TxHeaderTypeDef TxHeader;
     uint8_t TxData[8];
@@ -205,6 +212,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN2_DMMotorEnableCmd(uint16_t ID, uint16_t mode)
     return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
+//DM电机位速闭环命令
 HAL_StatusTypeDef bsp_can::BSP_CAN2_DMMotorPositionCmd(int16_t ID, float position, float velocity) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -225,6 +233,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN2_DMMotorPositionCmd(int16_t ID, float positio
     return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
+//DM电机速度闭环命令
 HAL_StatusTypeDef bsp_can::BSP_CAN2_DMMotorVelocityCmd(int16_t ID, float velocity) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -250,6 +259,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN2_DMMotorVelocityCmd(int16_t ID, float velocit
     return HAL_CAN_AddTxMessage(&hcan2, &TxHeader, TxData, &TxMailbox);
 }
 
+//LK电机失能命令            0x80
 HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorCloseCmd() {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -269,6 +279,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorCloseCmd() {
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
+//LK电机使能命令            0x88
 HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorStartCmd() {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -288,6 +299,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorStartCmd() {
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
+//LK电机转矩命令            0xA1
 HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorTorqueCmd(int16_t current) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -316,6 +328,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorTorqueCmd(int16_t current) {
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
+//LK电机速度命令            0xA2
 HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorVelocityCmd(int32_t velocity) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -343,6 +356,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorVelocityCmd(int32_t velocity) {
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
+//LK电机增量位置命令         0xA7
 HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorIncrePosCmd(int32_t degree) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -370,6 +384,36 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorIncrePosCmd(int32_t degree) {
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
+//LK电机增量位置命令（含限速） 0xA7
+HAL_StatusTypeDef bsp_can::BSP_CAN1_LKMotorIncrePosVelRestrictCmd(int32_t degree, uint32_t velocity) {
+    //三要素：帧头，数据，邮箱
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t TxData[8];
+    uint32_t TxMailbox;
+
+    //帧头组成
+    TxHeader.StdId = 0x141; //标准标识符
+    TxHeader.IDE = CAN_ID_STD;
+    TxHeader.RTR = CAN_RTR_DATA;
+    TxHeader.DLC = 8;
+
+    //数据填充
+    TxData[0] = 0xA8;   // 命令字：增量位置限速控制
+    TxData[1] = 0x00;
+
+    TxData[2] = velocity;
+    TxData[3] = velocity >> 8;
+
+    TxData[4] = degree;        // 最低字节
+    TxData[5] = degree >> 8;   // 次低字节
+    TxData[6] = degree >> 16;  // 次高字节
+    TxData[7] = degree >> 24;  // 最高字节
+
+    //将信息推送到邮箱
+    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+}
+
+//上板对下板发送遥控器控制命令 0x301
 HAL_StatusTypeDef bsp_can::BSP_CAN1_SendRemoteControlCmd(int16_t X,int16_t Y,int16_t Z,uint8_t s1,uint8_t s2) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -396,6 +440,7 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_SendRemoteControlCmd(int16_t X,int16_t Y,int
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 }
 
+//下板对上板发送IMU读取数据命令 0x401
 HAL_StatusTypeDef bsp_can::BSP_CAN1_SendIMUData(int16_t roll, int16_t pitch, int16_t yaw) {
     //三要素：帧头，数据，邮箱
     CAN_TxHeaderTypeDef TxHeader;
@@ -420,6 +465,27 @@ HAL_StatusTypeDef bsp_can::BSP_CAN1_SendIMUData(int16_t roll, int16_t pitch, int
     TxData[3] = pitch_int;
     TxData[4] = yaw_int >> 8;
     TxData[5] = yaw_int;
+
+    //将信息推送到邮箱
+    return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+}
+
+//下板对上板反馈底盘状态命令    0x402
+HAL_StatusTypeDef bsp_can::BSP_CAN1_SendChassisData(int16_t spinvelocity) {
+    //三要素：帧头，数据，邮箱
+    CAN_TxHeaderTypeDef TxHeader;
+    uint8_t TxData[8];
+    uint32_t TxMailbox;
+
+    //帧头组成
+    TxHeader.StdId = 0x501; //标准标识符
+    TxHeader.IDE = CAN_ID_STD;
+    TxHeader.RTR = CAN_RTR_DATA;
+    TxHeader.DLC = 8;
+
+    //数据填充
+    TxData[0] = spinvelocity >> 8;
+    TxData[1] = spinvelocity;
 
     //将信息推送到邮箱
     return HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
@@ -456,6 +522,7 @@ void update_motor_total_angle(DJI_motor_info* motor, uint16_t new_ecd)
     motor->last_angle = new_ecd;
 }
 
+//FIFO0接收回调函数，分CAN1，CAN2
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
     CAN_RxHeaderTypeDef RxHeader;
     uint8_t RxData[8];
@@ -541,12 +608,12 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     motor_9.temp          =   RxData[6];
                     break;
                 }
-
                 default: break;
             }
         }
         else if(hcan->Instance == CAN1) {
             switch(RxHeader.StdId) {
+                //处理达妙电机命令
                 case 0x11: {
                     DM_motor_1.id  = RxData[0] & 0x0F;
                     DM_motor_1.err = RxData[0] >> 4;
@@ -555,7 +622,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     DM_motor_1.torque_raw  = ((RxData[4] & 0x0F) << 8) | RxData[5];
                     DM_motor_1.temp_mos    = RxData[7];
                 }
-
+                //处理ID为1的瓴控电机命令
                 case 0x141: {
                     switch (RxData[0]) {
                         case 0xA1: {
@@ -574,11 +641,17 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                             LK_motor_1.rotor_angle = (RxData[7] << 8) | RxData[6];
                             break;
                         }
+                        case 0xA7: {
+                            break;
+                        }
+                        case 0xA8: {
+                            break;
+                        }
                         default:break;
                     }
                 }
+                // 处理遥控器数据
                 case 0x301: {
-                    // 处理遥控器数据
                     remote_control.X = (RxData[0] << 8) | RxData[1];
                     remote_control.Y = (RxData[2] << 8) | RxData[3];
                     remote_control.Z = (RxData[4] << 8) | RxData[5];
@@ -586,23 +659,24 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                     remote_control.s2 = RxData[7];
                     break;
                 }
+                //处理IMU数据
                 case 0x401: {
                     // 高字节在前，恢复 int16_t
-                    auto roll_int  = (int16_t)((RxData[0] << 8) | RxData[1]);
-                    auto pitch_int = (int16_t)((RxData[2] << 8) | RxData[3]);
-                    auto yaw_int   = (int16_t)((RxData[4] << 8) | RxData[5]);
+                    auto roll_int  = static_cast<int16_t>((RxData[0] << 8) | RxData[1]);
+                    auto pitch_int = static_cast<int16_t>((RxData[2] << 8) | RxData[3]);
+                    auto yaw_int   = static_cast<int16_t>((RxData[4] << 8) | RxData[5]);
 
                     // 转回 float
                     imu_data_chassis.roll  = roll_int  / 100.0f;
                     imu_data_chassis.pitch = pitch_int / 100.0f;
                     imu_data_chassis.yaw   = yaw_int   / 100.0f;
-
-                    debug_roll = imu_data_chassis.roll;
-                    debug_pitch = imu_data_chassis.pitch;
-                    debug_yaw = imu_data_chassis.yaw;
                     break;
                 }
-
+                //处理底盘数据
+                // case 0x501: {
+                //     chassis.spinvelocity = static_cast<int16_t>((RxData[0] << 8) | RxData[1]);
+                //     break;
+                // }
                 default: break;
             }
         }
@@ -665,11 +739,19 @@ extern "C" {
         return can.BSP_CAN1_LKMotorIncrePosCmd(degree);
     }
 
+    HAL_StatusTypeDef bsp_can1_lkmotorincreposvelrestrictcmd(int32_t degree,uint32_t velocity) {
+        return can.BSP_CAN1_LKMotorIncrePosVelRestrictCmd(degree, velocity);
+    }
+
     HAL_StatusTypeDef bsp_can1_sendremotecontrolcmd(int16_t X,int16_t Y,int16_t Z, uint8_t s1, uint8_t s2) {
         return can.BSP_CAN1_SendRemoteControlCmd(X,Y,Z, s1, s2);
     }
 
     HAL_StatusTypeDef bsp_can1_sendimudata(int16_t roll, int16_t pitch, int16_t yaw) {
         return can.BSP_CAN1_SendIMUData(roll, pitch, yaw);
+    }
+
+    HAL_StatusTypeDef bsp_can1_sendchassisdata(int16_t spinvelocity) {
+        return can.BSP_CAN1_SendChassisData(spinvelocity);
     }
 }

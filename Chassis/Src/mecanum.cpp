@@ -22,10 +22,20 @@ std::array<float, 4> Mecanum::Mecanum_Calculate(float Vx, float Vy, float omega)
     return MotorSpeeds;
 }
 
+// float Mecanum::Mecanum_CalcOmega(float w1, float w2, float w3, float w4)
+// {
+//     float R = L + W;
+//     return (r / (4.0f * R)) * ( -w1 - w2 - w3 - w4 );
+// }
+
 extern "C"{
     static Mecanum mecanum(0.6f, 0.42f, 0.08f);
 
     void mecanum_calculate(float Vx, float Vy, float omega) {
         mecanum.Mecanum_Calculate(Vx, Vy, omega);
     }
+    //
+    // float mecanum_calcomega(float w1, float w2, float w3, float w4) {
+    //     return mecanum.Mecanum_CalcOmega(w1, w2, w3, w4);
+    // }
 }

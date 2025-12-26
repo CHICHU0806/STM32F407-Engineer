@@ -8,8 +8,8 @@
 #pragma once
 #include "can.h"
 
+//大疆系列电机反馈信息
 typedef struct {
-    //M3508，GM6020，M2006电机协议反馈信息
     int16_t rotor_angle;      // 电机转子角度
     int16_t rotor_speed;      // 电机转子速度
     int16_t torque_current;   // 电机转矩电流
@@ -21,6 +21,7 @@ typedef struct {
     uint8_t  inited;          // 是否初始化标志
 } DJI_motor_info;
 
+//达妙系列电机反馈信息
 typedef struct {
     uint8_t  id;           // 电机 ID (0~15)
     uint8_t  err;          // 电机错误码
@@ -37,6 +38,7 @@ typedef struct {
 
 } DM_motor_info;
 
+//瓴控系列电机反馈信息
 typedef struct {
     uint16_t rotor_angle;      // 电机转子角度
     int16_t rotor_speed;      // 电机转子速度
@@ -44,6 +46,7 @@ typedef struct {
     int8_t  temp;             // 电机温度
 } LK_motor_info;
 
+//遥控器数据
 typedef struct {
     int16_t X;
     int16_t Y;
@@ -52,11 +55,17 @@ typedef struct {
     uint8_t s2;
 }  remote_control_info;
 
+//IMU数据
 typedef struct {
     int16_t roll;
     int16_t pitch;
     int16_t yaw;
 } imu_data_info;
+
+//底盘状态
+typedef struct {
+    int16_t spinvelocity;
+} chassis_data;
 
 #ifdef __cplusplus
 class bsp_can {
@@ -81,12 +90,12 @@ public:
     HAL_StatusTypeDef BSP_CAN1_LKMotorTorqueCmd(int16_t current);
     HAL_StatusTypeDef BSP_CAN1_LKMotorVelocityCmd(int32_t velocity);
     HAL_StatusTypeDef BSP_CAN1_LKMotorIncrePosCmd(int32_t degree);
+    HAL_StatusTypeDef BSP_CAN1_LKMotorIncrePosVelRestrictCmd(int32_t degree,uint32_t velocity);
 
-    //遥控器数据 CAN发送函数接口
+    //上下半通信CAN发送函数接口
     HAL_StatusTypeDef BSP_CAN1_SendRemoteControlCmd(int16_t X,int16_t Y,int16_t Z, uint8_t s1,uint8_t s2);
-
-    //IMU数据 CAN发送函数接口
     HAL_StatusTypeDef BSP_CAN1_SendIMUData(int16_t roll, int16_t pitch, int16_t yaw);
+    HAL_StatusTypeDef BSP_CAN1_SendChassisData(int16_t spinvelocity);
 };
 #endif
 
@@ -113,12 +122,12 @@ extern "C" {
     HAL_StatusTypeDef bsp_can1_lkmotortorquecmd(int16_t torque);
     HAL_StatusTypeDef bsp_can1_lkmotorvelocitycmd(int32_t velocity);
     HAL_StatusTypeDef bsp_can1_lkmotorincreposcmd(int32_t degree);
+    HAL_StatusTypeDef bsp_can1_lkmotorincreposvelrestrictcmd(int32_t degree,uint32_t velocity);
 
-    //遥控器数据 CAN发送函数接口
+    //上下半通信CAN发送函数接口
     HAL_StatusTypeDef bsp_can1_sendremotecontrolcmd(int16_t X,int16_t Y,int16_t Z,uint8_t s1,uint8_t s2);
-
-    //IMU数据 CAN发送函数接口
     HAL_StatusTypeDef bsp_can1_sendimudata(int16_t roll, int16_t pitch, int16_t yaw);
+    HAL_StatusTypeDef bsp_can1_sendchassisdata(int16_t spinvelocity);
 
 #ifdef __cplusplus
 }
