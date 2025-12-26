@@ -58,13 +58,13 @@ void MasterBoardTask::run() {
         switch (dbus.s1) {
             case 1:
                 switch (dbus.s2) {
+                    //小陀螺模式
                     case 1: {
-                        //小陀螺模式
-                        bsp_can1_sendremotecontrolcmd(0,0,900, dbus.s1,dbus.s2);
+                        //bsp_can1_sendremotecontrolcmd(0,0,900, dbus.s1,dbus.s2);
                         bsp_can1_lkmotorvelocitycmd(-21950);
                         break;
                     }
-                    case 2: {
+                   case 2 : {
                         break;
                     }
                     case 3: {
@@ -75,35 +75,31 @@ void MasterBoardTask::run() {
                 break;
             case 2:
                 switch (dbus.s2) {
+                    //发射模式（左下右上）
+                    //提供图传抬升，准镜旋转，pitch升降与云台yaw的旋转
                     case 1: {
-                        //发射模式
-                        //英雄三摩擦轮速度控制
+                        //英雄三摩擦轮速度控制（不调试发射需要注释掉）
                         // HeroShoot_target_speed1 = HeroShoot_speed_pid1.Calculate(-6000, motor_1.rotor_speed, 0.01f);
                         // HeroShoot_target_speed2 = HeroShoot_speed_pid1.Calculate(6000, motor_2.rotor_speed, 0.01f);
                         // HeroShoot_target_speed3 = HeroShoot_speed_pid1.Calculate(-6000, motor_3.rotor_speed, 0.01f);
-                        //
-                        // bsp_can2_djimotorcmd(HeroShoot_target_speed1,HeroShoot_target_speed2,HeroShoot_target_speed3,0);
 
-                        if (dbus.ch[2] == 0) {
-                            bsp_can2_djimotorcmdfive2eight(-dbus.ch[3]*2,pitch_target_speed,0,0);
-                            bsp_can1_lkmotortorquecmd(-dbus.ch[0]*0.45f);
-                        }
-                        else if (dbus.ch[2] != 0) {
-                            bsp_can2_djimotorcmdfive2eight(-dbus.ch[3]*2,pitch_target_speed,0,0);
-                            bsp_can1_lkmotortorquecmd(-dbus.ch[0]*0.45f);
-                            bsp_can2_djimotorcmd(HeroShoot_target_speed1,HeroShoot_target_speed2,HeroShoot_target_speed3,dbus.ch[2]*2);
-                        }
+                        bsp_can2_djimotorcmdfive2eight(-dbus.ch[3]*2,pitch_target_speed,0,0);
+                        bsp_can1_lkmotortorquecmd(-dbus.ch[0]*0.45f);
+                        bsp_can2_djimotorcmd(HeroShoot_target_speed1,HeroShoot_target_speed2,HeroShoot_target_speed3,dbus.ch[2]*2);
                         break;
                     }
+                    //自由控制（左下右下）
+                    //提供云台与底盘的全状态分别控制
                     case 2: {
-                        //自由控制
-                        bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4], dbus.s1,dbus.s2);
-                        bsp_can1_lkmotortorquecmd(-dbus.ch[0] * 0.45f);
+                        //bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4], dbus.s1,dbus.s2);
+                        // bsp_can1_lkmotortorquecmd(-dbus.ch[0] * 0.45f);
+                        bsp_can1_lkmotorincreposvelrestrictcmd(-dbus.ch[0],100);
                         break;
                     }
                     case 3: {
                         break;
                     }
+                    default: break;
                 }
                 break;
             case 3:
@@ -114,9 +110,10 @@ void MasterBoardTask::run() {
                     case 2: {
                         break;
                     }
+                    //云台自稳+跟随
+                    //提供底盘跟随云台朝向的运动方式
                     case 3: {
-                        //云台自稳
-                        bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4], dbus.s1,dbus.s2);
+                        //bsp_can1_sendremotecontrolcmd(dbus.ch[3],dbus.ch[2],dbus.ch[4], dbus.s1,dbus.s2);
                         //bsp_can1_lkmotorvelocitycmd(-dbus.ch[4] * 23-dbus.ch[0] * 13);
                         bsp_can1_lkmotortorquecmd(-dbus.ch[0]*0.45f);
                         break;
@@ -126,8 +123,7 @@ void MasterBoardTask::run() {
                 break;
             default: break;
         }
-
-        osDelay(10);
+        osDelay(1);
     }
 }
 

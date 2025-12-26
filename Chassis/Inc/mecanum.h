@@ -18,6 +18,9 @@ public:
     // 输出: 四个轮速 (前左, 前右, 后左, 后右)
     std::array<float, 4> Mecanum_Calculate(float Vx, float Vy, float omega);
 
+    //通过实际轮速反解底盘状态
+    float Mecanum_CalcOmega(float w1, float w2, float w3, float w4);
+
 private:
     float L;   // 车长
     float W;   // 车宽
@@ -29,7 +32,7 @@ extern "C" {
 #endif
 
     void mecanum_calculate(float Vx, float Vy, float omega);
-
+    float mecanum_calcomega(float w1, float w2, float w3, float w4);
 #ifdef __cplusplus
 }
 #endif

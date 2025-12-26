@@ -13,6 +13,7 @@ extern DJI_motor_info motor_1;
 extern DJI_motor_info motor_2;
 extern DJI_motor_info motor_3;
 extern DJI_motor_info motor_4;
+extern DJI_motor_info motor_5;
 extern remote_control_info remote_control;
 
 //云台状态记录
@@ -32,8 +33,12 @@ void MecanumTask::run() {
         int16_t motor3_cmd = speed_pid_calculate(MotorSpeeds[2],motor_3.rotor_speed,0.01f);
         int16_t motor4_cmd = speed_pid_calculate(MotorSpeeds[3],motor_4.rotor_speed,0.01f);
 
-        bsp_can2_djimotorcmd(motor1_cmd, motor2_cmd, motor3_cmd, motor4_cmd);
-        bsp_can2_djimotorcmdfive2eight(,0,0,0);
+        // float omega_feedback = mecanum_calcomega(motor_1.rotor_speed,motor_2.rotor_speed,motor_3.rotor_speed,motor_4.rotor_speed);
+
+        //bsp_can2_djimotorcmd(motor1_cmd, motor2_cmd, motor3_cmd, motor4_cmd);
+        // bsp_can2_djimotorcmdfive2eight(0,0,0,0);
+        // bsp_can1_sendchassisdata(omega_feedback);
+
         osDelay(10);
     }
 }
