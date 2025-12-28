@@ -122,13 +122,13 @@ void MX_FREERTOS_Init(void) {
   //MotorTask_Init();
 
   //主板任务
-  MasterBoardTask_Init();
+  //MasterBoardTask_Init();
 
   //IMU任务
-  ImuTask_Init();
+  //ImuTask_Init();
 
   //各类底盘任务
-  //MecanumTask_Init();
+  MecanumTask_Init();
   //OmniWheelTask_Init();
   //SwerveTask_Init();
   //TargetCarTask_Init();
