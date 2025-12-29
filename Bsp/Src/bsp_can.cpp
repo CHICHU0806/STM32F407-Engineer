@@ -649,8 +649,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
                         }
                         default:break;
                     }
-                }
-                // 处理遥控器数据
+                }                // 处理遥控器数据
                 case 0x301: {
                     remote_control.X = (RxData[0] << 8) | RxData[1];
                     remote_control.Y = (RxData[2] << 8) | RxData[3];
